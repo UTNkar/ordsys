@@ -1,3 +1,7 @@
 **/.idea
 **/.DS_Store
 
+# Python/Django
+venv
+.env
+__pycache__

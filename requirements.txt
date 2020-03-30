@@ -1,0 +1,12 @@
+argon2-cffi==19.2.0
+asgiref==3.2.7
+cffi==1.14.0
+Django==3.0.4
+django-cors-headers==3.2.1
+djangorestframework==3.11.0
+psycopg2==2.8.4
+pycparser==2.20
+python-decouple==3.3
+pytz==2019.3
+six==1.14.0
+sqlparse==0.3.1
