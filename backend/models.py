@@ -124,6 +124,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(
         to=Order,
         on_delete=models.CASCADE,
+        related_name='order_items',
         verbose_name=_('order'),
         help_text=_('Which order this item belongs to.'),
     )
