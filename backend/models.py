@@ -1,7 +1,8 @@
-from django.contrib.auth.models import User
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
+from .managers import UserManager
 
 
 class Event(models.Model):
@@ -99,7 +100,7 @@ class Order(models.Model):
         help_text=_('During which event the order was placed.'),
     )
     user = models.ForeignKey(
-        to=User,
+        to='User',
         on_delete=models.CASCADE,
         verbose_name=_('user'),
         help_text=_('Which user that submitted the order.'),
@@ -161,3 +162,38 @@ class Organisation(models.Model):
     class Meta:
         db_table = 'organisation'
         ordering = ['name']
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    id = models.AutoField(primary_key=True)
+    username = models.CharField(
+        max_length=40,
+        unique=True,
+        verbose_name=_('username'),
+    )
+    password = models.CharField(
+        max_length=128,
+        verbose_name=_('password'),
+    )
+    is_staff = models.BooleanField(
+        verbose_name=_('staff status'),
+        default=False,
+        help_text=_('Designates whether the user can log into this admin site.'),
+    )
+    # 'org' must be allowed to be null in order to create a superuser before an organisation exists.
+    # The custom user forms in 'forms.py' ensures new users must be created with an organisation.
+    org = models.ForeignKey(
+        to=Organisation,
+        on_delete=models.CASCADE,
+        null=True,
+        verbose_name=_('organisation'),
+        help_text=_('Which organisation this user belongs to.'),
+    )
+    USERNAME_FIELD = 'username'
+    objects = UserManager()
+
+    def __str__(self):
+        return self.username
+
+    class Meta:
+        ordering = ['username']
