@@ -2,7 +2,17 @@ from django import forms
 from django.contrib.auth.password_validation import validate_password
 
 
-class UserForm(forms.ModelForm):
+class ModelWithOrganisationForm(forms.ModelForm):
+    def save(self, commit=True):
+        obj = super().save(commit=False)
+        if hasattr(self, 'org'):
+            setattr(obj, 'org', self.org)
+        if commit:
+            obj.save()
+        return obj
+
+
+class UserForm(ModelWithOrganisationForm):
     password = forms.CharField(widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput)
 
