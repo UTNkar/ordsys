@@ -40,10 +40,25 @@ class EventAdmin(ForeignKeyModelAdmin):
             (None, {'fields': ['name', 'org']}),
         )
 
+    def get_list_display(self, request):
+        if not request.user.is_superuser:
+            return ['name']
+        return ['name', 'org']
+
+    def get_list_filter(self, request):
+        if not request.user.is_superuser:
+            return []
+        return ['org']
+
     def get_queryset(self, request):
         if not request.user.is_superuser:
             return Event.objects.filter(org=request.user.org)
         return Event.objects.all()
+
+    def get_search_fields(self, request):
+        if not request.user.is_superuser:
+            return ['name']
+        return ['name', 'org__name']
 
 
 @admin.register(MenuItem)
@@ -59,32 +74,68 @@ class MenuItemAdmin(ForeignKeyModelAdmin):
     def get_fieldsets(self, request, obj=None):
         if not request.user.is_superuser:
             return (
-                (None, {'fields': ['item_name']}),
+                (None, {'fields': ['item_name', 'active']}),
             )
         return (
-            (None, {'fields': ['item_name', 'org']}),
+            (None, {'fields': ['item_name', 'active', 'org']}),
         )
+
+    def get_list_display(self, request):
+        if not request.user.is_superuser:
+            return ['item_name', 'active']
+        return ['item_name', 'active', 'org']
+
+    def get_list_filter(self, request):
+        if not request.user.is_superuser:
+            return ['active']
+        return ['active', 'org']
 
     def get_queryset(self, request):
         if not request.user.is_superuser:
             return MenuItem.objects.filter(org=request.user.org)
         return MenuItem.objects.all()
 
+    def get_search_fields(self, request):
+        if not request.user.is_superuser:
+            return []
+        return ['org__name']
+
 
 @admin.register(Order)
 class OrderAdmin(ForeignKeyModelAdmin):
     form = ModelWithOrganisationForm
+    list_display = [
+        'get_order_name', 'get_event_name', 'created_timestamp', 'status', 'get_delivered_timestamp', 'user'
+    ]
+
+    def get_delivered_timestamp(self, obj):
+        return obj.delivered_timestamp
+    get_delivered_timestamp.empty_value_display = '(Not delivered)'
+    get_delivered_timestamp.short_description = 'Order delivered'
+
+    def get_event_name(self, obj):
+        return obj.event.name
+    get_event_name.short_description = 'Event'
+
+    def get_order_name(self, obj):
+        return f'Order #{obj.id}'
+    get_order_name.short_description = 'Order'
 
     def get_fieldsets(self, request, obj=None):
         return (
             (None, {'fields': [
-                'customer_number', 'created_timestamp', 'delivered_timestamp', 'note', 'status', 'event', 'user'
+                'customer_number', 'note', 'status', 'event', 'user'
             ]}),
         )
 
+    def get_list_filter(self, request):
+        if not request.user.is_superuser:
+            return ['status', 'event', 'user']
+        return ['status', 'event', 'user', 'user__org']
+
     def get_readonly_fields(self, request, obj=None):
         if not request.user.is_superuser:
-            field_list = ['created_timestamp', 'delivered_timestamp', 'status']
+            field_list = ['status']
             if obj is not None:
                 field_list.append('user')
             return field_list
@@ -95,9 +146,30 @@ class OrderAdmin(ForeignKeyModelAdmin):
             return Order.objects.filter(user__org=request.user.org)
         return Order.objects.all()
 
+    def get_search_fields(self, request):
+        if not request.user.is_superuser:
+            return ['event__name', 'user__username']
+        return ['event__name', 'user__org__name', 'user__username']
+
 
 @admin.register(OrderItem)
 class OrderItemAdmin(ForeignKeyModelAdmin):
+    list_display = ['get_menu_name', 'get_order_name', 'get_event_name', 'quantity', 'special_requests']
+    list_filter = ['menu', 'order']
+    search_fields = ['menu__item_name', 'order__event__name']
+
+    def get_event_name(self, obj):
+        return obj.order.event.name
+    get_event_name.short_description = 'Event'
+
+    def get_menu_name(self, obj):
+        return obj.menu.item_name
+    get_menu_name.short_description = 'Item ordered'
+
+    def get_order_name(self, obj):
+        return f'Order #{obj.order.id}'
+    get_order_name.short_description = 'Order'
+
     def get_readonly_fields(self, request, obj=None):
         if not request.user.is_superuser and obj is not None:
             return ['order']
@@ -121,9 +193,10 @@ class OrganisationAdmin(admin.ModelAdmin):
 class UserAdmin(BaseUserAdmin, ForeignKeyModelAdmin):
     form = UserForm
     add_form = UserForm
-    list_display = ['username', 'org', 'is_staff', 'is_superuser']
-    list_filter = ['org', 'is_staff', 'is_superuser']
-    search_fields = ['org__name', 'username']
+    # Must be overridden as superclass lists contains missing fields.
+    # The lists are dynamically obtained in their respective methods.
+    list_display = []
+    list_filter = []
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -141,7 +214,22 @@ class UserAdmin(BaseUserAdmin, ForeignKeyModelAdmin):
             ('Permissions', {'fields': ['is_staff', 'is_superuser', 'groups']}),
         )
 
+    def get_list_display(self, request):
+        if not request.user.is_superuser:
+            return ['username', 'is_staff']
+        return ['username', 'org', 'is_staff', 'is_superuser']
+
+    def get_list_filter(self, request):
+        if not request.user.is_superuser:
+            return []
+        return ['org', 'is_staff', 'is_superuser']
+
     def get_queryset(self, request):
         if not request.user.is_superuser:
             return User.objects.filter(org=request.user.org)
         return User.objects.all()
+
+    def get_search_fields(self, request):
+        if not request.user.is_superuser:
+            return ['username']
+        return ['org__name', 'username']
