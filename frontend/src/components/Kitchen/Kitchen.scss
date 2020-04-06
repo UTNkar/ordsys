@@ -1,0 +1,17 @@
+.order-column {
+    height: 93.5vh;
+    overflow-y: auto;
+
+    .card {
+        margin-bottom: 1rem;
+    }
+}
+
+#done-order-column {
+    height: 70vh;
+    overflow-y: auto;
+
+    .card {
+        margin-bottom: 1rem;
+    }
+}
