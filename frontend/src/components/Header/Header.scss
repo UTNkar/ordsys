@@ -1,0 +1,27 @@
+:root {
+    --header_color: #000000;
+    --text_color: #ffffff;
+}
+
+.header.navbar {
+    /* Prevents Safari from displaying an incorrect header height */
+    min-height: 6.5vh;
+    max-height: 6.5vh;
+    background-color: var(--header_color, #004C98);
+
+    .navbar-brand {
+        color: var(--text_color, #ffffff);
+        padding-left: 20px;
+        padding-right: 20px;
+        font-size: 30px;
+        font-weight: bold;
+    }
+
+    .nav-item {
+        color: var(--text_color, #ffffff);
+        padding-right: 20px;
+        padding-left: 20px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+}
