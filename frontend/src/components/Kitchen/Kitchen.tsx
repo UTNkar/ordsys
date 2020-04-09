@@ -4,6 +4,24 @@ import './Kitchen.scss';
 import OrderTicket from '../Order/OrderTicket';
 import { MenuItem, Order, OrderStatus } from '../../@types';
 
+function showStats(ordersWaiting: Order[], ordersInProgress: Order[], menuItems: MenuItem[]) {
+    const orders = [...ordersWaiting, ...ordersInProgress]
+    const orderItems = orders.flatMap(order => order.order_items)
+    const relevantMenuItems = menuItems.filter(menuItem =>
+        orderItems.some(orderItem => orderItem.menu === menuItem.id)
+    )
+    return relevantMenuItems.map(menuItem =>
+        <li key={menuItem.id}>
+            {`
+                ${orderItems.reduce((accumulator, currentValue) =>
+                    accumulator + (currentValue.menu === menuItem.id ? currentValue.quantity : 0), 0
+                )}
+                ${menuItem.item_name}
+            `}
+        </li>
+    );
+}
+
 function Kitchen() {
     const [menuItems, setMenuItems] = useState<MenuItem[]>([])
     const [orders, setOrders] = useState<Order[]>([])
@@ -99,6 +117,16 @@ function Kitchen() {
                             <h4 className="py-3">
                                 Total (waiting + in progress)
                             </h4>
+                            <Row
+                                // @ts-ignore
+                                align="left"
+                            >
+                                <Col>
+                                    <ul className="list-unstyled">
+                                        {showStats(ordersWaiting, ordersInProgress, menuItems)}
+                                    </ul>
+                                </Col>
+                            </Row>
                         </Col>
                     </Row>
                 </Col>
