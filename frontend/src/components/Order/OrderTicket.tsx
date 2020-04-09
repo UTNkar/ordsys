@@ -21,6 +21,7 @@ function displayOrderItems(orderItems: OrderItem[] | undefined, menuItems: MenuI
 }
 
 interface OrderTicketProps {
+    buttons?: React.ReactNode
     createdTimestamp?: string
     menuItems?: MenuItem[]
     note?: string
@@ -31,7 +32,7 @@ interface OrderTicketProps {
 }
 
 function OrderTicket({
-    children, createdTimestamp, menuItems, note, onClick, orderItems, orderNumber, status
+    buttons, children, createdTimestamp, menuItems, note, onClick, orderItems, orderNumber, status
 }: PropsWithChildren<OrderTicketProps>) {
     return (
         <Card
@@ -54,6 +55,13 @@ function OrderTicket({
             <Row>
                 <Col>
                     {displayOrderItems(orderItems, menuItems)}
+                </Col>
+                <Col
+                    className="align-self-end"
+                    // @ts-ignore
+                    align="right"
+                >
+                    {buttons}
                 </Col>
             </Row>
             <Row className="align-items-end">

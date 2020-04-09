@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 import './Kitchen.scss';
 import OrderTicket from '../Order/OrderTicket';
+import { DjangoBackend } from '../../api/DjangoBackend';
 import { MenuItem, Order, OrderStatus } from '../../@types';
 
 function showStats(ordersWaiting: Order[], ordersInProgress: Order[], menuItems: MenuItem[]) {
@@ -20,6 +21,11 @@ function showStats(ordersWaiting: Order[], ordersInProgress: Order[], menuItems:
             `}
         </li>
     );
+}
+
+function changeOrderStatus(order: Order, newStatus: OrderStatus) {
+    DjangoBackend.patch(`/api/orders/${order.id}/`, { status: newStatus })
+        .catch(reason => console.log(reason))
 }
 
 function Kitchen() {
@@ -61,6 +67,18 @@ function Kitchen() {
                     {ordersWaiting.map(order =>
                         <OrderTicket
                             key={order.id}
+                            buttons={
+                                <Button
+                                    className="shadow-sm"
+                                    variant="outline-secondary"
+                                    onClick={() => changeOrderStatus(order, OrderStatus.IN_PROGRESS)}
+                                >
+                                    <img
+                                        src={'/assets/images/arrow_right.svg'}
+                                        alt="Mark order as in progress"
+                                    />
+                                </Button>
+                            }
                             createdTimestamp={order.created_timestamp.slice(11, 16)}
                             menuItems={menuItems}
                             note={order.note}
@@ -81,6 +99,30 @@ function Kitchen() {
                     {ordersInProgress.map(order =>
                         <OrderTicket
                             key={order.id}
+                            buttons={
+                                <>
+                                    <Button
+                                        className="shadow-sm"
+                                        variant="outline-secondary"
+                                        onClick={() => changeOrderStatus(order, OrderStatus.WAITING)}
+                                    >
+                                        <img
+                                            src={'/assets/images/arrow_left.svg'}
+                                            alt="Mark order as waiting"
+                                        />
+                                    </Button>
+                                    <Button
+                                        className="shadow-sm ml-5"
+                                        variant="outline-secondary"
+                                        onClick={() => changeOrderStatus(order, OrderStatus.DONE)}
+                                    >
+                                        <img
+                                            src={'/assets/images/arrow_right.svg'}
+                                            alt="Mark order as done"
+                                        />
+                                    </Button>
+                                </>
+                            }
                             createdTimestamp={order.created_timestamp.slice(11, 16)}
                             menuItems={menuItems}
                             note={order.note}
@@ -102,6 +144,18 @@ function Kitchen() {
                             {ordersDone.map(order =>
                                 <OrderTicket
                                     key={order.id}
+                                    buttons={
+                                        <Button
+                                            className="shadow-sm"
+                                            variant="outline-secondary"
+                                            onClick={() => changeOrderStatus(order, OrderStatus.IN_PROGRESS)}
+                                        >
+                                            <img
+                                                src={'/assets/images/arrow_left.svg'}
+                                                alt="Mark order as in progress"
+                                            />
+                                        </Button>
+                                    }
                                     createdTimestamp={order.created_timestamp.slice(11, 16)}
                                     menuItems={menuItems}
                                     note={order.note}
