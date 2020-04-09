@@ -1,7 +1,19 @@
-#order-ticket {
-    width: 23rem;
+.card-status-waiting {
+    background-color: #eaeaea;
 }
 
-#order-ticket-item-list {
-    list-style-type: none;
+.card-status-in-progress {
+    background-color: #fff3b0;
+}
+
+.card-status-done {
+    background-color: #d0ffb2;
+}
+
+.order-ticket-text {
+    font-size: 1.1rem;
+}
+
+.order-ticket-menu-items {
+    margin-bottom: 0.5rem;
 }

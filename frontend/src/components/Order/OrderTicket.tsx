@@ -1,19 +1,41 @@
 import React from 'react';
 import { Card, Row, Col } from 'react-bootstrap';
 import './OrderTicket.scss'
+import { MenuItem, OrderItem } from '../../@types';
+
+function displayOrderItems(orderItems: OrderItem[] | undefined, menuItems: MenuItem[] | undefined) {
+    if (orderItems === undefined || menuItems === undefined) {
+        return
+    }
+    return orderItems.map(orderItem => (
+        <ul className="list-unstyled order-ticket-menu-items" key={orderItem.id}>
+            <li>
+                {`
+                    ${orderItem.quantity} 
+                    ${menuItems.find(menuItem => menuItem.id === orderItem.menu)?.item_name}
+                    ${orderItem.special_requests === "" ? "" : `(${orderItem.special_requests})`}
+                `}
+            </li>
+        </ul>
+    ))
+}
 
 interface OrderTicketProps {
     createdTimestamp?: string
+    menuItems?: MenuItem[]
     note?: string
-    orderItems?: string[]
+    orderItems?: OrderItem[]
     orderNumber?: number
+    status?: string
 }
 
-function OrderTicket({ createdTimestamp, note, orderItems, orderNumber }: OrderTicketProps) {
+function OrderTicket({
+    createdTimestamp, menuItems, note, orderItems, orderNumber, status
+}: OrderTicketProps
+) {
     return (
         <Card
-            id="order-ticket"
-            className="p-3 rounded-lg"
+            className={`p-3 rounded-lg card-status-${status}`}
             // @ts-ignore
             align="left"
         >
@@ -30,9 +52,7 @@ function OrderTicket({ createdTimestamp, note, orderItems, orderNumber }: OrderT
             </Row>
             <Row>
                 <Col>
-                    <ul id="order-ticket-item-list">
-                        {orderItems?.map((orderItem, index) => <li key={index}>{orderItem}</li>)}
-                    </ul>
+                    {displayOrderItems(orderItems, menuItems)}
                 </Col>
             </Row>
             <Row>
