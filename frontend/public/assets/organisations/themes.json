@@ -1,0 +1,32 @@
+{
+    "klubbverket": {
+        "themeColour": "#000000",
+        "themeLogo": "logotypes/klubbverket.png",
+        "themeText": "#FFFFFF"
+    },
+    "utn": {
+        "themeColour": "#004C98",
+        "themeLogo": "logotypes/utn.png",
+        "themeText": "#FFFFFF"
+    },
+    "forsranningen": {
+        "themeColour": "#C82D30",
+        "themeLogo": "logotypes/forsranningen.png",
+        "themeText": "#FFFFFF"
+    },
+    "rebusrally": {
+        "themeColour": "#830017",
+        "themeLogo": "logotypes/rebusrallyt.png",
+        "themeText": "#FFFFFF"
+    },
+    "utnarm": {
+        "themeColour": "008BBD",
+        "themeLogo": "logotypes/utnarm.png",
+        "themeText": "#FFFFFF"
+    },
+    "td": {
+        "themeColour": "803795",
+        "themeLogo": "logotypes/td.png",
+        "themeText": "#FFFFFF"
+    }
+}
