@@ -13,15 +13,22 @@ function Header() {
         }
     }, [])
 
+    const organisation_logo = "utn" //TODO make adaptive
     return (
         <Navbar className="header" expand="lg">
             <Link to="/">
-                <Navbar.Brand>Organisation</Navbar.Brand>
+                <Navbar.Brand>
+                    <img
+                        src={`/assets/organisations/logotypes/${organisation_logo}.png`}
+                        alt="Organisation logo"
+                    />
+                </Navbar.Brand>
             </Link>
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="ml-auto">
-                    <Nav.Item>{date}</Nav.Item>
+                    <Nav.Item className="mx-3">Event_ID</Nav.Item>
+                    <Nav.Item className="mx-3">{date}</Nav.Item>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
