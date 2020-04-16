@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { FaUndo } from 'react-icons/fa';
 import './Bar.scss';
+import AllOrders from './AllOrders';
 import CurrentOrder from './CurrentOrder';
 import Menu from './Menu';
 import OrderNumber from './OrderNumber';
@@ -84,8 +85,8 @@ function Bar() {
                         onMenuItemClick={onMenuItemClick}
                     />
                 </Col>
-                <Col>
-                    All orders
+                <Col id="bar-all-orders-column">
+                    <AllOrders />
                 </Col>
             </Row>
         </Container>

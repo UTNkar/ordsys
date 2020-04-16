@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { Card, Row, Col } from 'react-bootstrap';
 import './OrderTicket.scss'
 import { MenuItem, OrderItem } from '../../@types';
@@ -30,9 +30,8 @@ interface OrderTicketProps {
 }
 
 function OrderTicket({
-    createdTimestamp, menuItems, note, orderItems, orderNumber, status
-}: OrderTicketProps
-) {
+    children, createdTimestamp, menuItems, note, orderItems, orderNumber, status
+}: PropsWithChildren<OrderTicketProps>) {
     return (
         <Card
             className={`p-3 rounded-lg card-status-${status}`}
@@ -55,9 +54,15 @@ function OrderTicket({
                     {displayOrderItems(orderItems, menuItems)}
                 </Col>
             </Row>
-            <Row>
+            <Row className="align-items-end">
                 <Col className="text-info">
                     {note}
+                </Col>
+                <Col
+                    // @ts-ignore
+                    align="right"
+                >
+                    {children}
                 </Col>
             </Row>
         </Card>
