@@ -1,0 +1,18 @@
+#btn-undo {
+    border-color: transparent;
+    font-size: 1.25rem;
+
+    svg {
+        --undo-icon-size: 1.75rem;
+        height: var(--undo-icon-size);
+        width: var(--undo-icon-size);
+    }
+}
+
+.bar-top.row {
+    height: 6.5vh;
+
+    h3 {
+        font-weight: bold;
+    }
+}
