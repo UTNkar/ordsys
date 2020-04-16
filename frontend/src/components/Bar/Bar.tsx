@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { FaUndo } from 'react-icons/fa';
 import './Bar.scss';
+import OrderNumber from './OrderNumber';
 
 function Bar() {
+    const [orderNote, setOrderNote] = useState('')
+    const [orderNumber, setOrderNumber] = useState('')
+
+    function addToOrderNumber(digit: number) {
+        const newNumber = (Number(orderNumber) % 10) * 10 + digit
+        setOrderNumber(String(newNumber))
+    }
+
     return (
         <Container fluid className="flex-grow-1">
             <Row xs={3} className="bar-top">
@@ -21,8 +30,14 @@ function Bar() {
                 </Col>
             </Row>
             <Row xs={3}>
-                <Col>
-                    Current order
+                <Col id="bar-checkout-column">
+                    <OrderNumber
+                        addToOrderNumber={addToOrderNumber}
+                        clearOrderNumber={() => setOrderNumber('')}
+                        onOrderNoteChange={e => setOrderNote(e.target.value)}
+                        orderNote={orderNote}
+                        orderNumber={orderNumber}
+                    />
                 </Col>
                 <Col>
                     Menu

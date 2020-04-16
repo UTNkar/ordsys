@@ -1,3 +1,10 @@
+:root {
+    --button-background-color: #004C98;
+    --button-text-color: #fff;
+    --button-active: #207c98;
+    --button-hover: black;
+}
+
 #btn-undo {
     border-color: transparent;
     font-size: 1.25rem;
@@ -15,4 +22,10 @@
     h3 {
         font-weight: bold;
     }
+}
+
+#bar-checkout-column {
+    margin-top: 1vh;
+    height: 86vh;
+    overflow-y: auto;
 }
