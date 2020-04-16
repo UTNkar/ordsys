@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { FaUndo } from 'react-icons/fa';
 import './Bar.scss';
+import Menu from './Menu';
 import OrderNumber from './OrderNumber';
 
 function Bar() {
+    const [mealNote, setMealNote] = useState('')
     const [orderNote, setOrderNote] = useState('')
     const [orderNumber, setOrderNumber] = useState('')
 
@@ -39,8 +41,11 @@ function Bar() {
                         orderNumber={orderNumber}
                     />
                 </Col>
-                <Col>
-                    Menu
+                <Col id="bar-menu-column">
+                    <Menu
+                        mealNote={mealNote}
+                        onMealNoteChange={e => setMealNote(e.target.value)}
+                    />
                 </Col>
                 <Col>
                     All orders

@@ -3,6 +3,11 @@
     --button-text-color: #fff;
     --button-active: #207c98;
     --button-hover: black;
+
+    --menu-card-backgroud-color: #004C98;
+    --menu-card-text-color: #fff;
+    --menu-card-active: #207c98;
+    --menu-card-hover: black;
 }
 
 #btn-undo {
@@ -24,8 +29,10 @@
     }
 }
 
-#bar-checkout-column {
+#bar-checkout-column, #bar-menu-column {
     margin-top: 1vh;
     height: 86vh;
     overflow-y: auto;
+    padding-left: 0;
+    padding-right: 0;
 }
