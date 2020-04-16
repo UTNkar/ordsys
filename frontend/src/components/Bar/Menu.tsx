@@ -6,9 +6,10 @@ import { MenuItem } from '../../@types';
 interface MenuProps {
     mealNote: string
     onMealNoteChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+    onMenuItemClick: (item: MenuItem) => void
 }
 
-function Menu({ mealNote, onMealNoteChange }: MenuProps) {
+function Menu({ mealNote, onMealNoteChange, onMenuItemClick }: MenuProps) {
     const [menuItems, setMenuItems] = useState<MenuItem[]>([])
 
     useEffect(() => {
@@ -34,6 +35,7 @@ function Menu({ mealNote, onMealNoteChange }: MenuProps) {
                             <Card
                                 key={item.id}
                                 className="menu-card"
+                                onClick={() => onMenuItemClick(item)}
                             >
                                 <Card.Body>
                                     <Card.Text>{item.item_name}</Card.Text>
