@@ -24,17 +24,19 @@ interface OrderTicketProps {
     createdTimestamp?: string
     menuItems?: MenuItem[]
     note?: string
+    onClick?: () => void
     orderItems?: OrderItem[]
     orderNumber?: number
     status?: string
 }
 
 function OrderTicket({
-    children, createdTimestamp, menuItems, note, orderItems, orderNumber, status
+    children, createdTimestamp, menuItems, note, onClick, orderItems, orderNumber, status
 }: PropsWithChildren<OrderTicketProps>) {
     return (
         <Card
             className={`p-3 rounded-lg card-status-${status}`}
+            onClick={onClick}
             // @ts-ignore
             align="left"
         >

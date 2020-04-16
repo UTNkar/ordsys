@@ -1,0 +1,49 @@
+.order-detail-window {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+}
+
+.order-detail-window-body {
+    width: 50%;
+    background-color: white;
+    border-radius: 5px;
+    text-align: center;
+    position: relative;
+    padding: 2%;
+}
+
+.order-detail {
+    width: 70%;
+    display: block;
+    margin: 1% auto;
+    padding: 1% 2%;
+    font-size: 1.2rem;
+}
+
+.close-button {
+    position: absolute;
+    top: 0;
+    right: 2%;
+    font-size: 3rem;
+    transform: rotate(45deg);
+    cursor: pointer;
+
+    &:hover {
+        color: red;
+    }
+}
+
+.detail-view-button {
+    font-size: 1.5rem;
+    margin: 1% auto;
+    display: block;
+    border: none;
+    width: 50%;
+    padding: 1% 2%;
+}
