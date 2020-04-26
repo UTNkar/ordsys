@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Event, MenuItem, Order, OrderItem
+from .models import Event, MenuItem, Order, OrderItem, User, Organisation
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -35,3 +35,17 @@ class OrderWithOrderItemsSerializer(serializers.ModelSerializer):
             'id', 'created_timestamp', 'delivered_timestamp', 'event', 'customer_number',
             'note', 'status', 'user', 'order_items'
         )
+
+
+class UserPublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username')
+
+
+class OrganisationWithUsersSerializer(serializers.ModelSerializer):
+    users = UserPublicSerializer(many=True)
+
+    class Meta:
+        model = Organisation
+        fields = ('id', 'name', 'users')

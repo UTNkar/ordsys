@@ -1,9 +1,10 @@
 from rest_framework import viewsets
 from rest_framework.filters import SearchFilter
-from .models import Event, MenuItem, Order
+from .models import Event, MenuItem, Order, Organisation
 from .filters import OrderFilter
 from .serializers import (
-    EventSerializer, MenuItemSerializer, OrderSerializer, OrderWithOrderItemsSerializer
+    EventSerializer, MenuItemSerializer, OrderSerializer, OrderWithOrderItemsSerializer,
+    OrganisationWithUsersSerializer,
 )
 
 
@@ -30,3 +31,8 @@ class OrderWithOrderItemsView(viewsets.ReadOnlyModelViewSet):
     filterset_class = OrderFilter
     serializer_class = OrderWithOrderItemsSerializer
     queryset = Order.objects.prefetch_related('order_items')
+
+
+class OrganisationWithUsersView(viewsets.ReadOnlyModelViewSet):
+    serializer_class = OrganisationWithUsersSerializer
+    queryset = Organisation.objects.all().prefetch_related('users')

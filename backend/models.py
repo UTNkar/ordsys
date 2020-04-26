@@ -185,6 +185,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     org = models.ForeignKey(
         to=Organisation,
         on_delete=models.CASCADE,
+        related_name='users',
         null=True,
         verbose_name=_('organisation'),
         help_text=_('Which organisation this user belongs to.'),
