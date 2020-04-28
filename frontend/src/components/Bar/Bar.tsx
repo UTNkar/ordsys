@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { FaUndo } from 'react-icons/fa';
 import './Bar.scss';
@@ -6,13 +6,28 @@ import AllOrders from './AllOrders';
 import CurrentOrder from './CurrentOrder';
 import Menu from './Menu';
 import OrderNumber from './OrderNumber';
-import { CurrentOrderItem, MenuItem } from '../../@types';
+import { DjangoBackend } from '../../api/DjangoBackend';
+import { CurrentOrderItem, MenuItem, Order, OrderStatus } from '../../@types';
 
 function Bar() {
     const [currentOrder, setCurrentOrder] = useState<CurrentOrderItem[]>([])
     const [mealNote, setMealNote] = useState('')
+    const [menuItems, setMenuItems] = useState<MenuItem[]>([])
     const [orderNote, setOrderNote] = useState('')
     const [orderNumber, setOrderNumber] = useState('')
+    const [orders, setOrders] = useState<Order[]>([])
+
+    useEffect(() => {
+        Promise.all([
+            DjangoBackend.get<MenuItem[]>('/api/menu_items/?active=true'),
+            DjangoBackend.get<Order[]>(`/api/orders_with_order_items/?exclude_status=${OrderStatus.DELIVERED}`),
+        ])
+            .then(([menuItems, orders]) => {
+                setMenuItems(menuItems.data)
+                setOrders(orders.data)
+            })
+            .catch(reason => console.log(reason.response))
+    }, [])
 
     function addToOrderNumber(digit: number) {
         const newNumber = (Number(orderNumber) % 10) * 10 + digit
@@ -81,12 +96,16 @@ function Bar() {
                 <Col id="bar-menu-column">
                     <Menu
                         mealNote={mealNote}
+                        menuItems={menuItems}
                         onMealNoteChange={e => setMealNote(e.target.value)}
                         onMenuItemClick={onMenuItemClick}
                     />
                 </Col>
                 <Col id="bar-all-orders-column">
-                    <AllOrders />
+                    <AllOrders
+                        menuItems={menuItems}
+                        orders={orders}
+                    />
                 </Col>
             </Row>
         </Container>

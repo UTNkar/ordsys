@@ -1,24 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Card, CardColumns, Col, Container, Row } from 'react-bootstrap';
 import './Menu.scss';
 import { MenuItem } from '../../@types';
 
 interface MenuProps {
     mealNote: string
+    menuItems: MenuItem[]
     onMealNoteChange: (event: React.ChangeEvent<HTMLInputElement>) => void
     onMenuItemClick: (item: MenuItem) => void
 }
 
-function Menu({ mealNote, onMealNoteChange, onMenuItemClick }: MenuProps) {
-    const [menuItems, setMenuItems] = useState<MenuItem[]>([])
-
-    useEffect(() => {
-        fetch('http://localhost:8000/api/menu_items/?active=true')
-            .then(response => response.json())
-            .then(menuItems => setMenuItems(menuItems))
-            .catch(reason => console.log(reason.response))
-    }, [])
-
+function Menu({ mealNote, menuItems, onMealNoteChange, onMenuItemClick }: MenuProps) {
     return (
         <Container className="h-100">
             <Row className="menu align-items-start h-100">
