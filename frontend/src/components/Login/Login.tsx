@@ -36,7 +36,7 @@ function Login({ history }: RouteComponentProps) {
     function onLoginSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
         logIn(selectedUser, inputPassword.value)
-            .then(() => history.push('/'))
+            .then(() => history.push('/event_select'))
             .catch(reason => {
                 const response = reason.response
                 if (response !== undefined && response.status === 400) {
