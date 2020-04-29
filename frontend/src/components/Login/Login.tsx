@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Button as MuiButton, MenuItem, TextField } from '@material-ui/core';
 import './Login.scss';
@@ -17,7 +16,11 @@ function handleNetworkError(response: AxiosResponse) {
     }
 }
 
-function Login({ history }: RouteComponentProps) {
+interface LoginProps {
+    onLogin: () => void
+}
+
+function Login({ onLogin }: LoginProps) {
     const [organisations, setOrganisations] = useState<Organisation[]>([])
     const [selectedOrganisation, setSelectedOrganisation] = useState<Organisation | string>('')
     const [users, setUsers] = useState<User[]>([])
@@ -36,7 +39,7 @@ function Login({ history }: RouteComponentProps) {
     function onLoginSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
         logIn(selectedUser, inputPassword.value)
-            .then(() => history.push('/event_select'))
+            .then(() => onLogin())
             .catch(reason => {
                 const response = reason.response
                 if (response !== undefined && response.status === 400) {

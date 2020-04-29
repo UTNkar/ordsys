@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Button as MuiButton, TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -16,9 +15,11 @@ function getEventOptionLabel(option: string | Event) {
     }
 }
 
-interface EventSelectorProps extends RouteComponentProps {}
+interface EventSelectorProps {
+    onEventChosen: () => void
+}
 
-function EventSelector({ history }: EventSelectorProps) {
+function EventSelector({ onEventChosen }: EventSelectorProps) {
     const [events, setEvents] = useState<Event[]>([])
     const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
     const [isLoading, setIsLoading] = useState(true)
@@ -39,7 +40,7 @@ function EventSelector({ history }: EventSelectorProps) {
         event.preventDefault()
         // Selected event is always non-null when this function is called (ensured by disabling submit if null)
         setEvent(selectedEvent as Event)
-        history.push('/')
+        onEventChosen()
     }
 
     return (
