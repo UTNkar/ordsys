@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { CanvasJSChart } from '../../libs/canvasjs.react';
+import { DjangoBackend } from '../../api/DjangoBackend';
 import { Event, MenuItem, Order } from '../../@types';
 
 function Statistics() {
@@ -11,24 +12,22 @@ function Statistics() {
     const [chartOptions, setChartOptions] = useState({})
 
     useEffect(() => {
-        Promise.all([fetch('http://localhost:8000/api/events/'), fetch('http://localhost:8000/api/menu_items/')])
-            .then((responses) => Promise.all([responses[0].json(), responses[1].json()]))
-            .then(([events, menuItems]: [Event[], MenuItem[]]) => {
-                setEvents(events)
-                setMenuItems(menuItems)
-                setSelectedEventName(events[0].name ?? '')
+        Promise.all([DjangoBackend.get<Event[]>('/api/events/'), DjangoBackend.get<MenuItem[]>('/api/menu_items/')])
+            .then(([events, menuItems]) => {
+                setEvents(events.data)
+                setMenuItems(menuItems.data)
+                setSelectedEventName(events.data[0].name ?? '')
             })
-            .catch(reason => console.log(reason))
+            .catch(reason => console.log(reason.response))
     }, [])
 
     function onEventIdConfirmed() {
         setIsLoadingData(true)
         const event = events.find(item => item.name === selectedEventName) as Event
-        fetch(`http://localhost:8000/api/orders_with_order_items/?event=${event.id}`)
-            .then(response => response.json())
-            .then((orders: Order[]) => {
+        DjangoBackend.get<Order[]>(`/api/orders_with_order_items/?event=${event.id}`)
+            .then(orders => {
                 const dataPoints: { label: string, y: number }[] = []
-                orders.forEach(order => {
+                orders.data.forEach(order => {
                     order.order_items.forEach(orderItem => {
                         const menuItem = menuItems.find(item => item.id === orderItem.menu) as MenuItem
                         const dataPointIndex = dataPoints.findIndex(item => item.label === menuItem.item_name)
@@ -57,7 +56,7 @@ function Statistics() {
                     }]
                 })
             })
-            .catch(reason => console.log(reason))
+            .catch(reason => console.log(reason.response))
             .finally(() => setIsLoadingData(false))
     }
 

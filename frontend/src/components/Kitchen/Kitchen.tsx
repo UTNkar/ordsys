@@ -34,15 +34,13 @@ function Kitchen() {
 
     useEffect(() => {
         function getOrders() {
-            fetch(`http://localhost:8000/api/orders_with_order_items/?exclude_status=${OrderStatus.DELIVERED}`)
-                .then(response => response.json())
-                .then((orders: Order[]) => setOrders(orders))
-                .catch(reason => console.log(reason))
+            DjangoBackend.get<Order[]>(`/api/orders_with_order_items/?exclude_status=${OrderStatus.DELIVERED}`)
+                .then(response => setOrders(response.data))
+                .catch(reason => console.log(reason.response))
         }
-        fetch('http://localhost:8000/api/menu_items/?active=true')
-            .then(response => response.json())
-            .then((menuItems: MenuItem[]) => setMenuItems(menuItems))
-            .catch(reason => console.log(reason))
+        DjangoBackend.get<MenuItem[]>('/api/menu_items/?active=true')
+            .then(response => setMenuItems(response.data))
+            .catch(reason => console.log(reason.response))
         const intervalId = setInterval(() => getOrders(), 1000)
         return function cleanup() {
             clearInterval(intervalId)
