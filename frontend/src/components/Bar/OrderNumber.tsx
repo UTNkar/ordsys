@@ -1,17 +1,20 @@
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
+import { FaPaperPlane } from 'react-icons/fa';
 import './OrderNumber.scss';
 
 interface OrderNumberProps {
     addToOrderNumber: (digit: number) => void
     clearOrderNumber: () => void
     onOrderNoteChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+    onSubmitOrder: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+    orderIsValid: boolean
     orderNumber: string
     orderNote: string
 }
 
 function OrderNumber({
-    addToOrderNumber, clearOrderNumber, onOrderNoteChange, orderNumber, orderNote
+    addToOrderNumber, clearOrderNumber, onOrderNoteChange, onSubmitOrder, orderIsValid, orderNumber, orderNote
 }: OrderNumberProps) {
     return (
         <Container className="numpad-container">
@@ -40,11 +43,17 @@ function OrderNumber({
                     <button className="btn btn-block btn-number" onClick={ () => addToOrderNumber(8) }>8</button>
                     <button className="btn btn-block btn-number" onClick={ () => addToOrderNumber(0) }>0</button>
                 </Col>
-                <Col className="pl-1">
+                <Col className="pl-1 d-flex flex-column">
                     <button className="btn btn-block btn-number" onClick={ () => addToOrderNumber(3) }>3</button>
                     <button className="btn btn-block btn-number" onClick={ () => addToOrderNumber(6) }>6</button>
                     <button className="btn btn-block btn-number" onClick={ () => addToOrderNumber(9) }>9</button>
-                    <button className="btn btn-block btn-send">S</button>
+                    <button
+                        className="btn btn-block btn-send d-flex flex-grow-1 align-items-center justify-content-center"
+                        onClick={onSubmitOrder}
+                        disabled={!orderIsValid}
+                    >
+                        <FaPaperPlane color="#000000" />
+                    </button>
                 </Col>
             </Row>
             <input

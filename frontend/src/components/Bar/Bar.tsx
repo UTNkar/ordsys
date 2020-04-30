@@ -7,6 +7,7 @@ import CurrentOrder from './CurrentOrder';
 import Menu from './Menu';
 import OrderNumber from './OrderNumber';
 import { DjangoBackend } from '../../api/DjangoBackend';
+import { getEventId } from '../../utils/event';
 import { CurrentOrderItem, MenuItem, Order, OrderStatus } from '../../@types';
 
 function Bar() {
@@ -56,6 +57,25 @@ function Bar() {
         }
     }
 
+    function onSubmitOrder(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+        event.preventDefault()
+        const orderItems = currentOrder.map(item => {
+            return { menu: item.id, quantity: item.quantity, special_requests: item.mealNote }
+        })
+        const payload = {
+            event: getEventId(),
+            customer_number: Number(orderNumber),
+            note: orderNote,
+            order_items: orderItems
+        }
+        DjangoBackend.post<Order>('/api/create_order/', payload)
+            .then(response => {
+                setOrders([...orders, response.data])
+                clearCurrentOrder()
+            })
+            .catch(reason => console.log(reason))
+    }
+
     return (
         <Container fluid className="flex-grow-1">
             <Row xs={3} className="bar-top">
@@ -85,7 +105,9 @@ function Bar() {
                                 <OrderNumber
                                     addToOrderNumber={addToOrderNumber}
                                     clearOrderNumber={() => setOrderNumber('')}
+                                    onSubmitOrder={onSubmitOrder}
                                     onOrderNoteChange={e => setOrderNote(e.target.value)}
+                                    orderIsValid={currentOrder.length > 0 && orderNumber !== ''}
                                     orderNote={orderNote}
                                     orderNumber={orderNumber}
                                 />

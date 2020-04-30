@@ -1,5 +1,6 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, generics, status
 from rest_framework.filters import SearchFilter
+from rest_framework.response import Response
 from .models import Event, MenuItem, Order, Organisation
 from .filters import OrderFilter
 from .serializers import (
@@ -25,6 +26,17 @@ class OrderView(viewsets.ModelViewSet):
     filterset_class = OrderFilter
     serializer_class = OrderSerializer
     queryset = Order.objects.all()
+
+
+class CreateOrderView(generics.CreateAPIView):
+    serializer_class = OrderWithOrderItemsSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=self.request.user)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class OrderWithOrderItemsView(viewsets.ReadOnlyModelViewSet):

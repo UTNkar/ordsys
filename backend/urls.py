@@ -1,5 +1,9 @@
+from django.conf.urls import url
 from django.urls import path, include
-from .views import EventView, MenuItemView, OrderView, OrderWithOrderItemsView, OrganisationWithUsersView
+from .views import (
+    CreateOrderView, EventView, MenuItemView, OrderView, OrderWithOrderItemsView,
+    OrganisationWithUsersView
+)
 from rest_framework import routers
 
 
@@ -12,4 +16,5 @@ router.register('organisations_with_users', OrganisationWithUsersView, 'organisa
 
 urlpatterns = [
     path('api/', include(router.urls)),
+    url(r'^api/create_order/$', CreateOrderView.as_view(), name='create_order'),
 ]
