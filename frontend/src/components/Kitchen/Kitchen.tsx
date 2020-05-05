@@ -59,7 +59,7 @@ function Kitchen() {
                     // @ts-ignore
                     align="center"
                 >
-                    <h2 className="py-3">
+                    <h2 className="py-3 heading">
                         Waiting
                     </h2>
                     {ordersWaiting.map(order =>
@@ -91,7 +91,7 @@ function Kitchen() {
                     // @ts-ignore
                     align="center"
                 >
-                    <h2 className="py-3">
+                    <h2 className="py-3 heading">
                         In Progress
                     </h2>
                     {ordersInProgress.map(order =>
@@ -136,7 +136,7 @@ function Kitchen() {
                 >
                     <Row>
                         <Col id="done-order-column" className="border-bottom">
-                            <h2 className="py-3">
+                            <h2 className="py-3 heading">
                                 Done
                             </h2>
                             {ordersDone.map(order =>
@@ -166,7 +166,7 @@ function Kitchen() {
                     </Row>
                     <Row>
                         <Col>
-                            <h4 className="py-3">
+                            <h4 className="py-3 heading">
                                 Total (waiting + in progress)
                             </h4>
                             <Row

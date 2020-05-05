@@ -1,7 +1,9 @@
 @import 'custom_bootstrap';
+@import 'fonts.css';
 
 #root {
     height: 100vh;
     display: flex;
     flex-direction: column;
+    font-family: 'TeXGyreAdventorRegular', sans-serif;
 }
