@@ -7,12 +7,15 @@ import { MenuItem, Order } from '../../@types';
 
 interface OrderDetailProps {
     closeOrderDetail: () => void
+    deleteOrder: (orderId: number) => void
     menuItems: MenuItem[]
     order: Order | null
     show: boolean
 }
 
-function OrderDetail({ closeOrderDetail, menuItems, order, show }: OrderDetailProps) {
+function OrderDetail({
+    closeOrderDetail, deleteOrder, menuItems, order, show
+}: OrderDetailProps) {
     if (order === null) {
         return null
     }
@@ -38,7 +41,7 @@ function OrderDetail({ closeOrderDetail, menuItems, order, show }: OrderDetailPr
                 <Button className="btn-secondary detail-view-button">
                     Edit
                 </Button>
-                <Button className="btn-danger detail-view-button">
+                <Button className="btn-danger detail-view-button" onClick={() => deleteOrder(order.id)}>
                     Delete
                 </Button>
             </div>

@@ -3,6 +3,7 @@ import { CardColumns } from 'react-bootstrap';
 import './AllOrders.scss';
 import OrderDetail from './OrderDetail';
 import OrderTicket from '../Order/OrderTicket';
+import { DjangoBackend } from '../../api/DjangoBackend';
 import { MenuItem, Order } from '../../@types';
 
 interface AllOrdersProps {
@@ -37,6 +38,11 @@ function AllOrders({ menuItems, orders }: AllOrdersProps) {
             </CardColumns>
             <OrderDetail
                 closeOrderDetail={() => setShouldShowOrderDetail(false)}
+                deleteOrder={orderId => {
+                    DjangoBackend.delete(`/api/orders/${orderId}/`)
+                        .catch(reason => console.log(reason.response));
+                    setShouldShowOrderDetail(false)
+                }}
                 menuItems={menuItems}
                 order={activeOrder}
                 show={shouldShownOrderDetail}
