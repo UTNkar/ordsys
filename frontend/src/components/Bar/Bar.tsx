@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { FaUndo } from 'react-icons/fa';
+import { Button as MuiButton } from '@material-ui/core';
+import { SnackbarKey, useSnackbar } from 'notistack';
 import './Bar.scss';
 import AllOrders from './AllOrders';
 import CurrentOrder from './CurrentOrder';
@@ -17,6 +19,8 @@ function Bar() {
     const [orderNote, setOrderNote] = useState('')
     const [orderNumber, setOrderNumber] = useState('')
     const [orders, setOrders] = useState<Order[]>([])
+
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
     useEffect(() => {
         Promise.all([
@@ -59,21 +63,42 @@ function Bar() {
 
     function onSubmitOrder(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         event.preventDefault()
+        const eventId = getEventId()
         const orderItems = currentOrder.map(item => {
             return { menu: item.id, quantity: item.quantity, special_requests: item.mealNote }
         })
-        const payload = {
-            event: getEventId(),
-            customer_number: Number(orderNumber),
-            note: orderNote,
-            order_items: orderItems
-        }
-        DjangoBackend.post<Order>('/api/create_order/', payload)
-            .then(response => {
-                setOrders([...orders, response.data])
-                clearCurrentOrder()
+        if (isNaN(eventId) || eventId <= 0) {
+            // TODO redirect user to event selector page again
+            enqueueSnackbar('Your selected event is invalid!', {
+                variant: 'error',
             })
-            .catch(reason => console.log(reason))
+        } else {
+            const payload = {
+                event: eventId,
+                customer_number: Number(orderNumber),
+                note: orderNote,
+                order_items: orderItems
+            }
+            DjangoBackend.post<Order>('/api/create_order/', payload)
+                .then(response => {
+                    setOrders([...orders, response.data])
+                    clearCurrentOrder()
+                    enqueueSnackbar('Order created!', {
+                        action: key => <MuiButton onClick={ () => undoOrder(response.data, key) }>Undo</MuiButton>,
+                        variant: 'success',
+                    })
+                })
+                .catch(() => enqueueSnackbar('Could not create order', {
+                    variant: 'error',
+                }))
+        }
+    }
+
+    function undoOrder(orderToUndo: Order, snackbarKey: SnackbarKey) {
+        DjangoBackend.delete(`/api/orders/${orderToUndo.id}/`)
+            .catch(reason => console.log(reason.response))
+        setOrders(orders.filter(order => order.id !== orderToUndo.id))
+        closeSnackbar(snackbarKey)
     }
 
     return (
