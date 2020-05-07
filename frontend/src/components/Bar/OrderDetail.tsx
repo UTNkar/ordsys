@@ -8,13 +8,14 @@ import { MenuItem, Order } from '../../@types';
 interface OrderDetailProps {
     closeOrderDetail: () => void
     deleteOrder: (orderId: number) => void
+    deliverOrder: (orderId: number) => void
     menuItems: MenuItem[]
     order: Order | null
     show: boolean
 }
 
 function OrderDetail({
-    closeOrderDetail, deleteOrder, menuItems, order, show
+    closeOrderDetail, deleteOrder, deliverOrder, menuItems, order, show
 }: OrderDetailProps) {
     if (order === null) {
         return null
@@ -35,7 +36,7 @@ function OrderDetail({
                         {order.status}
                     </OrderTicket>
                 </div>
-                <Button className="btn-success detail-view-button">
+                <Button className="btn-success detail-view-button" onClick={() => deliverOrder(order.id)}>
                     Delivered
                 </Button>
                 <Button className="btn-secondary detail-view-button">

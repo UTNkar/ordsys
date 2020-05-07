@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AnonymousUser
+from django.utils.timezone import now
 from rest_framework import serializers
 from .models import Event, MenuItem, Order, OrderItem, User, Organisation
 
@@ -16,6 +17,11 @@ class MenuItemSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    def update(self, instance, validated_data):
+        if instance.status != Order.StatusEnum.DELIVERED and validated_data['status'] == Order.StatusEnum.DELIVERED:
+            validated_data['delivered_timestamp'] = now()
+        return super().update(instance, validated_data)
+
     class Meta:
         model = Order
         fields = '__all__'

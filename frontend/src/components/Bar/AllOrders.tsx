@@ -4,7 +4,7 @@ import './AllOrders.scss';
 import OrderDetail from './OrderDetail';
 import OrderTicket from '../Order/OrderTicket';
 import { DjangoBackend } from '../../api/DjangoBackend';
-import { MenuItem, Order } from '../../@types';
+import { MenuItem, Order, OrderStatus } from '../../@types';
 
 interface AllOrdersProps {
     menuItems: MenuItem[]
@@ -41,6 +41,12 @@ function AllOrders({ menuItems, orders }: AllOrdersProps) {
                 deleteOrder={orderId => {
                     DjangoBackend.delete(`/api/orders/${orderId}/`)
                         .catch(reason => console.log(reason.response));
+                    setShouldShowOrderDetail(false)
+                }}
+                deliverOrder={orderId => {
+                    DjangoBackend.patch(`/api/orders/${orderId}/`, {
+                        status: OrderStatus.DELIVERED,
+                    }).catch(reason => console.log(reason.response))
                     setShouldShowOrderDetail(false)
                 }}
                 menuItems={menuItems}
