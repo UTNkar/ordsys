@@ -1,14 +1,9 @@
-:root { /* TODO make adaptive */
-    --header_color: #004C98;
-    --text_color: #ffffff;
-}
-
 .header.navbar {
     /* Prevents Safari from displaying an incorrect header height */
     min-height: 6.5vh;
     max-height: 6.5vh;
-    background-color: var(--header_color, #004C98);
-    color: var(--text_color, #ffffff);
+    background-color: var(--button-background-color);
+    color: var(--light-text-color);
 
     .navbar-brand {
         padding-left: 1em;
@@ -23,6 +18,6 @@
     }
 
     .navbar-toggler {
-        background-color: var(--text_color, #ffffff);
+        background-color: var(--light-text-color);
     }
 }

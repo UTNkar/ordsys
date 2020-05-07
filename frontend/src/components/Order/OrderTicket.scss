@@ -1,13 +1,13 @@
 .card-status-waiting {
-    background-color: #eaeaea;
+    background-color: var(--order-waiting-color)
 }
 
 .card-status-in-progress {
-    background-color: #fff3b0;
+    background-color: var(--order-in-progress-color);
 }
 
 .card-status-done {
-    background-color: #d0ffb2;
+    background-color: var(--order-done-color);
 }
 
 .order-ticket-text {

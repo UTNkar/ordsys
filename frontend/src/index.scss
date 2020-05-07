@@ -7,3 +7,16 @@
     flex-direction: column;
     font-family: 'TeXGyreAdventorRegular', sans-serif;
 }
+
+:root {
+    --button-background-color: #004C98;
+    --button-hover-color: #023b75;
+    --button-active-color: #207c98;
+
+    --order-waiting-color: #eaeaea;
+    --order-in-progress-color: #fff3b0;
+    --order-done-color: #d0ffb2;
+
+    --dark-text-color: #000000;
+    --light-text-color: #ffffff;
+}

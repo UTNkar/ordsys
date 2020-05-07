@@ -39,18 +39,18 @@
     overflow-y: auto;
 
     .menu-card {
-        background-color: var(--menu-card-backgroud-color);
-        color: var(--menu-card-text-color);
+        background-color: var(--button-background-color);
+        color: var(--light-text-color);
         text-align: center;
         font-size: 2rem;
         cursor: pointer;
 
         &:active {
-            background: var(--menu-card-active);
+            background: var(--button-active-color);
         }
 
         &:hover {
-            background-color: var(--menu-card-hover);
+            background-color: var(--button-hover-color);
         }
     }
 }

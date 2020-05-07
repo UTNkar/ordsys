@@ -21,15 +21,15 @@
 .order-number.row > .col {
     .btn-number {
         background-color: var(--button-background-color);
-        color: var(--button-text-color);
+        color: var(--light-text-color);
         font-size: 2rem;
 
         &:active {
-            background: var(--button-active);
+            background: var(--button-active-color);
         }
 
         &:hover {
-            background: var(--button-hover);
+            background: var(--button-hover-color);
         }
     }
 
