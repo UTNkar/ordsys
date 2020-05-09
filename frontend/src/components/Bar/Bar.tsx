@@ -46,6 +46,18 @@ function Bar() {
         setOrderNumber('')
     }
 
+    function modifyOrder(orderId: number, payload: Order | object | undefined = undefined) {
+        const index = orders.findIndex(order => order.id === orderId)
+        if (index !== -1) {
+            if (payload === undefined || ('status' in payload && payload.status === OrderStatus.DELIVERED)) {
+                orders.splice(index, 1)
+            } else {
+                orders[index] = { ...orders[index], ...payload }
+            }
+            setOrders(orders.slice(0))
+        }
+    }
+
     function onMenuItemClick(clickedItem: MenuItem) {
         const existingItemIndex = currentOrder.findIndex(existingItem =>
             existingItem.id === clickedItem.id && existingItem.mealNote === mealNote
@@ -152,6 +164,8 @@ function Bar() {
                     <AllOrders
                         menuItems={menuItems}
                         orders={orders}
+                        onOrderDelete={modifyOrder}
+                        onOrderDeliver={modifyOrder}
                     />
                 </Col>
             </Row>

@@ -8,10 +8,12 @@ import { MenuItem, Order, OrderStatus } from '../../@types';
 
 interface AllOrdersProps {
     menuItems: MenuItem[]
+    onOrderDelete: (orderId: number) => void
+    onOrderDeliver: (orderId: number, newData: Order | object | undefined) => void
     orders: Order[]
 }
 
-function AllOrders({ menuItems, orders }: AllOrdersProps) {
+function AllOrders({ menuItems, onOrderDelete, onOrderDeliver, orders }: AllOrdersProps) {
     const [activeOrder, setActiveOrder] = useState<Order | null>(null)
     const [shouldShownOrderDetail, setShouldShowOrderDetail] = useState(false)
 
@@ -41,12 +43,14 @@ function AllOrders({ menuItems, orders }: AllOrdersProps) {
                 deleteOrder={orderId => {
                     DjangoBackend.delete(`/api/orders/${orderId}/`)
                         .catch(reason => console.log(reason.response));
+                    onOrderDelete(orderId)
                     setShouldShowOrderDetail(false)
                 }}
                 deliverOrder={orderId => {
-                    DjangoBackend.patch(`/api/orders/${orderId}/`, {
-                        status: OrderStatus.DELIVERED,
-                    }).catch(reason => console.log(reason.response))
+                    const payload = { status: OrderStatus.DELIVERED }
+                    DjangoBackend.patch(`/api/orders/${orderId}/`, payload)
+                        .catch(reason => console.log(reason.response))
+                    onOrderDeliver(orderId, payload)
                     setShouldShowOrderDetail(false)
                 }}
                 menuItems={menuItems}
