@@ -8,15 +8,17 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = '__all__'
+        read_only_fields = ('org',)
 
 
 class MenuItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = MenuItem
         fields = '__all__'
+        read_only_fields = ('org',)
 
 
-class OrderSerializer(serializers.ModelSerializer):
+class BaseOrderSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         if instance.status != Order.StatusEnum.DELIVERED and validated_data['status'] == Order.StatusEnum.DELIVERED:
             validated_data['delivered_timestamp'] = now()
@@ -25,22 +27,38 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = '__all__'
+        read_only_fields = ('delivered_timestamp', )
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = '__all__'
+        read_only_fields = ('order',)
 
 
-class CreateOrderItemSerializer(OrderItemSerializer):
-    order = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
+class RestrictiveUpdateOrderSerializer(BaseOrderSerializer):
+    class Meta(BaseOrderSerializer.Meta):
+        read_only_fields = BaseOrderSerializer.Meta.read_only_fields + ('created_timestamp', 'event', 'user')
 
 
-class OrderWithOrderItemsSerializer(serializers.ModelSerializer):
-    order_items = CreateOrderItemSerializer(many=True)
-    user = serializers.PrimaryKeyRelatedField(read_only=True, required=False)
+class BaseOrderWithOrderItemsSerializer(BaseOrderSerializer):
+    order_items = OrderItemSerializer(many=True)
 
+    class Meta(BaseOrderSerializer.Meta):
+        fields = (
+            'id', 'created_timestamp', 'delivered_timestamp', 'event',
+            'customer_number', 'note', 'status', 'user', 'order_items'
+        )
+        read_only_fields = BaseOrderSerializer.Meta.read_only_fields + ('created_timestamp', 'user')
+
+
+class RestrictiveUpdateOrderWithOrderItemsSerializer(BaseOrderWithOrderItemsSerializer):
+    class Meta(BaseOrderWithOrderItemsSerializer.Meta):
+        read_only_fields = BaseOrderWithOrderItemsSerializer.Meta.read_only_fields + ('event',)
+
+
+class CreatableOrderWithOrderItemsSerializer(BaseOrderWithOrderItemsSerializer):
     def create(self, validated_data):
         """
         Creates an order and all related order items.
@@ -56,13 +74,6 @@ class OrderWithOrderItemsSerializer(serializers.ModelSerializer):
         ]
         OrderItem.objects.bulk_create(batch)
         return order
-
-    class Meta:
-        model = Order
-        fields = (
-            'id', 'created_timestamp', 'delivered_timestamp', 'event', 'customer_number',
-            'note', 'status', 'user', 'order_items'
-        )
 
 
 class UserPublicSerializer(serializers.ModelSerializer):

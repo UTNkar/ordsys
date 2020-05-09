@@ -91,7 +91,7 @@ function Bar() {
                 note: orderNote,
                 order_items: orderItems
             }
-            DjangoBackend.post<Order>('/api/create_order/', payload)
+            DjangoBackend.post<Order>('/api/manage_orders_with_order_items/', payload)
                 .then(response => {
                     setOrders([...orders, response.data])
                     clearCurrentOrder()

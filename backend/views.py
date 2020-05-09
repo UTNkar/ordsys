@@ -1,12 +1,13 @@
-from rest_framework import viewsets, generics, status
+from rest_framework import viewsets, status, mixins
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from .models import Event, MenuItem, Order, Organisation
 from .filters import OrderFilter
 from .serializers import (
-    EventSerializer, MenuItemSerializer, OrderSerializer, OrderWithOrderItemsSerializer,
-    OrganisationWithUsersSerializer,
+    EventSerializer, MenuItemSerializer, RestrictiveUpdateOrderSerializer, BaseOrderWithOrderItemsSerializer,
+    CreatableOrderWithOrderItemsSerializer, RestrictiveUpdateOrderWithOrderItemsSerializer,
+    OrganisationWithUsersSerializer
 )
 
 
@@ -39,10 +40,10 @@ class MenuItemView(viewsets.ModelViewSet):
         return Order.objects.none()
 
 
-class OrderView(viewsets.ModelViewSet):
+class OrderView(viewsets.GenericViewSet, mixins.DestroyModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin):
     filterset_class = OrderFilter
     permission_classes = [IsAuthenticated]
-    serializer_class = OrderSerializer
+    serializer_class = RestrictiveUpdateOrderSerializer
 
     def get_queryset(self):
         user = self.request.user
@@ -53,9 +54,9 @@ class OrderView(viewsets.ModelViewSet):
         return Order.objects.none()
 
 
-class CreateOrderView(generics.CreateAPIView):
+class ManageOrderWithOrderItemsView(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.UpdateModelMixin):
+    filterset_class = OrderFilter
     permission_classes = [IsAuthenticated]
-    serializer_class = OrderWithOrderItemsSerializer
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -64,11 +65,24 @@ class CreateOrderView(generics.CreateAPIView):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+    def get_queryset(self):
+        user = self.request.user
+        if not user.is_superuser and user.is_active:
+            return Order.objects.filter(user__org=user.org).prefetch_related('order_items')
+        elif user.is_active:
+            return Order.objects.prefetch_related('order_items')
+        return Order.objects.none()
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return CreatableOrderWithOrderItemsSerializer
+        return RestrictiveUpdateOrderWithOrderItemsSerializer
+
 
 class OrderWithOrderItemsView(viewsets.ReadOnlyModelViewSet):
     filterset_class = OrderFilter
     permission_classes = [IsAuthenticated]
-    serializer_class = OrderWithOrderItemsSerializer
+    serializer_class = BaseOrderWithOrderItemsSerializer
 
     def get_queryset(self):
         user = self.request.user
