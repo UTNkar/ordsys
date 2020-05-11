@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { CardColumns } from 'react-bootstrap';
 import './AllOrders.scss';
 import OrderDetail from './OrderDetail';
 import OrderTicket from '../Order/OrderTicket';
@@ -19,25 +18,27 @@ function AllOrders({ menuItems, onOrderDelete, onOrderDeliver, orders }: AllOrde
 
     return (
         <>
-            <CardColumns className="all-orders-container order-cards">
+            <div className="masonry">
                 {orders.map(order =>
-                    <OrderTicket
-                        key={order.id}
-                        createdTimestamp={order.created_timestamp?.slice(11, 16)}
-                        menuItems={menuItems}
-                        note={order.note}
-                        onClick={() => {
-                            setActiveOrder(order)
-                            setShouldShowOrderDetail(true)
-                        }}
-                        orderItems={order.order_items}
-                        orderNumber={order.customer_number}
-                        status={order.status.toLowerCase().replace(' ', '-')}
-                    >
-                        {order.status}
-                    </OrderTicket>
+                    <div key={order.id} className="masonry-brick">
+                        <OrderTicket
+                            key={order.id}
+                            createdTimestamp={order.created_timestamp?.slice(11, 16)}
+                            menuItems={menuItems}
+                            note={order.note}
+                            onClick={() => {
+                                setActiveOrder(order)
+                                setShouldShowOrderDetail(true)
+                            }}
+                            orderItems={order.order_items}
+                            orderNumber={order.customer_number}
+                            status={order.status.toLowerCase().replace(' ', '-')}
+                        >
+                            {order.status}
+                        </OrderTicket>
+                    </div>
                 )}
-            </CardColumns>
+            </div>
             <OrderDetail
                 closeOrderDetail={() => setShouldShowOrderDetail(false)}
                 deleteOrder={orderId => {

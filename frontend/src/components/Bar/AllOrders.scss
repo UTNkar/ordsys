@@ -1,29 +1,23 @@
 @media (min-width: 576px) {
-    .order-cards.card-columns {
-        column-count: 1;
+    .masonry-brick {
+       width: 98%;
+       margin: 1%;
     }
 }
 
-@media (min-width: 768px) {
-    .order-cards.card-columns {
-        column-count: 1;
+@media (min-width: 1400px) {
+    .masonry-brick {
+        width: 48%;
+        margin: 1%;
     }
 }
 
-@media (min-width: 992px) {
-    .order-cards.card-columns {
-        column-count: 1;
-    }
+.masonry {
+    display: flex;
+    flex-flow: row wrap;
+    width: 100%;
 }
 
-@media (min-width: 1200px) {
-    .order-cards.card-columns {
-        column-count: 1;
-    }
-}
-
-@media (min-width: 1500px) {
-    .order-cards.card-columns {
-        column-count: 2;
-    }
+.masonry-brick .card {
+    height: 100%;
 }
