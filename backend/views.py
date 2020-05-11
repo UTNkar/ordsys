@@ -17,6 +17,13 @@ class EventView(viewsets.ModelViewSet):
     search_fields = ('name',)
     serializer_class = EventSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(org=self.request.user.org)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
     def get_queryset(self):
         user = self.request.user
         if not user.is_superuser and user.is_active:

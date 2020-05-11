@@ -5,10 +5,11 @@ from .models import Event, MenuItem, Order, OrderItem, User, Organisation
 
 
 class EventSerializer(serializers.ModelSerializer):
+    org = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
+
     class Meta:
         model = Event
         fields = '__all__'
-        read_only_fields = ('org',)
 
 
 class MenuItemSerializer(serializers.ModelSerializer):
