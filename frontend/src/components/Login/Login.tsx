@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
 import { Button as MuiButton, MenuItem, TextField } from '@material-ui/core';
 import './Login.scss';
+import FormContainer from '../FormContainer/FormContainer';
 import { DjangoBackend } from '../../api/DjangoBackend';
 import { logIn } from '../../utils/authenticationHelper';
 import { AxiosResponse } from 'axios';
@@ -62,78 +62,72 @@ function Login({ onLogin }: LoginProps) {
     }
 
     return (
-        <Container fluid className="d-flex flex-column justify-content-center flex-grow-1">
-            <Row>
-                <Col
-                    className="pb-5"
-                    // @ts-ignore
-                    align="center"
+        <FormContainer>
+            <div
+                className="pb-5"
+                // @ts-ignore
+                align="center"
+            >
+                <h1>OrdSys</h1>
+            </div>
+            <form noValidate autoComplete="off" onSubmit={onLoginSubmit}>
+                <TextField
+                    disabled={organisations.length === 0}
+                    fullWidth
+                    id="organisation-select"
+                    label="Organisation"
+                    margin="normal"
+                    onChange={onOrganisationChange}
+                    select
+                    value={selectedOrganisation}
+                    variant="outlined"
                 >
-                    <h1>OrdSys</h1>
-                </Col>
-            </Row>
-            <Row className="align-self-center login-form-row">
-                <Col className="w-100">
-                    <form noValidate autoComplete="off" onSubmit={onLoginSubmit}>
-                        <TextField
-                            disabled={organisations.length === 0}
-                            fullWidth
-                            id="organisation-select"
-                            label="Organisation"
-                            margin="normal"
-                            onChange={onOrganisationChange}
-                            select
-                            value={selectedOrganisation}
-                            variant="outlined"
-                        >
-                            {organisations.map(org =>
-                                // Using objects as value is valid as long as TextField has 'select' prop.
-                                <MenuItem key={org.id} value={org as any}>{org.name}</MenuItem>)
-                            }
-                        </TextField>
-                        <TextField
-                            disabled={selectedOrganisation === ''}
-                            fullWidth
-                            id="user-select"
-                            label="User"
-                            margin="normal"
-                            onChange={e => setSelectedUser(e.target.value)}
-                            select
-                            value={selectedUser}
-                            variant="outlined"
-                        >
-                            {users.map(user =>
-                                <MenuItem key={user.id} value={user.username}>{user.username}</MenuItem>
-                            )}
-                        </TextField>
-                        <TextField
-                            disabled={selectedUser === ''}
-                            error={!inputPassword.isValid}
-                            fullWidth
-                            // Having an empty string ensures the size of the TextField is constant
-                            helperText={inputPassword.isValid ? ' ' : 'Invalid password'}
-                            label="Password"
-                            margin="normal"
-                            onChange={e => setInputPassword({ isValid: true, value: e.target.value })}
-                            type="password"
-                            value={inputPassword.value}
-                            variant="outlined"
-                        />
-                        <MuiButton
-                            className="mt-3 mb-2"
-                            color="primary"
-                            disabled={inputPassword.value === ''}
-                            fullWidth
-                            size='large'
-                            type="submit"
-                            variant="contained"
-                        >
-                            Sign in
-                        </MuiButton>
-                    </form>
-                </Col>
-            </Row>
-        </Container>
+                    {organisations.map(org =>
+                        // Using objects as value is valid as long as TextField has 'select' prop.
+                        <MenuItem key={org.id} value={org as any}>{org.name}</MenuItem>)
+                    }
+                </TextField>
+                <TextField
+                    disabled={selectedOrganisation === ''}
+                    fullWidth
+                    id="user-select"
+                    label="User"
+                    margin="normal"
+                    onChange={e => setSelectedUser(e.target.value)}
+                    select
+                    value={selectedUser}
+                    variant="outlined"
+                >
+                    {users.map(user =>
+                        <MenuItem key={user.id} value={user.username}>{user.username}</MenuItem>
+                    )}
+                </TextField>
+                <TextField
+                    disabled={selectedUser === ''}
+                    error={!inputPassword.isValid}
+                    fullWidth
+                    // Having an empty string ensures the size of the TextField is constant
+                    helperText={inputPassword.isValid ? ' ' : 'Invalid password'}
+                    label="Password"
+                    margin="normal"
+                    onChange={e => setInputPassword({ isValid: true, value: e.target.value })}
+                    type="password"
+                    value={inputPassword.value}
+                    variant="outlined"
+                />
+                <MuiButton
+                    className="mt-3 mb-2"
+                    color="primary"
+                    disabled={inputPassword.value === ''}
+                    fullWidth
+                    size='large'
+                    type="submit"
+                    variant="contained"
+                >
+                    Sign in
+                </MuiButton>
+            </form>
+        </FormContainer>
     );
 }
 

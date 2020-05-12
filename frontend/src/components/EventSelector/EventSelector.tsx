@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
 import { Button as MuiButton, TextField } from '@material-ui/core';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { FilterOptionsState } from '@material-ui/lab/useAutocomplete/useAutocomplete';
 import './EventSelector.scss';
+import FormContainer from '../FormContainer/FormContainer';
 import { DjangoBackend } from '../../api/DjangoBackend';
 import { setEvent } from '../../utils/event';
 import { Event } from '../../@types';
@@ -86,57 +86,51 @@ function EventSelector({ onEventChosen }: EventSelectorProps) {
     }
 
     return (
-        <Container fluid className="d-flex flex-column justify-content-center flex-grow-1">
-            <Row>
-                <Col
-                    className="pb-5"
-                    // @ts-ignore
-                    align="center"
-                >
-                    <h1>OrdSys</h1>
-                </Col>
-            </Row>
-            <Row className="align-self-center event-selector-form-row">
-                <Col>
-                    <form noValidate autoComplete="off" onSubmit={onEventSubmit}>
-                        <Autocomplete
-                            autoHighlight
-                            className="my-4"
-                            clearOnBlur={false}
-                            disabled={isLoading}
-                            filterOptions={(events, params) => filterEvents(filter, events, params)}
-                            freeSolo
-                            fullWidth
-                            getOptionLabel={getEventOptionLabel}
-                            onChange={(e, newValue) => setSelectedEvent(newValue as Event)}
-                            openOnFocus
-                            options={events}
-                            renderOption={option => option.name}
-                            renderInput={props =>
-                                <TextField
-                                    {...props}
-                                    inputRef={eventSelectorFieldRef}
-                                    label="Search for, or create, an event"
-                                    variant="outlined"
-                                />
-                            }
-                            value={selectedEvent}
+        <FormContainer>
+            <div
+                className="pb-5"
+                // @ts-ignore
+                align="center"
+            >
+                <h1>OrdSys</h1>
+            </div>
+            <form noValidate autoComplete="off" onSubmit={onEventSubmit}>
+                <Autocomplete
+                    autoHighlight
+                    className="my-4"
+                    clearOnBlur={false}
+                    disabled={isLoading}
+                    filterOptions={(events, params) => filterEvents(filter, events, params)}
+                    freeSolo
+                    fullWidth
+                    getOptionLabel={getEventOptionLabel}
+                    onChange={(e, newValue) => setSelectedEvent(newValue as Event)}
+                    openOnFocus
+                    options={events}
+                    renderOption={option => option.name}
+                    renderInput={props =>
+                        <TextField
+                            {...props}
+                            inputRef={eventSelectorFieldRef}
+                            label="Search for, or create, an event"
+                            variant="outlined"
                         />
-                        <MuiButton
-                            className="mt-2"
-                            color="primary"
-                            disabled={selectedEvent === null || isLoading}
-                            fullWidth
-                            size="large"
-                            type="submit"
-                            variant="contained"
-                        >
-                            {!selectedEvent?.inputValue ? 'Confirm event' : 'Create event'}
-                        </MuiButton>
-                    </form>
-                </Col>
-            </Row>
-        </Container>
+                    }
+                    value={selectedEvent}
+                />
+                <MuiButton
+                    className="mt-2"
+                    color="primary"
+                    disabled={selectedEvent === null || isLoading}
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="contained"
+                >
+                    {!selectedEvent?.inputValue ? 'Confirm event' : 'Create event'}
+                </MuiButton>
+            </form>
+        </FormContainer>
     );
 }
 
