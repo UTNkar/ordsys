@@ -23,7 +23,7 @@ function AllOrders({ menuItems, onOrderDelete, onOrderDeliver, orders }: AllOrde
                     <div key={order.id} className="masonry-brick">
                         <OrderTicket
                             key={order.id}
-                            createdTimestamp={order.created_timestamp?.slice(11, 16)}
+                            createdTimestamp={order.created_timestamp}
                             menuItems={menuItems}
                             note={order.note}
                             onClick={() => {

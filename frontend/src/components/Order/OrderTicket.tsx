@@ -20,6 +20,17 @@ function displayOrderItems(orderItems: OrderItem[] | undefined, menuItems: MenuI
     ))
 }
 
+function getHoursAndMinutes(timestamp: string | undefined) {
+    if (timestamp === undefined) {
+        return
+    }
+    function formatTime(time: number) {
+        return time >= 10 ? String(time) : '0' + time
+    }
+    const localisedDate = new Date(Date.parse(timestamp))
+    return `${formatTime(localisedDate.getHours())}:${formatTime(localisedDate.getMinutes())}`
+}
+
 interface OrderTicketProps {
     buttons?: React.ReactNode
     createdTimestamp?: string
@@ -49,7 +60,9 @@ function OrderTicket({
                     // @ts-ignore
                     align="right"
                 >
-                    <Card.Title>{createdTimestamp}</Card.Title>
+                    <Card.Title className="order-ticket-text">
+                        {getHoursAndMinutes(createdTimestamp)}
+                    </Card.Title>
                 </Col>
             </Row>
             <Row>

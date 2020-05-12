@@ -77,7 +77,7 @@ function Kitchen() {
                                     />
                                 </Button>
                             }
-                            createdTimestamp={order.created_timestamp.slice(11, 16)}
+                            createdTimestamp={order.created_timestamp}
                             menuItems={menuItems}
                             note={order.note}
                             orderItems={order.order_items}
@@ -121,7 +121,7 @@ function Kitchen() {
                                     </Button>
                                 </>
                             }
-                            createdTimestamp={order.created_timestamp.slice(11, 16)}
+                            createdTimestamp={order.created_timestamp}
                             menuItems={menuItems}
                             note={order.note}
                             orderItems={order.order_items}
@@ -154,7 +154,7 @@ function Kitchen() {
                                             />
                                         </Button>
                                     }
-                                    createdTimestamp={order.created_timestamp.slice(11, 16)}
+                                    createdTimestamp={order.created_timestamp}
                                     menuItems={menuItems}
                                     note={order.note}
                                     orderItems={order.order_items}
