@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { FaUndo } from 'react-icons/fa';
-import { Button as MuiButton } from '@material-ui/core';
+import { MdClose } from 'react-icons/md';
+import { Button as MuiButton, IconButton as MuiIconButton } from '@material-ui/core';
 import { SnackbarKey, useSnackbar } from 'notistack';
 import './Bar.scss';
 import AllOrders from './AllOrders';
@@ -108,7 +109,27 @@ function Bar() {
 
     function undoOrder(orderToUndo: Order, snackbarKey: SnackbarKey) {
         DjangoBackend.delete(`/api/orders/${orderToUndo.id}/`)
-            .catch(reason => console.log(reason.response))
+            .catch(() => {
+                enqueueSnackbar('Failed to undo order!', {
+                    action: key =>
+                        <>
+                            <MuiButton onClick={ () => undoOrder(orderToUndo, key) }>Retry</MuiButton>
+                            <MuiIconButton
+                                aria-label='Close'
+                                color='inherit'
+                                onClick={ () => closeSnackbar(key) }
+                                size='medium'
+                                title='Close'
+                            >
+                                <MdClose />
+                            </MuiIconButton>
+                        </>,
+                    persist: true,
+                    variant: 'error',
+                })
+                // Sort the list in case new orders has been added while processing the request
+                setOrders([...orders, orderToUndo].sort((order1, order2) => order1.id - order2.id))
+            })
         setOrders(orders.filter(order => order.id !== orderToUndo.id))
         closeSnackbar(snackbarKey)
     }
