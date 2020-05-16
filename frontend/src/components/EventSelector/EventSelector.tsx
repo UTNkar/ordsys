@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button as MuiButton, TextField } from '@material-ui/core';
+import { Button as MuiButton, CircularProgress, TextField } from '@material-ui/core';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { FilterOptionsState } from '@material-ui/lab/useAutocomplete/useAutocomplete';
+import { useSnackbar } from 'notistack';
 import './EventSelector.scss';
 import FormContainer from '../FormContainer/FormContainer';
 import { DjangoBackend } from '../../api/DjangoBackend';
 import { setEvent } from '../../utils/event';
+import { AxiosResponse } from 'axios';
 import { Event } from '../../@types';
 
 function getEventOptionLabel(option: string | EventOption) {
@@ -40,6 +42,24 @@ function filterEvents(
     return filteredEvents
 }
 
+function getDescriptiveErrorMessage(response: AxiosResponse) {
+    if (response !== undefined && response.status >= 500) {
+        return  'An internal server error occurred, please try again'
+    } else {
+        return 'An unknown error occurred, please try again'
+    }
+}
+
+function renderSubmitButtonChildren(isCreatingEvent: boolean, event: EventOption | null) {
+    if (isCreatingEvent) {
+        return <CircularProgress size='1.6rem' />
+    } else if (event?.inputValue) {
+        return 'Confirm event'
+    } else {
+        return 'Create event'
+    }
+}
+
 interface EventSelectorProps {
     onEventChosen: () => void
 }
@@ -51,19 +71,25 @@ interface EventOption extends Event {
 function EventSelector({ onEventChosen }: EventSelectorProps) {
     const [events, setEvents] = useState<EventOption[]>([])
     const [selectedEvent, setSelectedEvent] = useState<EventOption | null>(null)
-    const [isLoading, setIsLoading] = useState(true)
+    const [isCreatingEvent, setIsCreatingEvent] = useState(false)
+    const [isLoadingData, setIsLoadingData] = useState(true)
 
     const eventSelectorFieldRef = useRef<HTMLInputElement | null>(null)
+    const { enqueueSnackbar } = useSnackbar()
     const filter = createFilterOptions<EventOption>()
 
     useEffect(() => {
         DjangoBackend.get<Event[]>('/api/events/')
             .then(response => {
                 setEvents(response.data)
-                setIsLoading(false)
+                setIsLoadingData(false)
                 eventSelectorFieldRef?.current?.focus()
             })
-            .catch(reason => console.log(reason.response))
+            .catch(reason => enqueueSnackbar(getDescriptiveErrorMessage(reason.response), {
+                variant: 'error',
+            }))
+        // We only want this to once so ignore the eslint warning
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     function onEventSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -71,13 +97,22 @@ function EventSelector({ onEventChosen }: EventSelectorProps) {
         // Selected event is always non-null when this function is called (ensured by disabling submit if null)
         if (selectedEvent?.inputValue) {
             // User wants to create a new event
-            setIsLoading(true)
+            setIsCreatingEvent(true)
             DjangoBackend.post<Event>('/api/events/', { name: selectedEvent.inputValue })
                 .then(response => {
                     setEvent(response.data)
+                    enqueueSnackbar(`Created event '${response.data.name}'`, {
+                        autoHideDuration: 2000,
+                        variant: 'success',
+                    })
                     onEventChosen()
                 })
-                .catch(reason => console.log(reason.response))
+                .catch(reason => {
+                    setIsCreatingEvent(false)
+                    enqueueSnackbar(getDescriptiveErrorMessage(reason.response), {
+                        variant: 'error',
+                    })
+                })
         } else {
             // User selected an existing event.
             setEvent(selectedEvent as Event)
@@ -99,7 +134,7 @@ function EventSelector({ onEventChosen }: EventSelectorProps) {
                     autoHighlight
                     className="my-4"
                     clearOnBlur={false}
-                    disabled={isLoading}
+                    disabled={isLoadingData}
                     filterOptions={(events, params) => filterEvents(filter, events, params)}
                     freeSolo
                     fullWidth
@@ -121,13 +156,13 @@ function EventSelector({ onEventChosen }: EventSelectorProps) {
                 <MuiButton
                     className="mt-2"
                     color="primary"
-                    disabled={selectedEvent === null || isLoading}
+                    disabled={selectedEvent === null || isLoadingData || isCreatingEvent}
                     fullWidth
                     size="large"
                     type="submit"
                     variant="contained"
                 >
-                    {!selectedEvent?.inputValue ? 'Confirm event' : 'Create event'}
+                    {renderSubmitButtonChildren(isCreatingEvent, selectedEvent)}
                 </MuiButton>
             </form>
         </FormContainer>
