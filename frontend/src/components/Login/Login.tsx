@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button as MuiButton, MenuItem, TextField } from '@material-ui/core';
+import { Button as MuiButton, CircularProgress, MenuItem, TextField } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
 import './Login.scss';
 import FormContainer from '../FormContainer/FormContainer';
 import { DjangoBackend } from '../../api/DjangoBackend';
@@ -7,12 +8,11 @@ import { logIn } from '../../utils/authenticationHelper';
 import { AxiosResponse } from 'axios';
 import { Organisation, User } from '../../@types';
 
-function handleNetworkError(response: AxiosResponse) {
+function getDescriptiveErrorMessage(response: AxiosResponse) {
     if (response !== undefined && response.status >= 500) {
-        alert('A server error occurred, please try again later.')
-    }
-    else {
-        alert('An unknown error occurred, please try again later.')
+        return 'An internal server error occurred, please try again'
+    } else {
+        return 'An unknown error occurred, please try again'
     }
 }
 
@@ -29,26 +29,43 @@ function Login({ onLogin }: LoginProps) {
         isValid: true,
         value: '',
     })
+    const [authenticationInProgress, setAuthenticationInProgress] = useState(false)
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
     useEffect(() => {
         DjangoBackend.get<Organisation[]>('/api/organisations_with_users/')
             .then(response => setOrganisations(response.data))
-            .catch(reason => console.log(reason.response))
+            .catch(reason => enqueueSnackbar(getDescriptiveErrorMessage(reason.response), {
+                variant: 'error'
+            }))
+        // We only want this to once so ignore the eslint warning
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     function onLoginSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
+        closeSnackbar()
+        setAuthenticationInProgress(true)
         logIn(selectedUser, inputPassword.value)
-            .then(() => onLogin())
+            .then(() => {
+                enqueueSnackbar('Successfully signed in!', {
+                    autoHideDuration: 2500,
+                    variant: 'success',
+                })
+                onLogin()
+            })
             .catch(reason => {
                 const response = reason.response
+                setAuthenticationInProgress(false)
                 if (response !== undefined && response.status === 400) {
                     setInputPassword({
                         isValid: false,
                         value: '',
                     })
                 } else {
-                    handleNetworkError(response)
+                    enqueueSnackbar(getDescriptiveErrorMessage(response), {
+                        variant: 'error',
+                    })
                 }
             })
     }
@@ -118,13 +135,13 @@ function Login({ onLogin }: LoginProps) {
                 <MuiButton
                     className="mt-3 mb-2"
                     color="primary"
-                    disabled={inputPassword.value === ''}
+                    disabled={inputPassword.value === '' || authenticationInProgress}
                     fullWidth
                     size='large'
                     type="submit"
                     variant="contained"
                 >
-                    Sign in
+                    {authenticationInProgress ? <CircularProgress size='1.6rem' /> : 'Sign in'}
                 </MuiButton>
             </form>
         </FormContainer>
