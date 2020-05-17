@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button as MuiButton, CircularProgress, TextField } from '@material-ui/core';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import Autocomplete, { AutocompleteInputChangeReason, createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { FilterOptionsState } from '@material-ui/lab/useAutocomplete/useAutocomplete';
 import { useSnackbar } from 'notistack';
 import './EventSelector.scss';
@@ -73,6 +73,7 @@ function EventSelector({ onEventChosen }: EventSelectorProps) {
     const [selectedEvent, setSelectedEvent] = useState<EventOption | null>(null)
     const [isCreatingEvent, setIsCreatingEvent] = useState(false)
     const [isLoadingData, setIsLoadingData] = useState(true)
+    const [eventInput, setEventInput] = useState('')
 
     const eventSelectorFieldRef = useRef<HTMLInputElement | null>(null)
     const { enqueueSnackbar } = useSnackbar()
@@ -91,6 +92,29 @@ function EventSelector({ onEventChosen }: EventSelectorProps) {
         // We only want this to once so ignore the eslint warning
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    function onEventInputChange(event: React.ChangeEvent<{}>, newValue: string, reason: AutocompleteInputChangeReason) {
+        switch (reason) {
+            case 'input':
+                setEventInput(newValue)
+                setSelectedEvent(null)
+                break
+            /*
+              User either selected an event in the dropdown or started typing after previously selecting one.
+              If they had previously selected one, the reason is still 'reset' with newValue of ''.
+              Don't update state if that's the case.
+             */
+            case 'reset':
+                if (newValue !== '') {
+                    setEventInput(newValue)
+                }
+                break
+            // User clicked the 'X' at the end of the field
+            case 'clear':
+                setEventInput(newValue)
+                break
+        }
+    }
 
     function onEventSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -139,7 +163,9 @@ function EventSelector({ onEventChosen }: EventSelectorProps) {
                     freeSolo
                     fullWidth
                     getOptionLabel={getEventOptionLabel}
+                    inputValue={eventInput}
                     onChange={(e, newValue) => setSelectedEvent(newValue as Event)}
+                    onInputChange={onEventInputChange}
                     openOnFocus
                     options={events}
                     renderOption={option => option.name}
