@@ -3,7 +3,11 @@ import { Link } from 'react-router-dom';
 import { Nav, Navbar } from 'react-bootstrap';
 import './Header.scss';
 
-function Header() {
+interface HeaderProps {
+    eventName: string | null
+}
+
+function Header({ eventName }: HeaderProps) {
     const [date, setDate] = useState(new Date().toLocaleString('sv-SE'))
 
     useEffect(() => {
@@ -27,7 +31,7 @@ function Header() {
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="ml-auto">
-                    <Nav.Item className="mx-3">Event_ID</Nav.Item>
+                    <Nav.Item className="mx-3">{eventName}</Nav.Item>
                     <Nav.Item className="mx-3">{date}</Nav.Item>
                 </Nav>
             </Navbar.Collapse>

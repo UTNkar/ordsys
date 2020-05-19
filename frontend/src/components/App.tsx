@@ -12,7 +12,7 @@ import Kitchen from './Kitchen/Kitchen';
 import Login from './Login/Login';
 import Statistics from './Statistics/Statistics';
 import { isAuthenticated } from '../utils/authenticationHelper';
-import { hasEvent } from '../utils/event';
+import { getEventName, hasEvent } from '../utils/event';
 
 function App() {
     const [userIsAuthenticated, setUserIsAuthenticated] = useState(isAuthenticated)
@@ -59,7 +59,7 @@ function App() {
             autoHideDuration={5000}
             ref={snackbarRef}
         >
-            <Header />
+            <Header eventName={getEventName()} />
             {renderComponents()}
         </SnackbarProvider>
     );
