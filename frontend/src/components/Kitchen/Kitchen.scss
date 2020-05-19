@@ -1,5 +1,13 @@
-.order-column {
-    height: 93.5vh;
+#top-row {
+    height: 6.5vh;
+}
+
+#content-row {
+    height: 87vh;
+}
+
+#content-row .order-column {
+    height: 100%;
     overflow-y: auto;
 
     .card {
@@ -8,7 +16,7 @@
 }
 
 #done-order-column {
-    height: 70vh;
+    height: 63.5vh;
     overflow-y: auto;
 
     .card {
@@ -18,8 +26,4 @@
 
 #order-item-request {
     list-style-type: none;
-}
-
-.heading {
-    font-family: "TeXGyreAdventorBold";
 }

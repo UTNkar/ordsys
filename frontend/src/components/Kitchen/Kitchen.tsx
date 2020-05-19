@@ -53,15 +53,19 @@ function Kitchen() {
 
     return (
         <Container fluid className="flex-grow-1">
-            <Row className="justify-content-center h-100">
-                <Col
-                    className="order-column border-right"
-                    // @ts-ignore
-                    align="center"
-                >
-                    <h2 className="py-3 heading">
-                        Waiting
-                    </h2>
+            <Row id="top-row" className="text-center">
+                <Col>
+                    <h2 className="py-3">Waiting</h2>
+                </Col>
+                <Col>
+                    <h2 className="py-3">In Progress</h2>
+                </Col>
+                <Col>
+                    <h2 className="py-3">Done</h2>
+                </Col>
+            </Row>
+            <Row id="content-row" className="justify-content-center">
+                <Col className="border-right order-column">
                     {ordersWaiting.map(order =>
                         <OrderTicket
                             key={order.id}
@@ -86,14 +90,7 @@ function Kitchen() {
                         />
                     )}
                 </Col>
-                <Col
-                    className="order-column border-right"
-                    // @ts-ignore
-                    align="center"
-                >
-                    <h2 className="py-3 heading">
-                        In Progress
-                    </h2>
+                <Col className="border-right order-column">
                     {ordersInProgress.map(order =>
                         <OrderTicket
                             key={order.id}
@@ -130,15 +127,9 @@ function Kitchen() {
                         />
                     )}
                 </Col>
-                <Col
-                    // @ts-ignore
-                    align="center"
-                >
+                <Col>
                     <Row>
                         <Col id="done-order-column" className="border-bottom">
-                            <h2 className="py-3 heading">
-                                Done
-                            </h2>
                             {ordersDone.map(order =>
                                 <OrderTicket
                                     key={order.id}
