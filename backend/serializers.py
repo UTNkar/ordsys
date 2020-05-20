@@ -60,6 +60,8 @@ class RestrictiveUpdateOrderWithOrderItemsSerializer(BaseOrderWithOrderItemsSeri
 
 
 class CreatableOrderWithOrderItemsSerializer(BaseOrderWithOrderItemsSerializer):
+    patchable_field_names = ('menu', 'quantity', 'special_requests')
+
     def create(self, validated_data):
         """
         Creates an order and all related order items.
@@ -75,6 +77,36 @@ class CreatableOrderWithOrderItemsSerializer(BaseOrderWithOrderItemsSerializer):
         ]
         OrderItem.objects.bulk_create(batch)
         return order
+
+    def update(self, instance, validated_data):
+        new_order_items_data = validated_data.pop('order_items', None)
+        if new_order_items_data is not None:
+            order_items = OrderItem.objects.filter(order=instance)
+            db_items_len = len(order_items)
+            new_order_items_len = len(new_order_items_data)
+            for index in range(new_order_items_len, db_items_len):
+                order_items[index].delete()
+            update_loop_length = db_items_len if db_items_len < new_order_items_len else new_order_items_len
+            update_batch = []
+            for index in range(update_loop_length):
+                order_item = order_items[index]
+                for attr, value in new_order_items_data[index].items():
+                    setattr(order_item, attr, value)
+                update_batch.append(order_item)
+            OrderItem.objects.bulk_update(update_batch, self.patchable_field_names)
+            if new_order_items_len > db_items_len:
+                create_batch = []
+                for index in range(new_order_items_len - db_items_len, new_order_items_len):
+                    data = new_order_items_data[index]
+                    req = data.get('special_requests', '')
+                    create_batch.append(
+                        OrderItem(menu=data['menu'], order=instance, quantity=data['quantity'], special_requests=req)
+                    )
+                OrderItem.objects.bulk_create(create_batch)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
 
 
 class UserPublicSerializer(serializers.ModelSerializer):

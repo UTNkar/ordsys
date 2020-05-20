@@ -81,7 +81,7 @@ class ManageOrderWithOrderItemsView(viewsets.GenericViewSet, mixins.CreateModelM
         return Order.objects.none()
 
     def get_serializer_class(self):
-        if self.request.method == 'POST':
+        if self.request.method in ('PATCH', 'POST', 'PUT'):
             return CreatableOrderWithOrderItemsSerializer
         return RestrictiveUpdateOrderWithOrderItemsSerializer
 

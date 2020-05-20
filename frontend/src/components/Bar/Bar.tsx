@@ -20,6 +20,7 @@ function Bar() {
     const [orderNote, setOrderNote] = useState('')
     const [orderNumber, setOrderNumber] = useState('')
     const [orders, setOrders] = useState<Order[]>([])
+    const [orderToEdit, setOrderToEdit] = useState(0)
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
@@ -33,6 +34,11 @@ function Bar() {
                 setOrders(orders.data)
             })
             .catch(reason => console.log(reason.response))
+        return function cleanup() {
+            closeSnackbar()
+        }
+        // We only want this to once so ignore the eslint warning
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     function addToOrderNumber(digit: number) {
@@ -41,10 +47,41 @@ function Bar() {
     }
 
     function clearCurrentOrder() {
+        closeSnackbar()
         setCurrentOrder([])
         setMealNote('')
         setOrderNote('')
         setOrderNumber('')
+        setOrderToEdit(0)
+    }
+
+    function editOrder(order: Order) {
+        const orderToEdit = order.order_items.map(orderItem => {
+            // TODO ensure menuItem is not undefined.
+            //  It shouldn't be unless menu items are removed during the event and they are re-fetched
+            //  or real-time updates are in place
+            const menuItem = menuItems.find(item => item.id === orderItem.menu) as MenuItem
+            return {
+                id: orderItem.menu,
+                item_name: menuItem.item_name,
+                active: menuItem.active,
+                org: menuItem.org,
+                quantity: orderItem.quantity,
+                mealNote: orderItem.special_requests,
+            }
+        })
+        setCurrentOrder(orderToEdit)
+        setOrderNote('')
+        setOrderNumber('')
+        setOrderToEdit(order.id)
+        enqueueSnackbar('You are editing an order', {
+            action: <MuiButton onClick={() => clearCurrentOrder()}>Cancel edit</MuiButton>,
+            anchorOrigin: {
+                horizontal: 'center', vertical: 'top'
+            },
+            persist: true,
+            variant: 'warning',
+        })
     }
 
     function modifyOrder(orderId: number, payload: Order | object | undefined = undefined) {
@@ -85,6 +122,24 @@ function Bar() {
             enqueueSnackbar('Your selected event is invalid!', {
                 variant: 'error',
             })
+        } else if (orderToEdit > 0) {
+            const payload = { customer_number: orderNumber, note: orderNote, order_items: orderItems }
+            DjangoBackend.patch<Order>(`/api/manage_orders_with_order_items/${orderToEdit}/`, payload)
+                .then(response => {
+                    const itemIndex = orders.findIndex(item => item.id === response.data.id)
+                    orders[itemIndex] = response.data
+                    setOrders(orders.slice(0))
+                    clearCurrentOrder()
+                    enqueueSnackbar('Order updated!', {
+                        autoHideDuration: 3000,
+                        variant: 'success',
+                    })
+                })
+                .catch(() => {
+                    enqueueSnackbar('Order update failed!', {
+                        variant: 'error',
+                    })
+                })
         } else {
             const payload = {
                 event: eventId,
@@ -105,6 +160,12 @@ function Bar() {
                     variant: 'error',
                 }))
         }
+    }
+
+    function removeOrderItem(itemToRemove: CurrentOrderItem) {
+        setCurrentOrder(currentOrder.filter(order =>
+            order.id === itemToRemove.id && order.mealNote === itemToRemove.mealNote
+        ))
     }
 
     function undoOrder(orderToUndo: Order, snackbarKey: SnackbarKey) {
@@ -155,7 +216,10 @@ function Bar() {
                     <Container className="h-100">
                         <Row className="align-items-start h-40">
                             <Col className="h-100 overflow-auto">
-                                <CurrentOrder currentOrder={currentOrder} />
+                                <CurrentOrder
+                                    currentOrder={currentOrder}
+                                    removeOrderItem={removeOrderItem}
+                                />
                             </Col>
                         </Row>
                         <Row className="align-items-end h-60">
@@ -187,6 +251,7 @@ function Bar() {
                         orders={orders}
                         onOrderDelete={modifyOrder}
                         onOrderDeliver={modifyOrder}
+                        onOrderEdit={editOrder}
                     />
                 </Col>
             </Row>

@@ -9,10 +9,11 @@ interface AllOrdersProps {
     menuItems: MenuItem[]
     onOrderDelete: (orderId: number) => void
     onOrderDeliver: (orderId: number, newData: Order | object | undefined) => void
+    onOrderEdit: (order: Order) => void
     orders: Order[]
 }
 
-function AllOrders({ menuItems, onOrderDelete, onOrderDeliver, orders }: AllOrdersProps) {
+function AllOrders({ menuItems, onOrderDelete, onOrderDeliver, onOrderEdit, orders }: AllOrdersProps) {
     const [activeOrder, setActiveOrder] = useState<Order | null>(null)
     const [shouldShownOrderDetail, setShouldShowOrderDetail] = useState(false)
 
@@ -52,6 +53,10 @@ function AllOrders({ menuItems, onOrderDelete, onOrderDeliver, orders }: AllOrde
                     DjangoBackend.patch(`/api/orders/${orderId}/`, payload)
                         .catch(reason => console.log(reason.response))
                     onOrderDeliver(orderId, payload)
+                    setShouldShowOrderDetail(false)
+                }}
+                editOrder={order => {
+                    onOrderEdit(order)
                     setShouldShowOrderDetail(false)
                 }}
                 menuItems={menuItems}
