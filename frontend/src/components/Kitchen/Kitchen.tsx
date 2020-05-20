@@ -3,6 +3,7 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 import './Kitchen.scss';
 import OrderTicket from '../Order/OrderTicket';
 import { DjangoBackend } from '../../api/DjangoBackend';
+import { getEventId } from '../../utils/event';
 import { MenuItem, Order, OrderStatus } from '../../@types';
 
 function showStats(ordersWaiting: Order[], ordersInProgress: Order[], menuItems: MenuItem[]) {
@@ -34,7 +35,9 @@ function Kitchen() {
 
     useEffect(() => {
         function getOrders() {
-            DjangoBackend.get<Order[]>(`/api/orders_with_order_items/?exclude_status=${OrderStatus.DELIVERED}`)
+            DjangoBackend.get<Order[]>(
+                `/api/orders_with_order_items/?event=${getEventId()}&exclude_status=${OrderStatus.DELIVERED}`
+            )
                 .then(response => setOrders(response.data))
                 .catch(reason => console.log(reason.response))
         }

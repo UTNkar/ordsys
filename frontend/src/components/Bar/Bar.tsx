@@ -26,7 +26,7 @@ function Bar() {
     useEffect(() => {
         Promise.all([
             DjangoBackend.get<MenuItem[]>('/api/menu_items/?active=true'),
-            DjangoBackend.get<Order[]>(`/api/orders_with_order_items/?exclude_status=${OrderStatus.DELIVERED}`),
+            DjangoBackend.get<Order[]>(`/api/orders_with_order_items/?event=${getEventId()}&exclude_status=${OrderStatus.DELIVERED}`),
         ])
             .then(([menuItems, orders]) => {
                 setMenuItems(menuItems.data)
