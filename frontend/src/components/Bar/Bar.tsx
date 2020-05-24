@@ -85,14 +85,40 @@ function Bar() {
     }
 
     function modifyOrder(orderId: number, payload: Order | object | undefined = undefined) {
-        const index = orders.findIndex(order => order.id === orderId)
-        if (index !== -1) {
-            if (payload === undefined || ('status' in payload && payload.status === OrderStatus.DELIVERED)) {
-                orders.splice(index, 1)
-            } else {
-                orders[index] = { ...orders[index], ...payload }
-            }
-            setOrders(orders.slice(0))
+        if (payload !== undefined) {
+            DjangoBackend.patch<Order>(`/api/manage_orders_with_order_items/${orderId}/`, payload)
+                .then(response => {
+                    const index = orders.findIndex(order => order.id === orderId)
+                    if (response.data.status === OrderStatus.DELIVERED) {
+                        orders.splice(index, 1)
+                    } else {
+                        orders[index] = response.data
+                        if (orderToEdit > 0) {
+                            clearCurrentOrder()
+                        }
+                    }
+                    setOrders(orders.slice(0))
+                    enqueueSnackbar('Order successfully updated!', {
+                        autoHideDuration: 2500,
+                        variant: 'success',
+                    })
+                }).catch(() => enqueueSnackbar('Order update failed!', {
+                    variant: 'error',
+                }))
+        } else {
+            DjangoBackend.delete(`/api/orders/${orderId}/`)
+                .then(() => {
+                    setOrders(orders.filter(order => order.id !== orderId))
+                    enqueueSnackbar('Order successfully deleted!', {
+                        autoHideDuration: 2500,
+                        variant: 'success',
+                    })
+                })
+                .catch(() => {
+                    enqueueSnackbar('Order deletion failed!', {
+                        variant: 'error',
+                    })
+                })
         }
     }
 
@@ -124,22 +150,7 @@ function Bar() {
             })
         } else if (orderToEdit > 0) {
             const payload = { customer_number: orderNumber, note: orderNote, order_items: orderItems }
-            DjangoBackend.patch<Order>(`/api/manage_orders_with_order_items/${orderToEdit}/`, payload)
-                .then(response => {
-                    const itemIndex = orders.findIndex(item => item.id === response.data.id)
-                    orders[itemIndex] = response.data
-                    setOrders(orders.slice(0))
-                    clearCurrentOrder()
-                    enqueueSnackbar('Order updated!', {
-                        autoHideDuration: 3000,
-                        variant: 'success',
-                    })
-                })
-                .catch(() => {
-                    enqueueSnackbar('Order update failed!', {
-                        variant: 'error',
-                    })
-                })
+            modifyOrder(orderToEdit, payload)
         } else {
             const payload = {
                 event: eventId,

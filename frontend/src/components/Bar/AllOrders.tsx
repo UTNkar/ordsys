@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './AllOrders.scss';
 import OrderDetail from './OrderDetail';
 import OrderTicket from '../Order/OrderTicket';
-import { DjangoBackend } from '../../api/DjangoBackend';
 import { MenuItem, Order, OrderStatus } from '../../@types';
 
 interface AllOrdersProps {
@@ -43,16 +42,11 @@ function AllOrders({ menuItems, onOrderDelete, onOrderDeliver, onOrderEdit, orde
             <OrderDetail
                 closeOrderDetail={() => setShouldShowOrderDetail(false)}
                 deleteOrder={orderId => {
-                    DjangoBackend.delete(`/api/orders/${orderId}/`)
-                        .catch(reason => console.log(reason.response));
                     onOrderDelete(orderId)
                     setShouldShowOrderDetail(false)
                 }}
                 deliverOrder={orderId => {
-                    const payload = { status: OrderStatus.DELIVERED }
-                    DjangoBackend.patch(`/api/orders/${orderId}/`, payload)
-                        .catch(reason => console.log(reason.response))
-                    onOrderDeliver(orderId, payload)
+                    onOrderDeliver(orderId, { status: OrderStatus.DELIVERED })
                     setShouldShowOrderDetail(false)
                 }}
                 editOrder={order => {
