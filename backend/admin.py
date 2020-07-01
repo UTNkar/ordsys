@@ -74,21 +74,21 @@ class MenuItemAdmin(ForeignKeyModelAdmin):
     def get_fieldsets(self, request, obj=None):
         if not request.user.is_superuser:
             return (
-                (None, {'fields': ['item_name', 'active']}),
+                (None, {'fields': ['item_name', 'active', 'beverage']}),
             )
         return (
-            (None, {'fields': ['item_name', 'active', 'org']}),
+            (None, {'fields': ['item_name', 'active', 'beverage', 'org']}),
         )
 
     def get_list_display(self, request):
         if not request.user.is_superuser:
-            return ['item_name', 'active']
-        return ['item_name', 'active', 'org']
+            return ['item_name', 'active', 'beverage']
+        return ['item_name', 'active', 'beverage', 'org']
 
     def get_list_filter(self, request):
         if not request.user.is_superuser:
-            return ['active']
-        return ['active', 'org']
+            return ['active', 'beverage']
+        return ['active', 'beverage', 'org']
 
     def get_queryset(self, request):
         if not request.user.is_superuser:

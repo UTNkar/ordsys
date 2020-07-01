@@ -34,7 +34,7 @@ class EventView(viewsets.ModelViewSet):
 
 
 class MenuItemView(viewsets.ModelViewSet):
-    filterset_fields = ('item_name', 'active', 'org')
+    filterset_fields = ('item_name', 'active', 'beverage', 'org')
     permission_classes = [IsAuthenticated]
     serializer_class = MenuItemSerializer
 

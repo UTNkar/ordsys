@@ -40,6 +40,11 @@ class MenuItem(models.Model):
         verbose_name=_('active'),
         help_text=_('Designates whether or not this item is currently on the menu.')
     )
+    beverage = models.BooleanField(
+        default=False,
+        verbose_name=_('beverage'),
+        help_text=_('Designates whether or not this item is a beverage.'),
+    )
     org = models.ForeignKey(
         to='Organisation',
         on_delete=models.CASCADE,
@@ -52,13 +57,14 @@ class MenuItem(models.Model):
 
     class Meta:
         db_table = 'menu_item'
-        ordering = ['org', 'item_name']
+        ordering = ['org', 'beverage', 'item_name']
         constraints = [
             models.UniqueConstraint(fields=['item_name', 'org'], name='item_name__org_key'),
         ]
         indexes = [
             models.Index(fields=['active'], name='menu_item_active_idx'),
-            models.Index(fields=['org', 'item_name'], name='menu_item_org_id_item_name_idx'),
+            models.Index(fields=['beverage'], name='menu_item_beverage_idx'),
+            models.Index(fields=['org', 'beverage', 'item_name'], name='menu_item_ordering_idx'),
         ]
 
 

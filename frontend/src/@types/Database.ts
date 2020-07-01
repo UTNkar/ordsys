@@ -8,6 +8,7 @@ export interface MenuItem {
     readonly id: number
     readonly item_name: string
     readonly active: boolean
+    readonly beverage: boolean
     readonly org: number
 }
 

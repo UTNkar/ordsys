@@ -65,6 +65,7 @@ function Bar() {
                 id: orderItem.menu,
                 item_name: menuItem.item_name,
                 active: menuItem.active,
+                beverage: menuItem.beverage,
                 org: menuItem.org,
                 quantity: orderItem.quantity,
                 mealNote: orderItem.special_requests,
