@@ -7,4 +7,4 @@ class OrderFilter(filters.FilterSet):
 
     class Meta:
         model = Order
-        fields = ('event', 'exclude_status', 'user')
+        fields = ('beverages_only', 'event', 'exclude_status', 'user')

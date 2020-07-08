@@ -14,6 +14,7 @@ export interface MenuItem {
 
 export interface Order {
     readonly id: number
+    readonly beverages_only: boolean
     customer_number: number
     readonly created_timestamp: string
     delivered_timestamp: string

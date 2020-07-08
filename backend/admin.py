@@ -105,7 +105,8 @@ class MenuItemAdmin(ForeignKeyModelAdmin):
 class OrderAdmin(ForeignKeyModelAdmin):
     form = ModelWithOrganisationForm
     list_display = [
-        'get_order_name', 'get_event_name', 'created_timestamp', 'status', 'get_delivered_timestamp', 'user'
+        'get_order_name', 'get_event_name', 'beverages_only', 'created_timestamp',
+        'status', 'get_delivered_timestamp', 'user'
     ]
 
     def get_delivered_timestamp(self, obj):
@@ -124,22 +125,21 @@ class OrderAdmin(ForeignKeyModelAdmin):
     def get_fieldsets(self, request, obj=None):
         return (
             (None, {'fields': [
-                'customer_number', 'note', 'status', 'event', 'user'
+                'beverages_only', 'customer_number', 'note', 'status', 'event', 'user'
             ]}),
         )
 
     def get_list_filter(self, request):
         if not request.user.is_superuser:
-            return ['status', 'event', 'user']
-        return ['status', 'event', 'user', 'user__org']
+            return ['beverages_only', 'status', 'event', 'user']
+        return ['beverages_only', 'status', 'event', 'user', 'user__org']
 
     def get_readonly_fields(self, request, obj=None):
-        if not request.user.is_superuser:
-            field_list = ['status']
-            if obj is not None:
-                field_list.append('user')
-            return field_list
-        return []
+        field_list = ['status']
+        if not request.user.is_superuser and obj is not None:
+            field_list.append('user')
+            field_list.append('beverages_only')
+        return field_list
 
     def get_queryset(self, request):
         if not request.user.is_superuser:

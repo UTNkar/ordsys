@@ -76,6 +76,9 @@ class Order(models.Model):
         DELIVERED = 'Delivered'
 
     id = models.AutoField(primary_key=True)
+    beverages_only = models.BooleanField(
+        help_text=_('Specifies if the order contains only beverages or only food.')
+    )
     customer_number = models.PositiveSmallIntegerField()
     created_timestamp = models.DateTimeField(
         default=now,
@@ -118,6 +121,9 @@ class Order(models.Model):
     class Meta:
         db_table = 'order'
         ordering = ['id']
+        indexes = [
+            models.Index(fields=['beverages_only'], name='order_beverages_only_idx'),
+        ]
 
 
 class OrderItem(models.Model):
