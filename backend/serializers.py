@@ -48,7 +48,7 @@ class BaseOrderWithOrderItemsSerializer(BaseOrderSerializer):
 
     class Meta(BaseOrderSerializer.Meta):
         fields = (
-            'id', 'created_timestamp', 'delivered_timestamp', 'event',
+            'id', 'beverages_only', 'created_timestamp', 'delivered_timestamp', 'event',
             'customer_number', 'note', 'status', 'user', 'order_items'
         )
         read_only_fields = BaseOrderSerializer.Meta.read_only_fields + ('created_timestamp', 'user')
