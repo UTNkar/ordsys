@@ -54,9 +54,9 @@ function renderSubmitButtonChildren(isCreatingEvent: boolean, event: EventOption
     if (isCreatingEvent) {
         return <CircularProgress size='1.6rem' />
     } else if (event?.inputValue) {
-        return 'Confirm event'
-    } else {
         return 'Create event'
+    } else {
+        return 'Confirm event'
     }
 }
 
