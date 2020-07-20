@@ -72,8 +72,8 @@ function Bar() {
             }
         })
         setCurrentOrder(orderToEdit)
-        setOrderNote('')
-        setOrderNumber('')
+        setOrderNote(order.note)
+        setOrderNumber(String(order.customer_number))
         setOrderToEdit(order.id)
         enqueueSnackbar('You are editing an order', {
             action: <MuiButton onClick={() => clearCurrentOrder()}>Cancel edit</MuiButton>,
@@ -176,7 +176,7 @@ function Bar() {
 
     function removeOrderItem(itemToRemove: CurrentOrderItem) {
         setCurrentOrder(currentOrder.filter(order =>
-            order.id === itemToRemove.id && order.mealNote === itemToRemove.mealNote
+            order.id !== itemToRemove.id || order.mealNote !== itemToRemove.mealNote
         ))
     }
 
