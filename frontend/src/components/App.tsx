@@ -12,6 +12,7 @@ import Home from './Home/Home';
 import Kitchen from './Kitchen/Kitchen';
 import Login from './Login/Login';
 import Statistics from './Statistics/Statistics';
+import Tap from './Tap/Tap';
 import { isAuthenticated } from '../utils/authenticationHelper';
 import { getEventName, hasEvent } from '../utils/event';
 
@@ -65,6 +66,7 @@ function App() {
                     <Route path="/bar" component={Bar} />
                     <Route path="/kitchen" component={Kitchen} />
                     <Route path="/statistics" component={Statistics} />
+                    <Route path="/tap" component={Tap} />
                 </>
             );
         } else if (userIsAuthenticated) {

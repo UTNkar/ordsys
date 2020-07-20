@@ -36,7 +36,7 @@ function Kitchen() {
     useEffect(() => {
         function getOrders() {
             DjangoBackend.get<Order[]>(
-                `/api/orders_with_order_items/?event=${getEventId()}&exclude_status=${OrderStatus.DELIVERED}`
+                `/api/orders_with_order_items/?event=${getEventId()}&beverages_only=false&exclude_status=${OrderStatus.DELIVERED}`
             )
                 .then(response => setOrders(response.data))
                 .catch(reason => console.log(reason.response))

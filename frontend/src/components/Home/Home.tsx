@@ -31,6 +31,15 @@ function Home() {
                     // @ts-ignore
                     align="center"
                 >
+                    <Link to='/tap'>
+                        <IconButton iconUrl='/assets/images/beer.svg' text='Tap' />
+                    </Link>
+                </Col>
+                <Col
+                    className="mx-5 p-0 border border-dark rounded"
+                    // @ts-ignore
+                    align="center"
+                >
                     <Link to='/statistics'>
                         <IconButton iconUrl='/assets/images/chart.svg' text='Statistics' />
                     </Link>
