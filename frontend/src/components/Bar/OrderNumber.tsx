@@ -1,6 +1,7 @@
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { FaPaperPlane } from 'react-icons/fa';
+import { CircularProgress } from '@material-ui/core';
 import './OrderNumber.scss';
 
 interface OrderNumberProps {
@@ -11,10 +12,12 @@ interface OrderNumberProps {
     orderIsValid: boolean
     orderNumber: string
     orderNote: string
+    showSubmitSpinner: boolean
 }
 
 function OrderNumber({
-    addToOrderNumber, clearOrderNumber, onOrderNoteChange, onSubmitOrder, orderIsValid, orderNumber, orderNote
+    addToOrderNumber, clearOrderNumber, onOrderNoteChange, onSubmitOrder, orderIsValid, orderNumber, orderNote,
+    showSubmitSpinner,
 }: OrderNumberProps) {
     return (
         <Container className="numpad-container">
@@ -50,9 +53,9 @@ function OrderNumber({
                     <button
                         className="btn btn-block btn-send d-flex flex-grow-1 align-items-center justify-content-center"
                         onClick={onSubmitOrder}
-                        disabled={!orderIsValid}
+                        disabled={!orderIsValid || showSubmitSpinner}
                     >
-                        <FaPaperPlane color="#000000" />
+                        {!showSubmitSpinner ? <FaPaperPlane color="#000000" /> : <CircularProgress size='2rem' />}
                     </button>
                 </Col>
             </Row>

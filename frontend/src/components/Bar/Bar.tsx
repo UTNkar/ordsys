@@ -21,6 +21,7 @@ function Bar() {
     const [orderNumber, setOrderNumber] = useState('')
     const [orders, setOrders] = useState<Order[]>([])
     const [orderToEdit, setOrderToEdit] = useState<Order | null>(null)
+    const [isSubmittingOrder, setIsSubmittingOrder] = useState(false)
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
@@ -104,9 +105,11 @@ function Bar() {
                         autoHideDuration: 2500,
                         variant: 'success',
                     })
-                }).catch(() => enqueueSnackbar('Order update failed!', {
+                })
+                .catch(() => enqueueSnackbar('Order update failed!', {
                     variant: 'error',
                 }))
+                .finally(() => setIsSubmittingOrder(false))
         } else {
             DjangoBackend.delete(`/api/orders/${orderId}/`)
                 .then(() => {
@@ -121,6 +124,7 @@ function Bar() {
                         variant: 'error',
                     })
                 })
+                .finally(() => setIsSubmittingOrder(false))
         }
     }
 
@@ -165,7 +169,10 @@ function Bar() {
             enqueueSnackbar('Your selected event is invalid!', {
                 variant: 'error',
             })
-        } else if (orderToEdit !== null) {
+            return
+        }
+        setIsSubmittingOrder(true)
+        if (orderToEdit !== null) {
             const payload = {
                 customer_number: orderNumber,
                 note: orderNote,
@@ -213,6 +220,7 @@ function Bar() {
                 .catch(() => enqueueSnackbar('Could not create order', {
                     variant: 'error',
                 }))
+                .finally(() => setIsSubmittingOrder(false))
         }
     }
 
@@ -293,6 +301,7 @@ function Bar() {
                                     orderIsValid={currentOrder.length > 0 && orderNumber !== ''}
                                     orderNote={orderNote}
                                     orderNumber={orderNumber}
+                                    showSubmitSpinner={isSubmittingOrder}
                                 />
                             </Col>
                         </Row>
