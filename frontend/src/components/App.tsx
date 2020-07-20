@@ -54,6 +54,7 @@ const createSnackbarStyles = makeStyles({
 function App() {
     const [userIsAuthenticated, setUserIsAuthenticated] = useState(isAuthenticated)
     const [userHasSetEvent, setUserHasSetEvent] = useState(hasEvent)
+    const [isEditingEvent, setIsEditingEvent] = useState(false)
 
     const snackbarRef = useRef<ProviderContext>(null)
     const snackbarClasses = createSnackbarStyles()
@@ -71,7 +72,14 @@ function App() {
             );
         } else if (userIsAuthenticated) {
             return (
-                <EventSelector onEventChosen={() => setUserHasSetEvent(true)} />
+                <EventSelector
+                    isEditingEvent={isEditingEvent}
+                    onEditCancel={() => {
+                        setIsEditingEvent(false)
+                        setUserHasSetEvent(true)
+                    }}
+                    onEventChosen={() => setUserHasSetEvent(true)}
+                />
             );
         } else {
             return (
@@ -104,7 +112,14 @@ function App() {
             }}
             ref={snackbarRef}
         >
-            <Header eventName={getEventName()} />
+            <Header
+                eventName={isEditingEvent ? null : getEventName()}
+                onEditEventClick={() => {
+                    setIsEditingEvent(true)
+                    setUserHasSetEvent(false)
+                }}
+                showEditEvent={userHasSetEvent}
+            />
             {renderComponents()}
         </SnackbarProvider>
     );

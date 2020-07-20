@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Nav, Navbar } from 'react-bootstrap';
+import { FaEdit } from 'react-icons/fa'
+import { IconButton as MuiIconButton } from '@material-ui/core';
 import './Header.scss';
 
 interface HeaderProps {
     eventName: string | null
+    onEditEventClick: () => void
+    showEditEvent: boolean
 }
 
-function Header({ eventName }: HeaderProps) {
+function Header({ eventName, onEditEventClick, showEditEvent }: HeaderProps) {
     const [date, setDate] = useState(new Date().toLocaleString('sv-SE'))
 
     useEffect(() => {
@@ -31,7 +35,15 @@ function Header({ eventName }: HeaderProps) {
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="ml-auto">
-                    <Nav.Item className="mx-3">{eventName}</Nav.Item>
+                    <Nav.Item className="ml-3">{eventName}</Nav.Item>
+                    {!showEditEvent
+                        ? null
+                        : <Nav.Item className="ml-2 mr-3">
+                            <MuiIconButton className='p-0 pb-1' onClick={onEditEventClick}>
+                                <FaEdit color='#ffffff' />
+                            </MuiIconButton>
+                        </Nav.Item>
+                    }
                     <Nav.Item className="mx-3">{date}</Nav.Item>
                 </Nav>
             </Navbar.Collapse>

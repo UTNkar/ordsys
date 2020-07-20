@@ -61,6 +61,8 @@ function renderSubmitButtonChildren(isCreatingEvent: boolean, event: EventOption
 }
 
 interface EventSelectorProps {
+    isEditingEvent: boolean
+    onEditCancel: () => void
     onEventChosen: () => void
 }
 
@@ -68,7 +70,7 @@ interface EventOption extends Event {
     inputValue?: string
 }
 
-function EventSelector({ onEventChosen }: EventSelectorProps) {
+function EventSelector({ isEditingEvent, onEditCancel, onEventChosen }: EventSelectorProps) {
     const [events, setEvents] = useState<EventOption[]>([])
     const [selectedEvent, setSelectedEvent] = useState<EventOption | null>(null)
     const [isCreatingEvent, setIsCreatingEvent] = useState(false)
@@ -190,6 +192,21 @@ function EventSelector({ onEventChosen }: EventSelectorProps) {
                 >
                     {renderSubmitButtonChildren(isCreatingEvent, selectedEvent)}
                 </MuiButton>
+                {!isEditingEvent
+                    ? null
+                    : <MuiButton
+                        className='mt-4'
+                        color='default'
+                        fullWidth
+                        hidden={!isEditingEvent}
+                        onClick={onEditCancel}
+                        size='large'
+                        type='button'
+                        variant='outlined'
+                    >
+                        Cancel edit
+                    </MuiButton>
+                }
             </form>
         </FormContainer>
     );
