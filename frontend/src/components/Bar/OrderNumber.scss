@@ -24,12 +24,12 @@
         color: var(--light-text-color);
         font-size: 2rem;
 
-        &:active {
-            background: var(--button-active-color);
-        }
-
         &:hover {
             background: var(--button-hover-color);
+        }
+
+        &:active {
+            background: var(--button-active-color);
         }
     }
 

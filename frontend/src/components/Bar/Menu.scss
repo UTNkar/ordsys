@@ -45,12 +45,12 @@
         font-size: 2rem;
         cursor: pointer;
 
-        &:active {
-            background: var(--button-active-color);
-        }
-
         &:hover {
             background-color: var(--button-hover-color);
+        }
+
+        &:active {
+            background: var(--button-active-color);
         }
     }
 }
