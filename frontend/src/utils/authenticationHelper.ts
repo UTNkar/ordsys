@@ -17,6 +17,11 @@ export function isAuthenticated(): boolean {
     return true
 }
 
+export function getToken(): string | undefined {
+    // Return the token without the "Token " preamble
+    return DjangoBackend.defaults.headers.common.Authorization.slice(6)
+}
+
 export async function logIn(organisation: Organisation, username: string, password: string): Promise<void> {
     const response = await DjangoBackend.post('/rest-auth/login/', { username, password })
     const token = response.data.key
