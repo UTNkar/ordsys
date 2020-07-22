@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { FaUndo } from 'react-icons/fa';
 import { MdClose } from 'react-icons/md';
 import { Button as MuiButton, IconButton as MuiIconButton } from '@material-ui/core';
 import { SnackbarKey, useSnackbar } from 'notistack';
+import { useWebSocket, WebSocketPath } from '../../hooks';
 import './Bar.scss';
 import AllOrders from './AllOrders';
 import CurrentOrder from './CurrentOrder';
@@ -12,7 +13,8 @@ import Menu from './Menu';
 import OrderNumber from './OrderNumber';
 import { DjangoBackend } from '../../api/DjangoBackend';
 import { getEventId } from '../../utils/event';
-import { BarRenderMode, CurrentOrderItem, MenuItem, Order, OrderStatus } from '../../@types';
+import { onMenuItemsChange, onOrdersChange } from '../../utils/realtimeModelUpdate';
+import { BarRenderMode, CurrentOrderItem, DatabaseChangeType, MenuItem, Order, OrderStatus } from '../../@types';
 import MembershipChecker from '../MembershipChecker/MembershipChecker';
 
 /**
@@ -44,7 +46,28 @@ function Bar({ renderMode }: BarProps) {
     const [orderToEdit, setOrderToEdit] = useState<Order | null>(null)
     const [isSubmittingOrder, setIsSubmittingOrder] = useState(false)
 
+    const componentIsMounted = useRef(true)
+
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+    const { sendJsonMessage } = useWebSocket({
+        shouldReconnect: () => componentIsMounted.current,
+        onOpen: () => {
+            sendJsonMessage({ models: ['backend.Order', 'backend.MenuItem'] })
+        },
+        onMessage: event => {
+            const message = JSON.parse(event.data)
+            switch (message.model_name) {
+                case 'Order':
+                    onOrdersChange(message.payload as Order, message.type as DatabaseChangeType, setOrders)
+                    break
+                case 'MenuItem':
+                    onMenuItemsChange(message.payload as MenuItem, message.type as DatabaseChangeType, setMenuItems)
+                    break
+                default:
+                    break
+            }
+        },
+    }, WebSocketPath.MODEL_CHANGES)
 
     useEffect(() => {
         Promise.all([
@@ -57,6 +80,7 @@ function Bar({ renderMode }: BarProps) {
             })
             .catch(reason => console.log(reason.response))
         return function cleanup() {
+            componentIsMounted.current = false
             closeSnackbar()
         }
         // We only want this to once so ignore the eslint warning
