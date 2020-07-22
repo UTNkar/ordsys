@@ -1,10 +1,32 @@
 from django.contrib.auth.models import AnonymousUser
+from django.db.models.signals import post_save
 from django.utils.timezone import now
 from rest_framework import serializers
 from .models import Event, MenuItem, Order, OrderItem, User, Organisation
 
 
-class EventSerializer(serializers.ModelSerializer):
+def _get_group_name(caller):
+    if isinstance(caller, BaseOrderSerializer):
+        return 'backend.Order'
+    elif isinstance(caller, EventSerializer):
+        return 'backend.Event'
+    elif isinstance(caller, MenuItemSerializer):
+        return 'backend.MenuItem'
+    elif isinstance(caller, UserPublicSerializer):
+        return 'backend.User'
+    elif isinstance(caller, OrganisationWithUsersSerializer):
+        return 'backend.Organisation'
+    elif isinstance(caller, OrderItemSerializer):
+        return 'backend.OrderItem'
+    raise NotImplementedError
+
+
+class _BaseSerializer(serializers.ModelSerializer):
+    def get_group_name(self):
+        return _get_group_name(self)
+
+
+class EventSerializer(_BaseSerializer):
     org = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
 
     class Meta:
@@ -12,14 +34,14 @@ class EventSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class MenuItemSerializer(serializers.ModelSerializer):
+class MenuItemSerializer(_BaseSerializer):
     class Meta:
         model = MenuItem
         fields = '__all__'
         read_only_fields = ('org',)
 
 
-class BaseOrderSerializer(serializers.ModelSerializer):
+class BaseOrderSerializer(_BaseSerializer):
     def update(self, instance, validated_data):
         if instance.status != Order.StatusEnum.DELIVERED and validated_data['status'] == Order.StatusEnum.DELIVERED:
             validated_data['delivered_timestamp'] = now()
@@ -31,7 +53,7 @@ class BaseOrderSerializer(serializers.ModelSerializer):
         read_only_fields = ('delivered_timestamp', )
 
 
-class OrderItemSerializer(serializers.ModelSerializer):
+class OrderItemSerializer(_BaseSerializer):
     class Meta:
         model = OrderItem
         fields = '__all__'
@@ -70,12 +92,23 @@ class CreatableOrderWithOrderItemsSerializer(BaseOrderWithOrderItemsSerializer):
             'Creating an order requires a non-anonymous user instance passed as an argument "user"' \
             'when calling the serializer\'s save() function, (serializer.save(user=user).'
         order_items = validated_data.pop('order_items')
-        order = Order.objects.create(**validated_data)
+
+        # Use bulk_create to avoid sending post_save signal before OrderItems are created.
+        # If we don't, the post_save signal payload won't contain any OrderItems.
+        # As bulk_create returns a list of objects created, we get the first and only order entry.
+        order = Order.objects.bulk_create([Order(**validated_data)])[0]
+
         batch = [OrderItem(
             menu=order_item['menu'], order=order, quantity=order_item['quantity'],
             special_requests=order_item.get('special_requests', '')) for order_item in order_items
         ]
         OrderItem.objects.bulk_create(batch)
+
+        # Manually send the post save signal now that all OrderItems have been created.
+        post_save.send(
+            sender=Order, instance=order, created=True,
+            update_fields=None, raw=False, using=None,
+        )
         return order
 
     def update(self, instance, validated_data):
@@ -109,13 +142,13 @@ class CreatableOrderWithOrderItemsSerializer(BaseOrderWithOrderItemsSerializer):
         return instance
 
 
-class UserPublicSerializer(serializers.ModelSerializer):
+class UserPublicSerializer(_BaseSerializer):
     class Meta:
         model = User
         fields = ('id', 'username')
 
 
-class OrganisationWithUsersSerializer(serializers.ModelSerializer):
+class OrganisationWithUsersSerializer(_BaseSerializer):
     users = UserPublicSerializer(many=True)
 
     class Meta:

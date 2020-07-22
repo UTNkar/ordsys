@@ -21,6 +21,9 @@ class Event(models.Model):
     def __str__(self):
         return f'{self.name} ({self.org})'
 
+    def get_org_id(self):
+        return self.org.id
+
     class Meta:
         db_table = 'event'
         ordering = ['org', 'name']
@@ -54,6 +57,9 @@ class MenuItem(models.Model):
 
     def __str__(self):
         return f'{self.item_name} ({self.org.name})'
+
+    def get_org_id(self):
+        return self.org.id
 
     class Meta:
         db_table = 'menu_item'
@@ -121,6 +127,9 @@ class Order(models.Model):
 
     def __str__(self):
         return f'Order #{self.id} ({self.event})'
+
+    def get_org_id(self):
+        return self.event.org.id
 
     class Meta:
         db_table = 'order'
@@ -190,6 +199,9 @@ class Organisation(models.Model):
     def __str__(self):
         return self.name
 
+    def get_org_id(self):
+        return self.id
+
     class Meta:
         db_table = 'organisation'
         ordering = ['name']
@@ -226,6 +238,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
+
+    def get_org_id(self):
+        return self.org.id
 
     class Meta:
         ordering = ['username']
