@@ -81,6 +81,7 @@ function Bar() {
                 horizontal: 'center', vertical: 'top'
             },
             persist: true,
+            preventDuplicate: true,
             variant: 'warning',
         })
     }
