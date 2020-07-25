@@ -47,11 +47,19 @@ function Bar({ renderMode }: BarProps) {
     const [isSubmittingOrder, setIsSubmittingOrder] = useState(false)
 
     const componentIsMounted = useRef(true)
+    const networkErrorSnackbarKey = useRef<SnackbarKey | null>(null)
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
     const { sendJsonMessage } = useWebSocket({
         shouldReconnect: () => componentIsMounted.current,
         onOpen: () => {
+            const currentNetworkErrorKey = networkErrorSnackbarKey.current
+            if (currentNetworkErrorKey !== null) {
+                // Re-fetch all data from the database if WebSocket was disconnected
+                fetchMenuItemsAndOrders()
+                closeSnackbar(currentNetworkErrorKey)
+                networkErrorSnackbarKey.current = null
+            }
             sendJsonMessage({ models: ['backend.Order', 'backend.MenuItem'] })
         },
         onMessage: event => {
@@ -67,18 +75,24 @@ function Bar({ renderMode }: BarProps) {
                     break
             }
         },
+        onError: () => {
+            if (networkErrorSnackbarKey.current === null) {
+                networkErrorSnackbarKey.current = enqueueSnackbar(
+                    'Network error, please check your internet connection!',
+                    {
+                        // Disallow manually closing the Snackbar
+                        action: () => {},
+                        persist: true,
+                        preventDuplicate: true,
+                        variant: 'error',
+                    }
+                )
+            }
+        },
     }, WebSocketPath.MODEL_CHANGES)
 
     useEffect(() => {
-        Promise.all([
-            DjangoBackend.get<MenuItem[]>('/api/menu_items/?active=true'),
-            DjangoBackend.get<Order[]>(`/api/orders_with_order_items/?event=${getEventId()}&exclude_status=${OrderStatus.DELIVERED}`),
-        ])
-            .then(([menuItems, orders]) => {
-                setMenuItems(menuItems.data)
-                setOrders(orders.data)
-            })
-            .catch(reason => console.log(reason.response))
+        fetchMenuItemsAndOrders()
         return function cleanup() {
             componentIsMounted.current = false
             closeSnackbar()
@@ -134,6 +148,18 @@ function Bar({ renderMode }: BarProps) {
             preventDuplicate: true,
             variant: 'warning',
         })
+    }
+
+    function fetchMenuItemsAndOrders() {
+        Promise.all([
+            DjangoBackend.get<MenuItem[]>('/api/menu_items/?active=true'),
+            DjangoBackend.get<Order[]>(`/api/orders_with_order_items/?event=${getEventId()}&exclude_status=${OrderStatus.DELIVERED}`),
+        ])
+            .then(([menuItems, orders]) => {
+                setMenuItems(menuItems.data)
+                setOrders(orders.data)
+            })
+            .catch(reason => console.log(reason.response))
     }
 
     function modifyOrder(orderId: number, payload: Order | object | undefined = undefined) {

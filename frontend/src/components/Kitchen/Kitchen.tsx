@@ -8,6 +8,7 @@ import { DjangoBackend } from '../../api/DjangoBackend';
 import { getEventId } from '../../utils/event';
 import { onMenuItemsChange, onOrdersChange } from '../../utils/realtimeModelUpdate';
 import { DatabaseChangeType, KitchenRenderMode, MenuItem, Order, OrderStatus } from '../../@types';
+import { SnackbarKey, useSnackbar } from "notistack";
 
 function showStats(ordersWaiting: Order[], ordersInProgress: Order[], menuItems: MenuItem[]) {
     const orders = [...ordersWaiting, ...ordersInProgress]
@@ -41,9 +42,19 @@ function Kitchen({ renderMode }: KitchenProps) {
     const [orders, setOrders] = useState<Order[]>([])
 
     const componentIsMounted = useRef(true)
+    const networkErrorSnackbarKey = useRef<SnackbarKey | null>(null)
+
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar()
     const { sendJsonMessage } = useWebSocket({
         shouldReconnect: () => componentIsMounted.current,
         onOpen: () => {
+            const currentNetworkErrorKey = networkErrorSnackbarKey.current
+            if (currentNetworkErrorKey !== null) {
+                // Re-fetch all data from the database if WebSocket was disconnected
+                fetchMenuItemsAndOrders()
+                closeSnackbar(currentNetworkErrorKey)
+                networkErrorSnackbarKey.current = null
+            }
             sendJsonMessage({ models: ['backend.Order', 'backend.MenuItem'] })
         },
         onMessage: event => {
@@ -61,29 +72,50 @@ function Kitchen({ renderMode }: KitchenProps) {
                     break
             }
         },
+        onError: () => {
+            if (networkErrorSnackbarKey.current === null) {
+                networkErrorSnackbarKey.current = enqueueSnackbar(
+                    'Network error, please check your internet connection!',
+                    {
+                        // Disallow manually closing the Snackbar
+                        action: () => {},
+                        persist: true,
+                        preventDuplicate: true,
+                        variant: 'error',
+                    }
+                )
+            }
+        },
     }, WebSocketPath.MODEL_CHANGES)
 
     useEffect(() => {
-        const getBeveragesOnly = renderMode === KitchenRenderMode.BEVERAGES
-        Promise.all([
-            DjangoBackend.get<Order[]>(
-                `/api/orders_with_order_items/?event=${getEventId()}&beverages_only=${getBeveragesOnly}&exclude_status=${OrderStatus.DELIVERED}`
-            ),
-            DjangoBackend.get<MenuItem[]>('/api/menu_items/?active=true')
-        ])
-            .then(([ordersResponse, menuItemsResponse]) => {
-                setOrders(ordersResponse.data)
-                setMenuItems(menuItemsResponse.data)
-            })
-            .catch(reason => console.log(reason.response))
+        fetchMenuItemsAndOrders()
         return function cleanup() {
             componentIsMounted.current = false
+            closeSnackbar()
         }
-    }, [renderMode])
+        // We only want this to trigger once per mount so ignore the eslint warning
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const ordersWaiting    = orders.filter(order => order.status === OrderStatus.WAITING)
     const ordersInProgress = orders.filter(order => order.status === OrderStatus.IN_PROGRESS)
     const ordersDone       = orders.filter(order => order.status === OrderStatus.DONE)
+
+    function fetchMenuItemsAndOrders() {
+        const getBeveragesOnly = renderMode === KitchenRenderMode.BEVERAGES
+        Promise.all([
+            DjangoBackend.get<MenuItem[]>('/api/menu_items/?active=true'),
+            DjangoBackend.get<Order[]>(
+                `/api/orders_with_order_items/?event=${getEventId()}&beverages_only=${getBeveragesOnly}&exclude_status=${OrderStatus.DELIVERED}`
+            ),
+        ])
+            .then(([menuItemsResponse, ordersResponse]) => {
+                setOrders(ordersResponse.data)
+                setMenuItems(menuItemsResponse.data)
+            })
+            .catch(reason => console.log(reason.response))
+    }
 
     function renderFoodView() {
         return (
