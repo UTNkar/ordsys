@@ -3,6 +3,11 @@ import { Event } from '../@types';
 const eventIdKey = 'eventId'
 const eventNameKey = 'eventName'
 
+export function clearEvent() {
+    sessionStorage.removeItem(eventIdKey)
+    sessionStorage.removeItem(eventNameKey)
+}
+
 /**
  * Checks if an event is registered for the current session.
  */

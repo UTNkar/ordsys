@@ -13,7 +13,7 @@ import Kitchen from './Kitchen/Kitchen';
 import Login from './Login/Login';
 import Statistics from './Statistics/Statistics';
 import Tap from './Tap/Tap';
-import { isAuthenticated } from '../utils/authenticationHelper';
+import { isAuthenticated, logOut } from '../utils/authenticationHelper';
 import { getEventName, hasEvent } from '../utils/event';
 import { getAppliedTheme } from '../utils/theme';
 
@@ -119,8 +119,14 @@ function App() {
                     setIsEditingEvent(true)
                     setUserHasSetEvent(false)
                 }}
+                onLogOutClick={() => {
+                    logOut()
+                    setUserIsAuthenticated(false)
+                    setUserHasSetEvent(false)
+                }}
                 organisationLogo={`/assets/images/${getAppliedTheme() ?? 'utn'}.png`}
                 showEditEvent={userHasSetEvent}
+                showLogOutButton={userIsAuthenticated}
             />
             {renderComponents()}
         </SnackbarProvider>
