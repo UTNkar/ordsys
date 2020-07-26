@@ -46,7 +46,7 @@ function Login({ onLogin }: LoginProps) {
         event.preventDefault()
         closeSnackbar()
         setAuthenticationInProgress(true)
-        logIn(selectedUser, inputPassword.value)
+        logIn(selectedOrganisation as Organisation, selectedUser, inputPassword.value)
             .then(() => {
                 enqueueSnackbar('Successfully signed in!', {
                     autoHideDuration: 2500,

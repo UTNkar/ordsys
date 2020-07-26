@@ -8,10 +8,11 @@ import './Header.scss';
 interface HeaderProps {
     eventName: string | null
     onEditEventClick: () => void
+    organisationLogo: string
     showEditEvent: boolean
 }
 
-function Header({ eventName, onEditEventClick, showEditEvent }: HeaderProps) {
+function Header({ eventName, onEditEventClick, organisationLogo, showEditEvent }: HeaderProps) {
     const [date, setDate] = useState(new Date().toLocaleString('sv-SE'))
 
     useEffect(() => {
@@ -21,13 +22,12 @@ function Header({ eventName, onEditEventClick, showEditEvent }: HeaderProps) {
         }
     }, [])
 
-    const organisation_logo = "utn" //TODO make adaptive
     return (
         <Navbar className="header" expand="lg">
             <Link to="/">
                 <Navbar.Brand>
                     <img
-                        src={`/assets/organisations/logotypes/${organisation_logo}.png`}
+                        src={organisationLogo}
                         alt="Organisation logo"
                     />
                 </Navbar.Brand>

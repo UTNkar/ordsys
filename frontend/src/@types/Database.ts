@@ -40,9 +40,19 @@ export enum OrderStatus {
     DELIVERED = 'Delivered',
 }
 
+export enum OrganisationTheme {
+    UTN = 'utn',
+    UTNARM = 'utnarm',
+    TEKNOLOG_DATAVETARMOTTAGNINGEN = 'td',
+    KLUBBVERKET = 'klubbverket',
+    FORSRANNINGEN = 'forsranningen',
+    REBUSRALLYT = 'rebusrallyt',
+}
+
 export interface Organisation {
     readonly id: number
     readonly name: string
+    readonly theme: OrganisationTheme
     readonly users: User[]
 }
 

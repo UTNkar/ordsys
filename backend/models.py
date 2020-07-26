@@ -161,11 +161,26 @@ class OrderItem(models.Model):
 
 
 class Organisation(models.Model):
+    class ThemesEnum(models.TextChoices):
+        UTN = 'utn', 'UTN'
+        UTNARM = 'utnarm', 'Utnarm'
+        TEKNOLOG_DATAVETARMOTTAGNINGEN = 'td', 'Teknolog- och datavetarmottagningen'
+        KLUBBVERKET = 'klubbverket', 'Klubbverket'
+        FORSRANNINGEN = 'forsranningen', 'Forsränningen'
+        REBUSRALLYT = 'rebusrallyt', 'Rebusrallyt'
+
     id = models.AutoField(primary_key=True)
     name = models.CharField(
         max_length=128,
         unique=True,
         verbose_name=_('organisation name'),
+    )
+    theme = models.CharField(
+        max_length=20,
+        choices=ThemesEnum.choices,
+        default=ThemesEnum.UTN,
+        verbose_name=_('theme'),
+        help_text=_('Which theme to apply to the organisation.'),
     )
 
     def __str__(self):

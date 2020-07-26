@@ -15,6 +15,7 @@ import Statistics from './Statistics/Statistics';
 import Tap from './Tap/Tap';
 import { isAuthenticated } from '../utils/authenticationHelper';
 import { getEventName, hasEvent } from '../utils/event';
+import { getAppliedTheme } from '../utils/theme';
 
 const commonSnackbarStyles = {
     '& .MuiSnackbarContent-action': {
@@ -118,6 +119,7 @@ function App() {
                     setIsEditingEvent(true)
                     setUserHasSetEvent(false)
                 }}
+                organisationLogo={`/assets/images/${getAppliedTheme() ?? 'utn'}.png`}
                 showEditEvent={userHasSetEvent}
             />
             {renderComponents()}

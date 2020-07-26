@@ -120,4 +120,4 @@ class OrganisationWithUsersSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Organisation
-        fields = ('id', 'name', 'users')
+        fields = ('id', 'name', 'theme', 'users')
