@@ -79,7 +79,10 @@ function App() {
                         setIsEditingEvent(false)
                         setUserHasSetEvent(true)
                     }}
-                    onEventChosen={() => setUserHasSetEvent(true)}
+                    onEventChosen={() => {
+                        setIsEditingEvent(false)
+                        setUserHasSetEvent(true)
+                    }}
                 />
             );
         } else {
