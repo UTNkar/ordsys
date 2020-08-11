@@ -12,11 +12,10 @@ import Home from './Home/Home';
 import Kitchen from './Kitchen/Kitchen';
 import Login from './Login/Login';
 import Statistics from './Statistics/Statistics';
-import Tap from './Tap/Tap';
 import { isAuthenticated, logOut } from '../utils/authenticationHelper';
 import { getEventName, hasEvent } from '../utils/event';
 import { getAppliedTheme } from '../utils/theme';
-import { BarRenderMode } from '../@types';
+import { BarRenderMode, KitchenRenderMode } from '../@types';
 
 const commonSnackbarStyles = {
     '& .MuiSnackbarContent-action': {
@@ -67,9 +66,15 @@ function App() {
                 <>
                     <Route exact path="/" component={Home} />
                     <Route path="/bar" render={props => <Bar {...props} renderMode={BarRenderMode.Full} />} />
-                    <Route path="/kitchen" component={Kitchen} />
+                    <Route
+                        path="/kitchen"
+                        render={props => <Kitchen {...props} renderMode={KitchenRenderMode.FOOD} /> }
+                    />
                     <Route path="/statistics" component={Statistics} />
-                    <Route path="/tap" component={Tap} />
+                    <Route
+                        path="/tap"
+                        render={props => <Kitchen {...props} renderMode={KitchenRenderMode.BEVERAGES} /> }
+                    />
                 </>
             );
         } else if (userIsAuthenticated) {
