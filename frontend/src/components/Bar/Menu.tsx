@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Card, CardColumns, Col, Container, Row } from 'react-bootstrap';
+import { Card, CardColumns, Col, Row } from 'react-bootstrap';
 import { Button as MuiButton, CircularProgress, TextField } from '@material-ui/core';
 import { green, red } from '@material-ui/core/colors';
 import { useSnackbar } from 'notistack';
@@ -52,13 +52,11 @@ function renderPersonalIdSubmit(
 const personalIdRegex = /^(\d{6}|\d{8})-?\d{4}$/
 
 interface MenuProps {
-    mealNote: string
     menuItems: MenuItem[]
-    onMealNoteChange: (event: React.ChangeEvent<HTMLInputElement>) => void
     onMenuItemClick: (item: MenuItem) => void
 }
 
-function Menu({ mealNote, menuItems, onMealNoteChange, onMenuItemClick }: MenuProps) {
+function Menu({ menuItems, onMenuItemClick }: MenuProps) {
     const [personalId, setPersonalId] = useState('')
     const [isCheckingPersonalId, setIsCheckingPersonalId] = useState(false)
     const [isInvalidPersonalId, setIsInvalidPersonalId] = useState(false)
@@ -95,16 +93,9 @@ function Menu({ mealNote, menuItems, onMealNoteChange, onMenuItemClick }: MenuPr
     }
 
     return (
-        <Container className="h-100">
-            <Row className="menu align-items-start h-75">
+        <>
+            <Row className="menu align-items-start">
                 <Col>
-                    <input
-                        id='meal-note-input'
-                        onChange={onMealNoteChange}
-                        placeholder="Modification"
-                        value={mealNote}
-                        type="text"
-                    />
                     <CardColumns className="menu-items mt-3">
                         {menuItems.map(item =>
                             <Card
@@ -120,7 +111,7 @@ function Menu({ mealNote, menuItems, onMealNoteChange, onMenuItemClick }: MenuPr
                     </CardColumns>
                 </Col>
             </Row>
-            <Row className="align-items-end justify-content-center h-25">
+            <Row className="membership-row align-items-end justify-content-center">
                 <Col className="membership-checker-container">
                     <form noValidate onSubmit={validateUtnMembership}>
                         <Row className='justify-content-between' noGutters xl={2} lg={1}>
@@ -151,7 +142,7 @@ function Menu({ mealNote, menuItems, onMealNoteChange, onMenuItemClick }: MenuPr
                     </form>
                 </Col>
             </Row>
-        </Container>
+        </>
     );
 }
 

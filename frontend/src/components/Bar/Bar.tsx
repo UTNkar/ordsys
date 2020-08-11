@@ -338,12 +338,19 @@ function Bar() {
                     </Container>
                 </Col>
                 <Col id="bar-menu-column">
-                    <Menu
-                        mealNote={mealNote}
-                        menuItems={menuItems}
-                        onMealNoteChange={e => setMealNote(e.target.value)}
-                        onMenuItemClick={onMenuItemClick}
-                    />
+                    <Container className='h-100 d-flex flex-column'>
+                        <input
+                            id='meal-note-input'
+                            onChange={e => setMealNote(e.target.value)}
+                            placeholder="Modification"
+                            value={mealNote}
+                            type="text"
+                        />
+                        <Menu
+                            menuItems={menuItems}
+                            onMenuItemClick={onMenuItemClick}
+                        />
+                    </Container>
                 </Col>
                 <Col id="bar-all-orders-column">
                     <AllOrders

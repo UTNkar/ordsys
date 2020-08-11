@@ -35,7 +35,14 @@
     text-align: center;
 }
 
-.menu {
+.membership-row.row {
+    flex: 0 1 25%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.row.menu {
+    flex: 0 3 75%;
     overflow-y: auto;
 
     .menu-card {
