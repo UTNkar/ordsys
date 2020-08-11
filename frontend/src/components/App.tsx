@@ -16,6 +16,7 @@ import Tap from './Tap/Tap';
 import { isAuthenticated, logOut } from '../utils/authenticationHelper';
 import { getEventName, hasEvent } from '../utils/event';
 import { getAppliedTheme } from '../utils/theme';
+import { BarRenderMode } from '../@types';
 
 const commonSnackbarStyles = {
     '& .MuiSnackbarContent-action': {
@@ -65,7 +66,7 @@ function App() {
             return (
                 <>
                     <Route exact path="/" component={Home} />
-                    <Route path="/bar" component={Bar} />
+                    <Route path="/bar" render={props => <Bar {...props} renderMode={BarRenderMode.Full} />} />
                     <Route path="/kitchen" component={Kitchen} />
                     <Route path="/statistics" component={Statistics} />
                     <Route path="/tap" component={Tap} />

@@ -9,7 +9,7 @@ interface OrderDetailProps {
     closeOrderDetail: () => void
     deleteOrder: (orderId: number) => void
     deliverOrder: (orderId: number) => void
-    editOrder: (order: Order) => void
+    editOrder?: (order: Order) => void
     menuItems: MenuItem[]
     order: Order | null
     show: boolean
@@ -40,9 +40,12 @@ function OrderDetail({
                 <Button className="btn-success detail-view-button" onClick={() => deliverOrder(order.id)}>
                     Delivered
                 </Button>
-                <Button className="btn-secondary detail-view-button" onClick={() => editOrder(order)}>
-                    Edit
-                </Button>
+                { editOrder ? 
+                    <Button className="btn-secondary detail-view-button" onClick={() => editOrder(order)}>
+                        Edit
+                    </Button> :
+                    null
+                }
                 <Button className="btn-danger detail-view-button" onClick={() => deleteOrder(order.id)}>
                     Delete
                 </Button>

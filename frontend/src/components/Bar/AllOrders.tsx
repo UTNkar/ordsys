@@ -8,7 +8,7 @@ interface AllOrdersProps {
     menuItems: MenuItem[]
     onOrderDelete: (orderId: number) => void
     onOrderDeliver: (orderId: number, newData: Order | object | undefined) => void
-    onOrderEdit: (order: Order) => void
+    onOrderEdit?: (order: Order) => void
     orders: Order[]
 }
 
@@ -49,10 +49,14 @@ function AllOrders({ menuItems, onOrderDelete, onOrderDeliver, onOrderEdit, orde
                     onOrderDeliver(orderId, { status: OrderStatus.DELIVERED })
                     setShouldShowOrderDetail(false)
                 }}
-                editOrder={order => {
-                    onOrderEdit(order)
-                    setShouldShowOrderDetail(false)
-                }}
+                editOrder={
+                    onOrderEdit !== undefined ?
+                        order => {
+                            onOrderEdit(order)
+                            setShouldShowOrderDetail(false)
+                        } :
+                        undefined
+                }
                 menuItems={menuItems}
                 order={activeOrder}
                 show={shouldShownOrderDetail}

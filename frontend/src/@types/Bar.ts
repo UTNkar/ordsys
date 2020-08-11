@@ -5,4 +5,8 @@ interface CurrentOrderItem extends MenuItem {
     quantity: number
 }
 
+export enum BarRenderMode {
+    Full,
+}
+
 export type { CurrentOrderItem }

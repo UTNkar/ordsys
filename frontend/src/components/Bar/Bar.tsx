@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { FaUndo } from 'react-icons/fa';
 import { MdClose } from 'react-icons/md';
@@ -11,7 +12,7 @@ import Menu from './Menu';
 import OrderNumber from './OrderNumber';
 import { DjangoBackend } from '../../api/DjangoBackend';
 import { getEventId } from '../../utils/event';
-import { CurrentOrderItem, MenuItem, Order, OrderStatus } from '../../@types';
+import { BarRenderMode, CurrentOrderItem, MenuItem, Order, OrderStatus } from '../../@types';
 
 /**
  * Turns an order number into a string on the form 'NN - X' if it is 0 or larger.
@@ -28,7 +29,11 @@ function stringifyOrderNumber(orderNumber: number) {
     return orderNumberString
 }
 
-function Bar() {
+interface BarProps extends RouteComponentProps {
+    renderMode: BarRenderMode
+}
+
+function Bar({ renderMode }: BarProps) {
     const [currentOrder, setCurrentOrder] = useState<CurrentOrderItem[]>([])
     const [mealNote, setMealNote] = useState('')
     const [menuItems, setMenuItems] = useState<MenuItem[]>([])
@@ -283,85 +288,100 @@ function Bar() {
         closeSnackbar(snackbarKey)
     }
 
+    function renderFullView() {
+        return (
+            <>
+                <Row xs={3} className="bar-top">
+                    <Col className="my-2 d-flex flex-row justify-content-center">
+                        <h3 className="pr-2 pt-2 align-self-center">Current Order</h3>
+                        <Button id="btn-undo" variant="outline-danger" onClick={clearCurrentOrder}>
+                            <FaUndo />
+                        </Button>
+                    </Col>
+                    <Col className="my-2 d-flex flex-column justify-content-center">
+                        <h3 className="pt-2 align-self-center">Menu</h3>
+                    </Col>
+                    <Col className="my-2 d-flex flex-column justify-content-center">
+                        <h3 className="pt-2 align-self-center">All Orders</h3>
+                    </Col>
+                </Row>
+                <Row xs={3}>
+                    <Col id="bar-checkout-column">
+                        <Container className="h-100">
+                            <Row className="align-items-start h-40">
+                                <Col className="h-100 overflow-auto">
+                                    <CurrentOrder
+                                        currentOrder={currentOrder}
+                                        removeOrderItem={removeOrderItem}
+                                    />
+                                </Col>
+                            </Row>
+                            <Row className="align-items-end h-60">
+                                <Col>
+                                    <OrderNumber
+                                        addToOrderNumber={addToOrderNumber}
+                                        clearOrderNumber={() => setOrderNumber(-1)}
+                                        onSubmitOrder={onSubmitOrder}
+                                        onOrderNoteChange={e => setOrderNote(e.target.value)}
+                                        /*
+                                         Order number must be larger than 10 and have a remainder larger than
+                                         0 modulo 10 to be valid since the string version is represented as 'NN - X'
+                                         where 'X' is the 10's of the number.
+                                         '00 - X' is not valid (excluding '00 - 0'), and neither is 'NN - 0'.
+                                         Allow order number '00 - 0' as it's internally used for food to employees.
+                                        */
+                                        orderIsValid={
+                                            currentOrder.length > 0
+                                                && ((orderNumber > 10 && orderNumber % 10 > 0)
+                                                    || orderNumber === 0)
+                                        }
+                                        orderNote={orderNote}
+                                        orderNumber={stringifyOrderNumber(orderNumber)}
+                                        showSubmitSpinner={isSubmittingOrder}
+                                    />
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Col>
+                    <Col id="bar-menu-column">
+                        <Container className='h-100 d-flex flex-column'>
+                            <input
+                                id='meal-note-input'
+                                onChange={e => setMealNote(e.target.value)}
+                                placeholder="Modification"
+                                value={mealNote}
+                                type="text"
+                            />
+                            <Menu
+                                menuItems={menuItems}
+                                onMenuItemClick={onMenuItemClick}
+                            />
+                        </Container>
+                    </Col>
+                    <Col id="bar-all-orders-column">
+                        <AllOrders
+                            menuItems={menuItems}
+                            orders={orders}
+                            onOrderDelete={modifyOrder}
+                            onOrderDeliver={modifyOrder}
+                            onOrderEdit={editOrder}
+                        />
+                    </Col>
+                </Row>
+            </>
+        )
+    }
+
+    function selectRenderView () {
+        switch (renderMode) {
+            case (BarRenderMode.Full):
+                return renderFullView()
+        }
+    }
+
     return (
         <Container fluid className="flex-grow-1">
-            <Row xs={3} className="bar-top">
-                <Col className="my-2 d-flex flex-row justify-content-center">
-                    <h3 className="pr-2 pt-2 align-self-center">Current Order</h3>
-                    <Button id="btn-undo" variant="outline-danger" onClick={clearCurrentOrder}>
-                        <FaUndo />
-                    </Button>
-                </Col>
-                <Col className="my-2 d-flex flex-column justify-content-center">
-                    <h3 className="pt-2 align-self-center">Menu</h3>
-                </Col>
-                <Col className="my-2 d-flex flex-column justify-content-center">
-                    <h3 className="pt-2 align-self-center">All Orders</h3>
-                </Col>
-            </Row>
-            <Row xs={3}>
-                <Col id="bar-checkout-column">
-                    <Container className="h-100">
-                        <Row className="align-items-start h-40">
-                            <Col className="h-100 overflow-auto">
-                                <CurrentOrder
-                                    currentOrder={currentOrder}
-                                    removeOrderItem={removeOrderItem}
-                                />
-                            </Col>
-                        </Row>
-                        <Row className="align-items-end h-60">
-                            <Col>
-                                <OrderNumber
-                                    addToOrderNumber={addToOrderNumber}
-                                    clearOrderNumber={() => setOrderNumber(-1)}
-                                    onSubmitOrder={onSubmitOrder}
-                                    onOrderNoteChange={e => setOrderNote(e.target.value)}
-                                    /*
-                                      Order number must be larger than 10 and have a remained larger than 0 modulo 10
-                                      to be valid since the string version is represented as 'NN - X' where 'X' is
-                                      the 10's of the number. '00 - X' is not valid (excluding '00 - 0'), and
-                                      neither is 'NN - 0'.
-                                      Allow order number '00 - 0' as it's internally used for food to employees.
-                                    */
-                                    orderIsValid={
-                                        currentOrder.length > 0
-                                            && ((orderNumber > 10 && orderNumber % 10 > 0)
-                                                || orderNumber === 0)
-                                    }
-                                    orderNote={orderNote}
-                                    orderNumber={stringifyOrderNumber(orderNumber)}
-                                    showSubmitSpinner={isSubmittingOrder}
-                                />
-                            </Col>
-                        </Row>
-                    </Container>
-                </Col>
-                <Col id="bar-menu-column">
-                    <Container className='h-100 d-flex flex-column'>
-                        <input
-                            id='meal-note-input'
-                            onChange={e => setMealNote(e.target.value)}
-                            placeholder="Modification"
-                            value={mealNote}
-                            type="text"
-                        />
-                        <Menu
-                            menuItems={menuItems}
-                            onMenuItemClick={onMenuItemClick}
-                        />
-                    </Container>
-                </Col>
-                <Col id="bar-all-orders-column">
-                    <AllOrders
-                        menuItems={menuItems}
-                        orders={orders}
-                        onOrderDelete={modifyOrder}
-                        onOrderDeliver={modifyOrder}
-                        onOrderEdit={editOrder}
-                    />
-                </Col>
-            </Row>
+            {selectRenderView()}
         </Container>
     );
 }
