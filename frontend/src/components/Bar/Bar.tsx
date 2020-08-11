@@ -13,6 +13,7 @@ import OrderNumber from './OrderNumber';
 import { DjangoBackend } from '../../api/DjangoBackend';
 import { getEventId } from '../../utils/event';
 import { BarRenderMode, CurrentOrderItem, MenuItem, Order, OrderStatus } from '../../@types';
+import MembershipChecker from '../MembershipChecker/MembershipChecker';
 
 /**
  * Turns an order number into a string on the form 'NN - X' if it is 0 or larger.
@@ -352,10 +353,19 @@ function Bar({ renderMode }: BarProps) {
                                 value={mealNote}
                                 type="text"
                             />
-                            <Menu
-                                menuItems={menuItems}
-                                onMenuItemClick={onMenuItemClick}
-                            />
+                            <Row className="menu align-items-start">
+                                <Col>
+                                    <Menu
+                                        menuItems={menuItems}
+                                        onMenuItemClick={onMenuItemClick}
+                                    />
+                                </Col>
+                            </Row>
+                            <Row className="membership-row align-items-end justify-content-center">
+                                <Col className="membership-checker-container">
+                                    <MembershipChecker />
+                                </Col>
+                            </Row>
                         </Container>
                     </Col>
                     <Col id="bar-all-orders-column">

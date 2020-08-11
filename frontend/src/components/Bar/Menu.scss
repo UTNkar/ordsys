@@ -35,12 +35,6 @@
     text-align: center;
 }
 
-.membership-row.row {
-    flex: 0 1 25%;
-    margin-left: 0;
-    margin-right: 0;
-}
-
 .row.menu {
     flex: 0 3 75%;
     overflow-y: auto;
@@ -60,25 +54,4 @@
             background: var(--button-active-color);
         }
     }
-}
-
-.membership-checker-container {
-    border: 1px solid #aaa;
-    border-radius: 5px;
-    margin-bottom: 2.5vh;
-    padding: 2rem 1rem 0.75rem 1rem;
-
-    .MuiTextField-root {
-        width: 97.5%;
-
-        * {
-            font-family: TexGyreAdventorRegular, sans-serif;
-        }
-    }
-}
-
-#personal-id-submit {
-    height: 2.5rem;
-    width: 97.5%;
-    font-family: TeXGyreAdventorBold, sans-serif;
 }
