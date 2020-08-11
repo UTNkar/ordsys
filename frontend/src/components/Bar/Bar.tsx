@@ -13,12 +13,27 @@ import { DjangoBackend } from '../../api/DjangoBackend';
 import { getEventId } from '../../utils/event';
 import { CurrentOrderItem, MenuItem, Order, OrderStatus } from '../../@types';
 
+/**
+ * Turns an order number into a string on the form 'NN - X' if it is 0 or larger.
+ * @param orderNumber - the order number to convert
+ */
+function stringifyOrderNumber(orderNumber: number) {
+    let orderNumberString =
+        orderNumber >= 0 ?
+            `${Math.floor(orderNumber / 10)} - ${orderNumber % 10}` :
+            ''
+    if (orderNumberString.length === 5) {
+        orderNumberString = '0'.concat(orderNumberString)
+    }
+    return orderNumberString
+}
+
 function Bar() {
     const [currentOrder, setCurrentOrder] = useState<CurrentOrderItem[]>([])
     const [mealNote, setMealNote] = useState('')
     const [menuItems, setMenuItems] = useState<MenuItem[]>([])
     const [orderNote, setOrderNote] = useState('')
-    const [orderNumber, setOrderNumber] = useState('')
+    const [orderNumber, setOrderNumber] = useState(-1)
     const [orders, setOrders] = useState<Order[]>([])
     const [orderToEdit, setOrderToEdit] = useState<Order | null>(null)
     const [isSubmittingOrder, setIsSubmittingOrder] = useState(false)
@@ -43,8 +58,11 @@ function Bar() {
     }, [])
 
     function addToOrderNumber(digit: number) {
-        const newNumber = (Number(orderNumber) % 10) * 10 + digit
-        setOrderNumber(String(newNumber))
+        if (orderNumber >= 0) {
+            setOrderNumber((orderNumber % 100) * 10 + digit)
+        } else {
+            setOrderNumber(digit)
+        }
     }
 
     function clearCurrentOrder() {
@@ -52,7 +70,7 @@ function Bar() {
         setCurrentOrder([])
         setMealNote('')
         setOrderNote('')
-        setOrderNumber('')
+        setOrderNumber(-1)
         setOrderToEdit(null)
     }
 
@@ -74,7 +92,8 @@ function Bar() {
         })
         setCurrentOrder(orderToEdit)
         setOrderNote(order.note)
-        setOrderNumber(String(order.customer_number))
+        // Extract 'NNX' from 'NN - X'
+        setOrderNumber(parseInt(order.customer_number.substring(0, 2).concat(order.customer_number[5])))
         setOrderToEdit(order)
         enqueueSnackbar('You are editing an order', {
             action: <MuiButton onClick={() => clearCurrentOrder()}>Cancel edit</MuiButton>,
@@ -180,7 +199,7 @@ function Bar() {
             }
             modifyOrder(orderToEdit.id, payload)
         } else {
-            const payloadBase = { event: eventId, customer_number: Number(orderNumber), note: orderNote }
+            const payloadBase = { event: eventId, customer_number: stringifyOrderNumber(orderNumber), note: orderNote }
             const foodPromise =
                 foodItems.length > 0
                     ? DjangoBackend.post<Order>('/api/manage_orders_with_order_items/', {
@@ -295,12 +314,23 @@ function Bar() {
                             <Col>
                                 <OrderNumber
                                     addToOrderNumber={addToOrderNumber}
-                                    clearOrderNumber={() => setOrderNumber('')}
+                                    clearOrderNumber={() => setOrderNumber(-1)}
                                     onSubmitOrder={onSubmitOrder}
                                     onOrderNoteChange={e => setOrderNote(e.target.value)}
-                                    orderIsValid={currentOrder.length > 0 && orderNumber !== ''}
+                                    /*
+                                      Order number must be larger than 10 and have a remained larger than 0 modulo 10
+                                      to be valid since the string version is represented as 'NN - X' where 'X' is
+                                      the 10's of the number. '00 - X' is not valid (excluding '00 - 0'), and
+                                      neither is 'NN - 0'.
+                                      Allow order number '00 - 0' as it's internally used for food to employees.
+                                    */
+                                    orderIsValid={
+                                        currentOrder.length > 0
+                                            && ((orderNumber > 10 && orderNumber % 10 > 0)
+                                                || orderNumber === 0)
+                                    }
                                     orderNote={orderNote}
-                                    orderNumber={orderNumber}
+                                    orderNumber={stringifyOrderNumber(orderNumber)}
                                     showSubmitSpinner={isSubmittingOrder}
                                 />
                             </Col>

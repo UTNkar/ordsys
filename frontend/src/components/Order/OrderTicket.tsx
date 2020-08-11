@@ -38,7 +38,7 @@ interface OrderTicketProps {
     note?: string
     onClick?: () => void
     orderItems?: OrderItem[]
-    orderNumber?: number
+    orderNumber: string
     status?: string
 }
 

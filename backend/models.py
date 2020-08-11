@@ -79,7 +79,11 @@ class Order(models.Model):
     beverages_only = models.BooleanField(
         help_text=_('Specifies if the order contains only beverages or only food.')
     )
-    customer_number = models.PositiveSmallIntegerField()
+    # Represented as 'NN - X'
+    customer_number = models.CharField(
+        max_length=6,
+        verbose_name=_('customer_number')
+    )
     created_timestamp = models.DateTimeField(
         default=now,
         editable=False,
