@@ -22,6 +22,15 @@ function Home() {
                     // @ts-ignore
                     align="center"
                 >
+                    <Link to='/delivery'>
+                        <IconButton iconUrl='/assets/images/take-away.svg' text='Delivery' />
+                    </Link>
+                </Col>
+                <Col
+                    className="mx-5 p-0 border border-dark rounded"
+                    // @ts-ignore
+                    align="center"
+                >
                     <Link to='/kitchen'>
                         <IconButton iconUrl='/assets/images/pot.svg' text='Kitchen' />
                     </Link>

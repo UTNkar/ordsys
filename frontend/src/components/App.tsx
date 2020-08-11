@@ -65,7 +65,8 @@ function App() {
             return (
                 <>
                     <Route exact path="/" component={Home} />
-                    <Route path="/bar" render={props => <Bar {...props} renderMode={BarRenderMode.Full} />} />
+                    <Route path="/bar" render={props => <Bar {...props} renderMode={BarRenderMode.FULL} />} />
+                    <Route path="/delivery" render={props => <Bar {...props} renderMode={BarRenderMode.DELIVERY} />} />
                     <Route
                         path="/kitchen"
                         render={props => <Kitchen {...props} renderMode={KitchenRenderMode.FOOD} /> }

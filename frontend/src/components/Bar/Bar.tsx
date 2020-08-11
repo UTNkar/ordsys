@@ -382,10 +382,35 @@ function Bar({ renderMode }: BarProps) {
         )
     }
 
-    function selectRenderView () {
+    function renderDeliveryView() {
+        return (
+            <>
+                <Row className="bar-top">
+                    <Col className=" justify-content-center">
+                        <h3 className="pt-2 align-self-center">All Orders</h3>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col id="bar-all-orders-column">
+                        <AllOrders
+                            menuItems={menuItems}
+                            orders={orders}
+                            onOrderDelete={modifyOrder}
+                            onOrderDeliver={modifyOrder}
+                            onOrderEdit={undefined}
+                        />
+                    </Col>
+                </Row>
+            </>
+        )
+    }
+
+    function selectRenderView() {
         switch (renderMode) {
-            case (BarRenderMode.Full):
+            case (BarRenderMode.FULL):
                 return renderFullView()
+            case (BarRenderMode.DELIVERY):
+                return renderDeliveryView()
         }
     }
 
