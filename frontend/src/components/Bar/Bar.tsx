@@ -199,7 +199,7 @@ function Bar({ renderMode }: BarProps) {
         setIsSubmittingOrder(true)
         if (orderToEdit !== null) {
             const payload = {
-                customer_number: orderNumber,
+                customer_number: stringifyOrderNumber(orderNumber),
                 note: orderNote,
                 order_items: orderToEdit.beverages_only ? beverageItems : foodItems
             }
