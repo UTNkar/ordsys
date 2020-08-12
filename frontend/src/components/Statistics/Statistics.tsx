@@ -64,13 +64,9 @@ function Statistics() {
     }
 
     return (
-        <Container className="flex-grow-1">
-            <Row className="h-25 justify-content-center">
-                <Col
-                    className="col-auto w-50"
-                    // @ts-ignore
-                    align="center"
-                >
+        <Container className="statistics-container">
+            <Row className="event-selector-row">
+                <Col>
                     <form noValidate autoComplete="off" onSubmit={onEventSubmit}>
                         <Autocomplete
                             autoHighlight
@@ -103,7 +99,7 @@ function Statistics() {
                     </form>
                 </Col>
             </Row>
-            <Row className="h-75">
+            <Row className="chart-output-row">
                 <Col>
                     <CanvasJSChart options={chartOptions} />
                 </Col>
