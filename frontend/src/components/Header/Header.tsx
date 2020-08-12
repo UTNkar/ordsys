@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Nav, Navbar } from 'react-bootstrap';
 import { FaEdit, FaSignOutAlt } from 'react-icons/fa'
-import { IconButton as MuiIconButton } from '@material-ui/core';
+import { IconButton as MuiIconButton, useMediaQuery } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import './Header.scss';
 
@@ -19,14 +19,20 @@ function Header({
     eventName, onEditEventClick, onLogOutClick, organisationLogo, showEditEvent, showLogOutButton
 }: HeaderProps) {
     const [date, setDate] = useState(new Date().toLocaleString('sv-SE'))
+    const dateIntervalId = useRef<number | undefined>(undefined)
+
+    // No point in showing date and time on mobile devices as they already have a clock in the top right corner
+    const showDateAndTime = useMediaQuery('(min-width: 1200px)')
     const { enqueueSnackbar } = useSnackbar()
 
     useEffect(() => {
-        const intervalId = window.setInterval(() => setDate(new Date().toLocaleString('sv-SE')), 1000)
-        return function cleanup() {
-            window.clearInterval(intervalId)
+        if (showDateAndTime) {
+            setDate(new Date().toLocaleString('sv-SE'))
+            dateIntervalId.current = window.setInterval(() => setDate(new Date().toLocaleString('sv-SE')), 1000)
+        } else {
+            window.clearInterval(dateIntervalId.current)
         }
-    }, [])
+    }, [showDateAndTime])
 
     function logOut() {
         onLogOutClick()
@@ -37,7 +43,7 @@ function Header({
     }
 
     return (
-        <Navbar className="header" expand="lg">
+        <Navbar className="header" expand="sm">
             <Link to="/">
                 <Navbar.Brand>
                     <img
@@ -48,24 +54,30 @@ function Header({
             </Link>
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="ml-auto">
-                    <Nav.Item className="ml-3">{eventName}</Nav.Item>
-                    {!showEditEvent
-                        ? null
-                        : <Nav.Item className="ml-2 mr-3">
-                            <MuiIconButton className='p-0 pb-1' onClick={onEditEventClick}>
+                <Nav className="header-nav">
+                    {eventName
+                        ? <Nav.Item>{eventName}</Nav.Item>
+                        : null
+                    }
+                    {showEditEvent
+                        ? <Nav.Item className='nav-item-with-button'>
+                            <MuiIconButton onClick={onEditEventClick}>
                                 <FaEdit color='#ffffff' />
                             </MuiIconButton>
                         </Nav.Item>
+                        : null
                     }
-                    <Nav.Item className="mx-3">{date}</Nav.Item>
-                    {!showLogOutButton
-                        ? null
-                        : <Nav.Item className="mx-1">
-                            <MuiIconButton className='p-0 pb-1' onClick={logOut}>
+                    {showDateAndTime
+                        ? <Nav.Item>{date}</Nav.Item>
+                        : null
+                    }
+                    {showLogOutButton
+                        ? <Nav.Item className='nav-item-with-button'>
+                            <MuiIconButton onClick={logOut}>
                                 <FaSignOutAlt color='#ffffff' />
                             </MuiIconButton>
                         </Nav.Item>
+                        : null
                     }
                 </Nav>
             </Navbar.Collapse>

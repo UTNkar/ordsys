@@ -1,20 +1,42 @@
 .header.navbar {
-    /* Prevents Safari from displaying an incorrect header height */
-    min-height: 6.5vh;
-    max-height: 6.5vh;
+    flex: 0 0 auto;
     background-color: var(--button-background-color);
     color: var(--light-text-color);
 
-    .navbar-brand {
-        padding-left: 1em;
+    @media (min-width: 0px) {
+        .navbar-brand img {
+            height: 1.75em;
+        }
+    }
 
-        img {
+    @media (min-width: 1000px) {
+        .navbar-brand img {
             height: 2em;
         }
     }
 
-    .nav-item {
-        font-size: 2em;
+    .navbar-brand {
+        padding: 0.2em 0 0.2em 0.5em;
+    }
+
+    .header-nav {
+        flex-flow: row wrap;
+        width: 100%;
+        justify-content: flex-end;
+
+        .nav-item {
+            margin-left: 0.75em;
+            margin-right: 0.4em;
+            font-size: 2em;
+        }
+
+        .nav-item-with-button {
+            margin-left: 0;
+
+            > button {
+                padding: 0 0 0.2em 0;
+            }
+        }
     }
 
     .navbar-toggler {
