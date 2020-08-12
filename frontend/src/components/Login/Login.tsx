@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button as MuiButton, CircularProgress, MenuItem, TextField } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import './Login.scss';
-import FormContainer from '../FormContainer/FormContainer';
+import FlexContainer from '../FlexContainer/FlexContainer';
 import { DjangoBackend } from '../../api/DjangoBackend';
 import { logIn } from '../../utils/authenticationHelper';
 import { AxiosResponse } from 'axios';
@@ -79,7 +79,7 @@ function Login({ onLogin }: LoginProps) {
     }
 
     return (
-        <FormContainer>
+        <FlexContainer fluid='md'>
             <div
                 className="pb-5"
                 // @ts-ignore
@@ -87,7 +87,7 @@ function Login({ onLogin }: LoginProps) {
             >
                 <h1>OrdSys</h1>
             </div>
-            <form noValidate autoComplete="off" onSubmit={onLoginSubmit}>
+            <form id='login-form' noValidate autoComplete="off" onSubmit={onLoginSubmit}>
                 <TextField
                     disabled={organisations.length === 0}
                     fullWidth
@@ -144,7 +144,7 @@ function Login({ onLogin }: LoginProps) {
                     {authenticationInProgress ? <CircularProgress size='1.6rem' /> : 'Sign in'}
                 </MuiButton>
             </form>
-        </FormContainer>
+        </FlexContainer>
     );
 }
 

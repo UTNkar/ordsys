@@ -4,7 +4,7 @@ import Autocomplete, { AutocompleteInputChangeReason, createFilterOptions } from
 import { FilterOptionsState } from '@material-ui/lab/useAutocomplete/useAutocomplete';
 import { useSnackbar } from 'notistack';
 import './EventSelector.scss';
-import FormContainer from '../FormContainer/FormContainer';
+import FlexContainer from '../FlexContainer/FlexContainer';
 import { DjangoBackend } from '../../api/DjangoBackend';
 import { setEvent } from '../../utils/event';
 import { AxiosResponse } from 'axios';
@@ -147,7 +147,7 @@ function EventSelector({ isEditingEvent, onEditCancel, onEventChosen }: EventSel
     }
 
     return (
-        <FormContainer>
+        <FlexContainer fluid='md'>
             <div
                 className="pb-5"
                 // @ts-ignore
@@ -155,7 +155,7 @@ function EventSelector({ isEditingEvent, onEditCancel, onEventChosen }: EventSel
             >
                 <h1>OrdSys</h1>
             </div>
-            <form noValidate autoComplete="off" onSubmit={onEventSubmit}>
+            <form id='event-selection-form' noValidate autoComplete="off" onSubmit={onEventSubmit}>
                 <Autocomplete
                     autoHighlight
                     className="my-4"
@@ -208,7 +208,7 @@ function EventSelector({ isEditingEvent, onEditCancel, onEventChosen }: EventSel
                     </MuiButton>
                 }
             </form>
-        </FormContainer>
+        </FlexContainer>
     );
 }
 

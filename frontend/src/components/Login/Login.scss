@@ -1,1 +1,9 @@
+@import 'src/custom_bootstrap';
 
+#login-form {
+    width: 50%;
+
+    @include media-breakpoint-down(md) {
+        width: 80%;
+    }
+}
