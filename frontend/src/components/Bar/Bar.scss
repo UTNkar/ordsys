@@ -17,6 +17,11 @@
     }
 }
 
+.row.menu {
+    flex: 0 3 75%;
+    overflow-y: auto;
+}
+
 #bar-checkout-column, #bar-menu-column {
     margin-top: 1vh;
     height: 86vh;
@@ -27,5 +32,17 @@
 #bar-all-orders-column {
     margin-top: 1vh;
     height: 83.5vh;
+    overflow-y: auto;
+}
+
+#waiter-menu-column {
+    height: 47vh;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#waiter-all-orders-column {
+    margin-top: 1vh;
+    height: 30vh;
     overflow-y: auto;
 }

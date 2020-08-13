@@ -65,8 +65,14 @@ function App() {
             return (
                 <>
                     <Route exact path="/" component={Home} />
-                    <Route path="/bar" render={props => <Bar {...props} renderMode={BarRenderMode.FULL} />} />
-                    <Route path="/delivery" render={props => <Bar {...props} renderMode={BarRenderMode.DELIVERY} />} />
+                    <Route
+                        path="/bar"
+                        render={props => <Bar {...props} renderMode={BarRenderMode.FULL} />}
+                    />
+                    <Route
+                        path="/delivery"
+                        render={props => <Bar {...props} renderMode={BarRenderMode.DELIVERY} />}
+                    />
                     <Route
                         path="/kitchen"
                         render={props => <Kitchen {...props} renderMode={KitchenRenderMode.FOOD} /> }
@@ -75,6 +81,10 @@ function App() {
                     <Route
                         path="/tap"
                         render={props => <Kitchen {...props} renderMode={KitchenRenderMode.BEVERAGES} /> }
+                    />
+                    <Route
+                        path="/waiter"
+                        render={props => <Bar {...props} renderMode={BarRenderMode.WAITER} />}
                     />
                 </>
             );

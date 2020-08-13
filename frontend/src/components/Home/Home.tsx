@@ -53,6 +53,15 @@ function Home() {
                         <IconButton iconUrl='/assets/images/chart.svg' text='Statistics' />
                     </Link>
                 </Col>
+                <Col
+                    className="mx-5 p-0 border border-dark rounded"
+                    // @ts-ignore
+                    align="center"
+                >
+                    <Link to='/waiter'>
+                        <IconButton iconUrl='/assets/images/waiter.svg' text='Waiter' />
+                    </Link>
+                </Col>
             </Row>
         </Container>
     );

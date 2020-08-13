@@ -35,23 +35,19 @@
     text-align: center;
 }
 
-.row.menu {
-    flex: 0 3 75%;
-    overflow-y: auto;
+.menu-card {
+    background-color: var(--button-background-color);
+    color: var(--light-text-color);
+    text-align: center;
+    font-size: 2rem;
+    cursor: pointer;
 
-    .menu-card {
-        background-color: var(--button-background-color);
-        color: var(--light-text-color);
-        text-align: center;
-        font-size: 2rem;
-        cursor: pointer;
+    &:hover {
+        background-color: var(--button-hover-color);
+    }
 
-        &:hover {
-            background-color: var(--button-hover-color);
-        }
-
-        &:active {
-            background: var(--button-active-color);
-        }
+    &:active {
+        background: var(--button-active-color);
     }
 }
+

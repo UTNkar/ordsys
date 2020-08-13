@@ -157,7 +157,11 @@ function Bar({ renderMode }: BarProps) {
         ])
             .then(([menuItems, orders]) => {
                 setMenuItems(menuItems.data)
-                setOrders(orders.data)
+                if (renderMode === BarRenderMode.WAITER) {
+                    setOrders(orders.data.reverse())
+                } else {
+                    setOrders(orders.data)
+                }
             })
             .catch(reason => console.log(reason.response))
     }
@@ -299,6 +303,19 @@ function Bar({ renderMode }: BarProps) {
         }
     }
 
+    /**
+     * Validates if the currently queued order meets the follow criteria:
+     * - Order number must be larger than 10
+     * - Order number must have have a remainder larger than 0 modulo 10.
+     * <br>
+     * These must be true as the string version is represented as 'NN - X' where 'X' is the 10's of the number.
+     * '00 - X' is not valid (excluding '00 - 0'), and neither is 'NN - 0'.
+     * The special order number '00 - 0' is allowed as it's internally used for food to employees.
+     */
+    function validateCurrentOrder() {
+        return currentOrder.length > 0 && ((orderNumber > 10 && orderNumber % 10 > 0) || orderNumber === 0)
+    }
+
     function removeOrderItem(itemToRemove: CurrentOrderItem) {
         setCurrentOrder(currentOrder.filter(order =>
             order.id !== itemToRemove.id || order.mealNote !== itemToRemove.mealNote
@@ -374,18 +391,7 @@ function Bar({ renderMode }: BarProps) {
                                         clearOrderNumber={() => setOrderNumber(-1)}
                                         onSubmitOrder={onSubmitOrder}
                                         onOrderNoteChange={e => setOrderNote(e.target.value)}
-                                        /*
-                                         Order number must be larger than 10 and have a remainder larger than
-                                         0 modulo 10 to be valid since the string version is represented as 'NN - X'
-                                         where 'X' is the 10's of the number.
-                                         '00 - X' is not valid (excluding '00 - 0'), and neither is 'NN - 0'.
-                                         Allow order number '00 - 0' as it's internally used for food to employees.
-                                        */
-                                        orderIsValid={
-                                            currentOrder.length > 0
-                                                && ((orderNumber > 10 && orderNumber % 10 > 0)
-                                                    || orderNumber === 0)
-                                        }
+                                        orderIsValid={validateCurrentOrder()}
                                         orderNote={orderNote}
                                         orderNumber={stringifyOrderNumber(orderNumber)}
                                         showSubmitSpinner={isSubmittingOrder}
@@ -455,12 +461,92 @@ function Bar({ renderMode }: BarProps) {
         )
     }
 
+    function renderWaiterView() {
+        return (
+            <>
+                <Row xs={2} className="bar-top">
+                    <Col className="my-2 d-flex flex-row justify-content-center">
+                        <h3 className="pr-2 pt-2 align-self-center">Current Order</h3>
+                        <Button id="btn-undo" variant="outline-danger" onClick={clearCurrentOrder}>
+                            <FaUndo />
+                        </Button>
+                    </Col>
+                    <Col className="my-2 d-flex flex-column justify-content-center">
+                        <h3 className="pt-2 align-self-center">Menu</h3>
+                    </Col>
+                </Row>
+                <Row xs={2}>
+                    <Col id="bar-checkout-column">
+                        <Container className="h-100">
+                            <Row className="align-items-start h-40">
+                                <Col className="h-100 overflow-auto">
+                                    <CurrentOrder
+                                        currentOrder={currentOrder}
+                                        removeOrderItem={removeOrderItem}
+                                    />
+                                </Col>
+                            </Row>
+                            <Row className="align-items-end h-60">
+                                <Col>
+                                    <OrderNumber
+                                        addToOrderNumber={addToOrderNumber}
+                                        clearOrderNumber={() => setOrderNumber(-1)}
+                                        onSubmitOrder={onSubmitOrder}
+                                        onOrderNoteChange={e => setOrderNote(e.target.value)}
+                                        orderIsValid={validateCurrentOrder()}
+                                        orderNote={orderNote}
+                                        orderNumber={stringifyOrderNumber(orderNumber)}
+                                        showSubmitSpinner={isSubmittingOrder}
+                                    />
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Col>
+                    <Col id="bar-menu-column">
+                        <Container className='h-100 d-flex flex-column'>
+                            <input
+                                id='meal-note-input'
+                                onChange={e => setMealNote(e.target.value)}
+                                placeholder="Modification"
+                                value={mealNote}
+                                type="text"
+                            />
+                            <Col>
+                                <Row className="menu align-items-start" id="waiter-menu-column">
+                                    <Col>
+                                        <Menu
+                                            menuItems={menuItems}
+                                            onMenuItemClick={onMenuItemClick}
+                                        />
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col className="align-items-end border-bottom" id="waiter-all-orders-column">
+                                        <AllOrders
+                                            menuItems={menuItems}
+                                            orders={orders}
+                                            onOrderDelete={modifyOrder}
+                                            onOrderDeliver={modifyOrder}
+                                            onOrderEdit={editOrder}
+                                        />
+                                    </Col>
+                                </Row>
+                            </Col>
+                        </Container>
+                    </Col>
+                </Row>
+            </>
+        )
+    }
+
     function selectRenderView() {
         switch (renderMode) {
             case (BarRenderMode.FULL):
                 return renderFullView()
             case (BarRenderMode.DELIVERY):
                 return renderDeliveryView()
+            case (BarRenderMode.WAITER):
+                return renderWaiterView()
         }
     }
 
