@@ -17,14 +17,14 @@ function showStats(ordersWaiting: Order[], ordersInProgress: Order[], menuItems:
         orderItems.some(orderItem => orderItem.menu === menuItem.id)
     )
     return relevantMenuItems.map(menuItem =>
-        <li key={menuItem.id}>
+        <div className='stats-list-item' key={menuItem.id}>
             {`
                 ${orderItems.reduce((accumulator, currentValue) =>
                     accumulator + (currentValue.menu === menuItem.id ? currentValue.quantity : 0), 0
-                )}
+                )} st
                 ${menuItem.item_name}
             `}
-        </li>
+        </div>
     );
 }
 
@@ -225,11 +225,11 @@ function Kitchen({ renderMode }: KitchenProps) {
                         <Row id='stats-row'>
                             <Col id='stats-column'>
                                 <h4>
-                                    Total (waiting + in progress)
+                                    Items waiting and in progress
                                 </h4>
-                                <ul id='stats-list'>
+                                <div id='stats-list'>
                                     {showStats(ordersWaiting, ordersInProgress, menuItems)}
-                                </ul>
+                                </div>
                             </Col>
                         </Row>
                     </Col>

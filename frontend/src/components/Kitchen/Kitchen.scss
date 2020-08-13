@@ -1,4 +1,5 @@
 $order-column-border: 1px solid #c4c4c4;
+$stats-y-margin: 0.75rem;
 
 #kitchen-container {
     display: flex;
@@ -64,12 +65,26 @@ $order-column-border: 1px solid #c4c4c4;
         justify-content: flex-start;
 
         h4 {
-            margin: 0.75rem 0;
+            margin: $stats-y-margin 0;
         }
     }
 
     #stats-list {
-        padding-left: 0;
-        list-style: none;
+        display: flex;
+        flex-flow: row wrap;
+        margin: $stats-y-margin 0;
+
+        .stats-list-item {
+            margin-bottom: 0.25rem;
+            font-size: 1.25rem;
+
+            @media (min-width: 0px) {
+                flex: 0 1 50%;
+            }
+
+            @media (min-width: 1600px) {
+                flex: 0 1 33.33%;
+            }
+        }
     }
 }
