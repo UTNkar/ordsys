@@ -120,19 +120,19 @@ function Kitchen({ renderMode }: KitchenProps) {
     function renderFoodView() {
         return (
             <>
-                <Row id="top-row" className="text-center">
+                <Row id="kitchen-top-row">
                     <Col>
-                        <h2 className="py-3">Waiting</h2>
+                        <h2>Waiting</h2>
                     </Col>
                     <Col>
-                        <h2 className="py-3">In Progress</h2>
+                        <h2>In Progress</h2>
                     </Col>
                     <Col>
-                        <h2 className="py-3">Done</h2>
+                        <h2>Done</h2>
                     </Col>
                 </Row>
-                <Row id="content-row" className="justify-content-center">
-                    <Col className="border-right order-column">
+                <Row id="kitchen-content-row">
+                    <Col className="order-column">
                         {ordersWaiting.map(order =>
                             <OrderTicket
                                 key={order.id}
@@ -157,7 +157,7 @@ function Kitchen({ renderMode }: KitchenProps) {
                             />
                         )}
                     </Col>
-                    <Col className="border-right order-column">
+                    <Col className="order-column">
                         {ordersInProgress.map(order =>
                             <OrderTicket
                                 key={order.id}
@@ -194,9 +194,9 @@ function Kitchen({ renderMode }: KitchenProps) {
                             />
                         )}
                     </Col>
-                    <Col>
-                        <Row>
-                            <Col id="done-order-column" className="border-bottom">
+                    <Col id='done-and-stats-column'>
+                        <Row id='done-orders-row'>
+                            <Col className="order-column">
                                 {ordersDone.map(order =>
                                     <OrderTicket
                                         key={order.id}
@@ -222,21 +222,14 @@ function Kitchen({ renderMode }: KitchenProps) {
                                 )}
                             </Col>
                         </Row>
-                        <Row>
-                            <Col>
-                                <h4 className="py-3 heading">
+                        <Row id='stats-row'>
+                            <Col id='stats-column'>
+                                <h4>
                                     Total (waiting + in progress)
                                 </h4>
-                                <Row
-                                    // @ts-ignore
-                                    align="left"
-                                >
-                                    <Col>
-                                        <ul className="list-unstyled">
-                                            {showStats(ordersWaiting, ordersInProgress, menuItems)}
-                                        </ul>
-                                    </Col>
-                                </Row>
+                                <ul id='stats-list'>
+                                    {showStats(ordersWaiting, ordersInProgress, menuItems)}
+                                </ul>
                             </Col>
                         </Row>
                     </Col>
@@ -248,16 +241,16 @@ function Kitchen({ renderMode }: KitchenProps) {
     function renderBeveragesView() {
         return (
             <>
-                <Row id="top-row" className="text-center">
+                <Row id="kitchen-top-row">
                     <Col>
-                        <h2 className="py-3">Waiting</h2>
+                        <h2>Waiting</h2>
                     </Col>
                     <Col>
-                        <h2 className="py-3">Done</h2>
+                        <h2>Done</h2>
                     </Col>
                 </Row>
-                <Row id="content-row" className="justify-content-center">
-                    <Col className="border-right order-column">
+                <Row id="kitchen-content-row">
+                    <Col className="order-column">
                         {ordersWaiting.map(order =>
                             <OrderTicket
                                 key={order.id}
@@ -313,7 +306,7 @@ function Kitchen({ renderMode }: KitchenProps) {
     }
 
     return (
-        <Container fluid className="flex-grow-1">
+        <Container fluid id="kitchen-container">
             { renderMode === KitchenRenderMode.FOOD ?
                 renderFoodView() :
                 renderBeveragesView()

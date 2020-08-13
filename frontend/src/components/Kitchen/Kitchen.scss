@@ -1,29 +1,75 @@
-#top-row {
-    height: 6.5vh;
+$order-column-border: 1px solid #c4c4c4;
+
+#kitchen-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
 }
 
-#content-row {
-    height: 87vh;
-}
+#kitchen-top-row {
+    flex: 0 0 auto;
 
-#content-row .order-column {
-    height: 100%;
-    overflow-y: auto;
-
-    .card {
-        margin-bottom: 1rem;
+    h2 {
+        text-align: center;
+        margin: 1rem auto;
     }
 }
 
-#done-order-column {
-    height: 63.5vh;
-    overflow-y: auto;
+#kitchen-content-row {
+    flex: 1 1;
+    // Wrapping must be disabled as well as min-height and flex-basis set to 0 to allow
+    // the content row to stay within it's parents height (otherwise it will grow beyond it).
+    // Explicitly use flex-basis: 0 instead of flex: 1 1 0 as it is not applied properly.
+    flex-basis: 0;
+    min-height: 0;
+    flex-wrap: nowrap;
+    margin-bottom: 2vh;
 
-    .card {
-        margin-bottom: 1rem;
+    .order-column {
+        overflow-y: auto;
+
+        .card {
+            margin-bottom: 1rem;
+        }
     }
-}
 
-#order-item-request {
-    list-style-type: none;
+    > .order-column {
+        border-right: $order-column-border;
+    }
+
+    #done-and-stats-column {
+        display: flex;
+        flex-direction: column;
+        overflow-y: unset;
+    }
+
+    #done-orders-row {
+        flex: 2 1 0;
+        overflow-y: auto;
+
+        .order-column {
+            border-bottom: $order-column-border;
+        }
+    }
+
+    #stats-row {
+        flex: 1 2 0;
+        overflow-y: auto;
+    }
+
+    #stats-column {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+
+        h4 {
+            margin: 0.75rem 0;
+        }
+    }
+
+    #stats-list {
+        padding-left: 0;
+        list-style: none;
+    }
 }
