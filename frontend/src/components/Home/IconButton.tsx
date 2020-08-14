@@ -10,11 +10,11 @@ function IconButton({ iconUrl, text }: IconButtonProps) {
     return (
         <>
             <img
-                className="w-50 mb-1 mt-4"
+                className="icon-button-img"
                 src={iconUrl}
                 alt={text}
             />
-            <div className="button-text">{ text }</div>
+            <div className="icon-button-text">{ text }</div>
         </>
     );
 }

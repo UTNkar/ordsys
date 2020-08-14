@@ -1,8 +1,28 @@
-.row.home-buttons .col a {
-    display: block;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    color: inherit;
+.home-buttons-container {
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+
+    .home-buttons-row {
+        justify-content: space-around;
+        flex: 1 1 auto;
+
+        .home-button {
+            padding: 0;
+            margin: 0.5rem;
+            border: 1px solid black;
+            border-radius: 0.5rem;
+            text-align: center;
+
+            a {
+                display: block;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                color: inherit;
+            }
+        }
+    }
+
 }

@@ -1,5 +1,31 @@
-.button-text {
-    padding-top: 0.5em;
-    padding-bottom: 0.75em;
-    font-size: calc(0.2vw + 0.5vh + 1vmin + 0.2em);
+@media (min-width: 0px) {
+    .icon-button-img {
+        height: 60px;
+        width: 60px;
+    }
+
+    .icon-button-text {
+        font-size: 1.25em;
+    }
+}
+
+@media (min-width: 1000px) {
+    .icon-button-img {
+        height: 100px;
+        width: 100px;
+    }
+
+    .icon-button-text {
+        font-size: 1.5em;
+    }
+}
+
+.icon-button-img {
+    margin-top: 1em;
+    margin-bottom: 0.1em;
+}
+
+.icon-button-text {
+    padding-top: 0.25em;
+    padding-bottom: 0.5em;
 }
