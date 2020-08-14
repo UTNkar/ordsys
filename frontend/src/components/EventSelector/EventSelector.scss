@@ -1,4 +1,6 @@
-@import 'src/custom_bootstrap';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
 
 #event-selection-form {
     width: 50%;
