@@ -5,3 +5,6 @@
 venv
 .env
 __pycache__
+
+# The folder where static files are collected in production
+ordsys/static/

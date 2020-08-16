@@ -21,7 +21,7 @@ hyperlink==19.0.0
 idna==2.9
 incremental==17.5.0
 msgpack==0.6.2
-psycopg2==2.8.4
+psycopg2==2.8.5
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.20
@@ -29,6 +29,7 @@ PyHamcrest==2.0.2
 pyOpenSSL==19.1.0
 python-decouple==3.3
 pytz==2019.3
+sentry-sdk==0.16.4
 service-identity==18.1.0
 six==1.14.0
 sqlparse==0.3.1

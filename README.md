@@ -8,7 +8,7 @@ using Django and PostgreSQL for the backend and React & Bootstrap for the fronte
 
 ## Requirements
 
-The application requires Python (version 3.6 or greater), Node.js, and PostgreSQL to be installed on your system.
+The application requires Python (version 3.6 or greater), Node.js (Version 14 or greater), and PostgreSQL to be installed on your system.
 
 ## Installation
 
@@ -16,17 +16,12 @@ To begin, clone the repo and open the repository folder in your terminal.
 
 ### Backend
 
-We recommend running the backend in a Python virtual environment. 
-
 #### Creating a Python Virtual Environment
 
 ##### MacOS/Linux
-1. Create a new virtual environment with `$ python3 -m venv venv`.
-2. Enter the virtual environment with `$ source venv/bin/activate`
-(or `$ source venv/bin/activate.fish` if you are using fish).
-3. In the virtual environment, install the required Python dependencies with `(venv) $ pip install -r requirements.txt`.
-<br>If you are experiencing issues with installing 'psycopg2', ensure you fulfill the prerequisites specified in [the
-official documentation](https://www.psycopg.org/docs/install.html#build-prerequisites).
+1. Run the command `source source_me.sh` to create and enter the virtual environment.
+2. Update pip to the latest version `pip install --upgrade pip`.
+3. Install the required Python dependencies with `pip install -r dev-requirements.txt`.
 
 ##### Windows
 1. Make sure you have the `virtualenv` and `virtualenvwrapper-win` packages installed on your system.
@@ -38,40 +33,16 @@ If the versions are mis-matched, you may have to install each package of `requir
 
 ### Setting up the database
 
-Create and configure a PostgreSQL database for the application. <br>
-In the project's root folder, create a file called `.env`. Into your `.env` file, enter:
-
-```
-SECRET_KEY = ...
-DEBUG = True # Change this to False when deploying to production!
-DB_NAME = ...
-DB_USER = ...
-DB_PASSWORD = ...
-DB_HOST = ...
-DB_PORT = ... # Usually 5432
-```
-
-A secret key is generated using Django. To do so, follow these steps while in the virtual environment:
-
-1. Enter the a Python shell with `(venv) $ python`
-2. Generate a key with these commands:
-```python
->>> from django.core.management.utils import get_random_secret_key
->>> get_random_secret_key()
->>> exit()
-```
-
-This will generate a secret key and output it in the terminal.
-
-#### Connect backend and database
-
-1. To connect and create all required database tables, enter `(venv) $ python ./manage.py makemigrations`
-followed by `(venv) $ python ./manage.py migrate`.
+1. Make a copy of `.env-template` and name it `.env` and fill in the needed variables. 
+Check `settings/dev.py` for what default values are used.
+2. To connect and create all required database tables, enter `./manage.py makemigrations`
+followed by `./manage.py migrate`.
+3. Create a superuser so that you can log in with `./manage.py createsuperuser`.
 
 #### Running the backend
 
-1. Make sure you're in your virtual environment. If not, enter it using `$ source venv/bin/activate`
-2. Start the server by typing `(venv) $ python ./manage.py runserver`.
+1. Make sure you're in your virtual environment. If not, enter it using `source source_me.sh`
+2. Start the server by typing `./manage.py runserver`.
 
 The backend can now be accessed at http://localhost:8000/.
 
