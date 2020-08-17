@@ -37,7 +37,8 @@ If the versions are mis-matched, you may have to install each package of `requir
 Check `settings/dev.py` for what default values are used.
 2. To connect and create all required database tables, enter `./manage.py makemigrations`
 followed by `./manage.py migrate`.
-3. Create a superuser so that you can log in with `./manage.py createsuperuser`.
+3. Create an organisation to associate your users with by running `./manage.py createorganisation`.
+4. Create a superuser so that you can log in with `./manage.py createsuperuser`.
 
 #### Running the backend
 

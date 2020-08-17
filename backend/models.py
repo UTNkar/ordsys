@@ -223,17 +223,15 @@ class User(AbstractBaseUser, PermissionsMixin):
         default=False,
         help_text=_('Designates whether the user can log into this admin site.'),
     )
-    # 'org' must be allowed to be null in order to create a superuser before an organisation exists.
-    # The custom user forms in 'forms.py' ensures new users must be created with an organisation.
     org = models.ForeignKey(
         to=Organisation,
         on_delete=models.CASCADE,
         related_name='users',
-        null=True,
         verbose_name=_('organisation'),
         help_text=_('Which organisation this user belongs to.'),
     )
     USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['org']
     objects = UserManager()
 
     def __str__(self):
