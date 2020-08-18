@@ -1,7 +1,16 @@
 import Axios from "axios";
 
+let baseURL = "";
+
+if (process.env.NODE_ENV === 'production') {
+    baseURL = "https://ordsys.utn.se/backend";
+}
+else {
+    baseURL = "http://localhost:8000";
+}
+
 export const DjangoBackend = Axios.create({
-    baseURL: 'http://localhost:8000',
+    baseURL,
     headers: {
         common: {
             Authorization: undefined

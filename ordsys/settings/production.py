@@ -15,10 +15,13 @@ SESSION_COOKIE_DOMAIN = '.utn.se'
 SESSION_COOKIE_SECURE = True
 
 sentry_sdk.init(
-    dsn=config("SENTRY_DSN"),
+    dsn=config("SENTRY_DSN", default=""),
     integrations=[DjangoIntegration()],
 
     # If you wish to associate users to errors (assuming you are using
     # django.contrib.auth) you may enable sending PII data.
     send_default_pii=True
 )
+
+BASE_URL = "/backend/"
+STATIC_URL = BASE_URL + '/static/'
