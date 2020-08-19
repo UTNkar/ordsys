@@ -1,5 +1,4 @@
 import reactUseWebSocket, { Options } from 'react-use-websocket';
-import { getToken } from '../utils/authenticationHelper';
 
 let protocol = "";
 let hostname = "";
@@ -23,7 +22,7 @@ export enum WebSocketPath {
 
 export function useWebSocket(options: Options, path: WebSocketPath) {
     return reactUseWebSocket(
-        encodeURI(`${protocol}://${hostname}:${port}/${basePath}/${path}/?token=${getToken()}`),
+        encodeURI(`${protocol}://${hostname}:${port}/${basePath}/${path}/`),
         options
     )
 }
