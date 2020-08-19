@@ -1,5 +1,7 @@
+from django.contrib.auth import login as django_login, logout as django_logout
 from rest_framework import viewsets, status, mixins
 from rest_framework.filters import SearchFilter
+from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from .models import Event, MenuItem, Order, Organisation
@@ -7,7 +9,7 @@ from .filters import OrderFilter
 from .serializers import (
     EventSerializer, MenuItemSerializer, RestrictiveUpdateOrderSerializer, BaseOrderWithOrderItemsSerializer,
     CreatableOrderWithOrderItemsSerializer, RestrictiveUpdateOrderWithOrderItemsSerializer,
-    OrganisationWithUsersSerializer
+    OrganisationWithUsersSerializer, LoginSerializer
 )
 
 
@@ -104,3 +106,24 @@ class OrganisationWithUsersView(viewsets.ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
     serializer_class = OrganisationWithUsersSerializer
     queryset = Organisation.objects.all().prefetch_related('users')
+
+
+class LoginView(GenericAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = LoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=self.request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        django_login(request=request, user=serializer.validated_data.get('user'))
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class LogoutView(GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    # Function must exist on class for view to accept POST
+    # noinspection PyMethodMayBeStatic
+    def post(self, request, *args, **kwargs):
+        django_logout(request)
+        return Response(status=status.HTTP_204_NO_CONTENT)

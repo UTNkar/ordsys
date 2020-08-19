@@ -1,7 +1,8 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 from .views import (
     EventView, MenuItemView, OrderView, OrderWithOrderItemsView,
-    ManageOrderWithOrderItemsView, OrganisationWithUsersView
+    ManageOrderWithOrderItemsView, OrganisationWithUsersView,
+    LoginView, LogoutView
 )
 from rest_framework import routers
 
@@ -16,4 +17,8 @@ router.register('organisations_with_users', OrganisationWithUsersView, 'organisa
 
 urlpatterns = [
     path('api/', include(router.urls)),
+    path('auth/', include([
+        re_path(r'^login/', LoginView.as_view(), name='login'),
+        re_path(r'^logout/', LogoutView.as_view(), name='logout'),
+    ]))
 ]

@@ -1,7 +1,9 @@
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import AnonymousUser
 from django.db.models.signals import post_save
 from django.utils.timezone import now
-from rest_framework import serializers
+from django.utils.translation import ugettext_lazy as _
+from rest_framework import serializers, exceptions
 from .models import Event, MenuItem, Order, OrderItem, User, Organisation
 
 
@@ -154,3 +156,22 @@ class OrganisationWithUsersSerializer(_BaseSerializer):
     class Meta:
         model = Organisation
         fields = ('id', 'name', 'theme', 'users')
+
+
+# The unimplemented methods 'create' and 'update' will never be called as we have no model.
+# noinspection PyAbstractClass
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(style={'input_type': 'password'})
+
+    def validate(self, attrs):
+        username = attrs.get('username')
+        password = attrs.get('password')
+
+        if username and password:
+            user = authenticate(self.context['request'], username=username, password=password)
+            if user:
+                attrs['user'] = user
+                return attrs
+            raise exceptions.ValidationError(_('Unable to log in with the provided credentials.'))
+        raise exceptions.ValidationError(_('Must include both "username" and "password".'))
