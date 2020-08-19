@@ -16,5 +16,6 @@ export const DjangoBackend = Axios.create({
             Authorization: undefined
         },
         'Content-Type': 'application/json'
-    }
+    },
+    withCredentials: true,
 })

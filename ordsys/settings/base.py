@@ -68,6 +68,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ordsys.wsgi.application'
 
+CORS_ALLOW_CREDENTIALS = True
+
 CORS_ORIGIN_ALLOW_ALL = False
 
 # Database
