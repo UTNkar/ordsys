@@ -16,14 +16,10 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
-from django.conf import settings
 
-base_url = settings.BASE_URL.lstrip("/")
 
 urlpatterns = [
-    path(base_url, include([
-        path('admin/', admin.site.urls),
-        url(r'^rest-auth/', include('rest_auth.urls')),
-        path('', include('backend.urls')),
-    ])),
+    path('admin/', admin.site.urls),
+    url(r'^rest-auth/', include('rest_auth.urls')),
+    path('', include('backend.urls')),
 ]
