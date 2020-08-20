@@ -4,18 +4,16 @@ import { getToken } from '../utils/authenticationHelper';
 let protocol = "";
 let hostname = "";
 let port = 0;
-let basePath = "";
+const basePath = "ws";
 
-if (process.env.NODE_ENV && process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
     protocol = "wss";
-    hostname = 'ordsys.utn.se';
+    hostname = 'ordsysbackend.utn.se';
     port = 443;
-    basePath = 'backend/ws';
 } else {
     protocol = "ws";
     hostname = 'localhost';
     port = 8000;
-    basePath = 'ws';
 }
 
 

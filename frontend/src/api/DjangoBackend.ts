@@ -3,7 +3,7 @@ import Axios from "axios";
 let baseURL = "";
 
 if (process.env.NODE_ENV === 'production') {
-    baseURL = "https://ordsys.utn.se/backend";
+    baseURL = "https://ordsysbackend.utn.se";
 }
 else {
     baseURL = "http://localhost:8000";

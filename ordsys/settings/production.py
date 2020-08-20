@@ -14,6 +14,10 @@ SESSION_COOKIE_DOMAIN = '.utn.se'
 
 SESSION_COOKIE_SECURE = True
 
+CORS_ORIGIN_WHITELIST = (
+    'https://ordsys.utn.se',
+)
+
 sentry_sdk.init(
     dsn=config("SENTRY_DSN", default=""),
     integrations=[DjangoIntegration()],
@@ -22,6 +26,3 @@ sentry_sdk.init(
     # django.contrib.auth) you may enable sending PII data.
     send_default_pii=True
 )
-
-BASE_URL = "/backend/"
-STATIC_URL = BASE_URL + '/static/'
