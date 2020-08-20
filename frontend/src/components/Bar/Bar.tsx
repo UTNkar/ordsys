@@ -169,17 +169,8 @@ function Bar({ renderMode }: BarProps) {
     function modifyOrder(orderId: number, payload: Order | object | undefined = undefined) {
         if (payload !== undefined) {
             DjangoBackend.patch<Order>(`/api/manage_orders_with_order_items/${orderId}/`, payload)
-                .then(response => {
-                    const index = orders.findIndex(order => order.id === orderId)
-                    if (response.data.status === OrderStatus.DELIVERED) {
-                        orders.splice(index, 1)
-                    } else {
-                        orders[index] = response.data
-                        if (orderToEdit !== null) {
-                            clearCurrentOrder()
-                        }
-                    }
-                    setOrders(orders.slice(0))
+                .then(() => {
+                    clearCurrentOrder()
                     enqueueSnackbar('Order successfully updated!', {
                         autoHideDuration: 2500,
                         variant: 'success',
@@ -192,7 +183,6 @@ function Bar({ renderMode }: BarProps) {
         } else {
             DjangoBackend.delete(`/api/orders/${orderId}/`)
                 .then(() => {
-                    setOrders(orders.filter(order => order.id !== orderId))
                     enqueueSnackbar('Order successfully deleted!', {
                         autoHideDuration: 2500,
                         variant: 'success',
@@ -279,13 +269,6 @@ function Bar({ renderMode }: BarProps) {
             Promise.all([foodPromise, beveragePromise])
                 .then(([foodResponse, beverageResponse]) => {
                     clearCurrentOrder()
-                    if (foodResponse !== null && beverageResponse !== null) {
-                        setOrders([...orders, foodResponse.data, beverageResponse.data])
-                    } else if (foodResponse !== null) {
-                        setOrders([...orders, foodResponse.data])
-                    } else if (beverageResponse !== null) {
-                        setOrders([...orders, beverageResponse.data])
-                    }
                     enqueueSnackbar('Order created!', {
                         action: key =>
                             <MuiButton
@@ -326,15 +309,7 @@ function Bar({ renderMode }: BarProps) {
         Promise.all([
             foodOrder !== undefined ? DjangoBackend.delete(`/api/orders/${foodOrder.id}/`) : null,
             beverageOrder !== undefined ? DjangoBackend.delete(`/api/orders/${beverageOrder.id}/`) : null,
-        ]).then(() => {
-            if (foodOrder !== undefined && beverageOrder !== undefined) {
-                setOrders(orders.filter(order => order.id !== foodOrder.id || order.id !== beverageOrder.id))
-            } else if (foodOrder !== undefined) {
-                setOrders(orders.filter(order => order.id !== foodOrder.id))
-            } else if (beverageOrder !== undefined) {
-                setOrders(orders.filter(order => order.id !== beverageOrder.id))
-            }
-        }).catch(() => {
+        ]).catch(() => {
             enqueueSnackbar('Failed to undo order!', {
                 action: key =>
                     <>
