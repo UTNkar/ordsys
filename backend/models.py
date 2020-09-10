@@ -85,7 +85,7 @@ class Order(models.Model):
     beverages_only = models.BooleanField(
         help_text=_('Specifies if the order contains only beverages or only food.')
     )
-    # Represented as 'NN - X'
+    # Represented as 'N' or 'NN'. Max length is 6 due to backwards compatibility with old 'NN - X' format.
     customer_number = models.CharField(
         max_length=6,
         verbose_name=_('customer_number')

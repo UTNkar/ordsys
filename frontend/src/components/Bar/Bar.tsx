@@ -17,21 +17,6 @@ import { onMenuItemsChange, onOrdersChange } from '../../utils/realtimeModelUpda
 import { BarRenderMode, CurrentOrderItem, DatabaseChangeType, MenuItem, Order, OrderStatus } from '../../@types';
 import MembershipChecker from '../MembershipChecker/MembershipChecker';
 
-/**
- * Turns an order number into a string on the form 'NN - X' if it is 0 or larger.
- * @param orderNumber - the order number to convert
- */
-function stringifyOrderNumber(orderNumber: number) {
-    let orderNumberString =
-        orderNumber >= 0 ?
-            `${Math.floor(orderNumber / 10)} - ${orderNumber % 10}` :
-            ''
-    if (orderNumberString.length === 5) {
-        orderNumberString = '0'.concat(orderNumberString)
-    }
-    return orderNumberString
-}
-
 interface BarProps extends RouteComponentProps {
     renderMode: BarRenderMode
 }
@@ -41,7 +26,7 @@ function Bar({ renderMode }: BarProps) {
     const [mealNote, setMealNote] = useState('')
     const [menuItems, setMenuItems] = useState<MenuItem[]>([])
     const [orderNote, setOrderNote] = useState('')
-    const [orderNumber, setOrderNumber] = useState(-1)
+    const [orderNumber, setOrderNumber] = useState('')
     const [orders, setOrders] = useState<Order[]>([])
     const [orderToEdit, setOrderToEdit] = useState<Order | null>(null)
     const [isSubmittingOrder, setIsSubmittingOrder] = useState(false)
@@ -102,11 +87,7 @@ function Bar({ renderMode }: BarProps) {
     }, [])
 
     function addToOrderNumber(digit: number) {
-        if (orderNumber >= 0) {
-            setOrderNumber((orderNumber % 100) * 10 + digit)
-        } else {
-            setOrderNumber(digit)
-        }
+        setOrderNumber(((Number(orderNumber) % 10) * 10 + digit).toString())
     }
 
     function clearCurrentOrder() {
@@ -114,7 +95,7 @@ function Bar({ renderMode }: BarProps) {
         setCurrentOrder([])
         setMealNote('')
         setOrderNote('')
-        setOrderNumber(-1)
+        setOrderNumber('')
         setOrderToEdit(null)
     }
 
@@ -136,8 +117,7 @@ function Bar({ renderMode }: BarProps) {
         })
         setCurrentOrder(orderToEdit)
         setOrderNote(order.note)
-        // Extract 'NNX' from 'NN - X'
-        setOrderNumber(parseInt(order.customer_number.substring(0, 2).concat(order.customer_number[5])))
+        setOrderNumber(order.customer_number)
         setOrderToEdit(order)
         enqueueSnackbar('You are editing an order', {
             action: <MuiButton onClick={() => clearCurrentOrder()}>Cancel edit</MuiButton>,
@@ -243,13 +223,13 @@ function Bar({ renderMode }: BarProps) {
         setIsSubmittingOrder(true)
         if (orderToEdit !== null) {
             const payload = {
-                customer_number: stringifyOrderNumber(orderNumber),
+                customer_number: orderNumber,
                 note: orderNote,
                 order_items: orderToEdit.beverages_only ? beverageItems : foodItems
             }
             modifyOrder(orderToEdit.id, payload)
         } else {
-            const payloadBase = { event: eventId, customer_number: stringifyOrderNumber(orderNumber), note: orderNote }
+            const payloadBase = { event: eventId, customer_number: orderNumber, note: orderNote }
             const foodPromise =
                 foodItems.length > 0
                     ? DjangoBackend.post<Order>('/api/manage_orders_with_order_items/', {
@@ -296,7 +276,7 @@ function Bar({ renderMode }: BarProps) {
      * The special order number '00 - 0' is allowed as it's internally used for food to employees.
      */
     function validateCurrentOrder() {
-        return currentOrder.length > 0 && ((orderNumber > 10 && orderNumber % 10 > 0) || orderNumber === 0)
+        return currentOrder.length > 0 && orderNumber !== ''
     }
 
     function removeOrderItem(itemToRemove: CurrentOrderItem) {
@@ -363,12 +343,12 @@ function Bar({ renderMode }: BarProps) {
                                 <Col>
                                     <OrderNumber
                                         addToOrderNumber={addToOrderNumber}
-                                        clearOrderNumber={() => setOrderNumber(-1)}
+                                        clearOrderNumber={() => setOrderNumber('')}
                                         onSubmitOrder={onSubmitOrder}
                                         onOrderNoteChange={e => setOrderNote(e.target.value)}
                                         orderIsValid={validateCurrentOrder()}
                                         orderNote={orderNote}
-                                        orderNumber={stringifyOrderNumber(orderNumber)}
+                                        orderNumber={orderNumber}
                                         showSubmitSpinner={isSubmittingOrder}
                                     />
                                 </Col>
@@ -465,12 +445,12 @@ function Bar({ renderMode }: BarProps) {
                                 <Col>
                                     <OrderNumber
                                         addToOrderNumber={addToOrderNumber}
-                                        clearOrderNumber={() => setOrderNumber(-1)}
+                                        clearOrderNumber={() => setOrderNumber('')}
                                         onSubmitOrder={onSubmitOrder}
                                         onOrderNoteChange={e => setOrderNote(e.target.value)}
                                         orderIsValid={validateCurrentOrder()}
                                         orderNote={orderNote}
-                                        orderNumber={stringifyOrderNumber(orderNumber)}
+                                        orderNumber={orderNumber}
                                         showSubmitSpinner={isSubmittingOrder}
                                     />
                                 </Col>
