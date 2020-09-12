@@ -117,7 +117,7 @@ function Kitchen({ renderMode }: KitchenProps) {
             .catch(reason => console.log(reason.response))
     }
 
-    function renderFoodView() {
+    function renderView() {
         return (
             <>
                 <Row id="kitchen-top-row">
@@ -238,79 +238,9 @@ function Kitchen({ renderMode }: KitchenProps) {
         )
     }
 
-    function renderBeveragesView() {
-        return (
-            <>
-                <Row id="kitchen-top-row">
-                    <Col>
-                        <h2>Waiting</h2>
-                    </Col>
-                    <Col>
-                        <h2>Done</h2>
-                    </Col>
-                </Row>
-                <Row id="kitchen-content-row">
-                    <Col className="order-column">
-                        {ordersWaiting.map(order =>
-                            <OrderTicket
-                                key={order.id}
-                                buttons={
-                                    <Button
-                                        className="shadow-sm"
-                                        variant="outline-secondary"
-                                        onClick={() => changeOrderStatus(order, OrderStatus.DONE)}
-                                    >
-                                        <img
-                                            src={'/assets/images/arrow_right.svg'}
-                                            alt="Mark order as done."
-                                        />
-                                    </Button>
-                                }
-                                createdTimestamp={order.created_timestamp}
-                                menuItems={menuItems}
-                                note={order.note}
-                                orderItems={order.order_items}
-                                orderNumber={order.customer_number}
-                                status="waiting"
-                            />
-                        )}
-                    </Col>
-                    <Col className="order-column">
-                        {ordersDone.map(order =>
-                            <OrderTicket
-                                key={order.id}
-                                buttons={
-                                    <Button
-                                        className="shadow-sm"
-                                        variant="outline-secondary"
-                                        onClick={() => changeOrderStatus(order, OrderStatus.WAITING)}
-                                    >
-                                        <img
-                                            src={'/assets/images/arrow_left.svg'}
-                                            alt="Mark order as waiting."
-                                        />
-                                    </Button>
-                                }
-                                createdTimestamp={order.created_timestamp}
-                                menuItems={menuItems}
-                                note={order.note}
-                                orderItems={order.order_items}
-                                orderNumber={order.customer_number}
-                                status="done"
-                            />
-                        )}
-                    </Col>
-                </Row>
-            </>
-        )
-    }
-
     return (
         <Container fluid id="kitchen-container">
-            { renderMode === KitchenRenderMode.FOOD ?
-                renderFoodView() :
-                renderBeveragesView()
-            }
+            {renderView()}
         </Container>
     );
 }
