@@ -11,7 +11,7 @@ function displayOrderItems(orderItems: OrderItem[] | undefined, menuItems: MenuI
         <ul className="list-unstyled order-ticket-menu-items" key={orderItem.id}>
             <li>
                 {`
-                    ${orderItem.quantity} 
+                    ${orderItem.quantity}
                     ${menuItems.find(menuItem => menuItem.id === orderItem.menu)?.item_name}
                     ${orderItem.special_requests === "" ? "" : `(${orderItem.special_requests})`}
                 `}

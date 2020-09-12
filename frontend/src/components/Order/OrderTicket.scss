@@ -6,6 +6,10 @@
     background-color: var(--order-in-progress-color);
 }
 
+.card-status-in-transit {
+    background-color: var(--order-in-transit-color);
+}
+
 .card-status-done {
     background-color: var(--order-done-color);
 }
