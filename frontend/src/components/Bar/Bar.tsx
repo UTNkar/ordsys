@@ -13,6 +13,7 @@ import Menu from './Menu';
 import OrderNumber from './OrderNumber';
 import { DjangoBackend } from '../../api/DjangoBackend';
 import { getEventId } from '../../utils/event';
+import { orderAscSorter, orderDescSorter } from '../../utils/sorters';
 import { onMenuItemsChange, onOrdersChange } from '../../utils/realtimeModelUpdate';
 import { BarRenderMode, CurrentOrderItem, DatabaseChangeType, MenuItem, Order, OrderStatus } from '../../@types';
 import MembershipChecker from '../MembershipChecker/MembershipChecker';
@@ -52,6 +53,11 @@ function Bar({ renderMode }: BarProps) {
             switch (message.model_name) {
                 case 'Order':
                     onOrdersChange(message.payload as Order, message.type as DatabaseChangeType, setOrders)
+                    if (renderMode === BarRenderMode.WAITER) {
+                        setOrders(prevState => prevState.sort(orderAscSorter))
+                    } else {
+                        setOrders(prevState => prevState.sort(orderDescSorter))
+                    }
                     break
                 case 'MenuItem':
                     onMenuItemsChange(message.payload as MenuItem, message.type as DatabaseChangeType, setMenuItems)
@@ -156,9 +162,9 @@ function Bar({ renderMode }: BarProps) {
             .then(([menuItems, orders]) => {
                 setMenuItems(menuItems.data)
                 if (renderMode === BarRenderMode.WAITER) {
-                    setOrders(orders.data.reverse())
+                    setOrders(orders.data.sort(orderAscSorter))
                 } else {
-                    setOrders(orders.data)
+                    setOrders(orders.data.sort(orderDescSorter))
                 }
             })
             .catch(reason => console.log(reason.response))
