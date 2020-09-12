@@ -99,6 +99,24 @@ function Bar({ renderMode }: BarProps) {
         setOrderToEdit(null)
     }
 
+    function decrementItemQuantity(item: CurrentOrderItem) {
+        if (item.quantity === 1) {
+            setCurrentOrder(currentOrder.filter(order =>
+                order.id !== item.id || order.mealNote !== item.mealNote
+            ))
+        } else {
+            const index = currentOrder.indexOf(item)
+            currentOrder[index].quantity -= 1
+            setCurrentOrder(currentOrder.slice(0))
+        }
+    }
+
+    function incrementItemQuantity(item: CurrentOrderItem) {
+        const index = currentOrder.indexOf(item)
+        currentOrder[index].quantity += 1
+        setCurrentOrder(currentOrder.slice(0))
+    }
+
     function editOrder(order: Order) {
         const orderToEdit = order.order_items.map(orderItem => {
             // TODO ensure menuItem is not undefined.
@@ -279,12 +297,6 @@ function Bar({ renderMode }: BarProps) {
         return currentOrder.length > 0 && orderNumber !== ''
     }
 
-    function removeOrderItem(itemToRemove: CurrentOrderItem) {
-        setCurrentOrder(currentOrder.filter(order =>
-            order.id !== itemToRemove.id || order.mealNote !== itemToRemove.mealNote
-        ))
-    }
-
     function undoOrders([foodOrder, beverageOrder]: [Order | undefined, Order | undefined], snackbarKey: SnackbarKey) {
         Promise.all([
             foodOrder !== undefined ? DjangoBackend.delete(`/api/orders/${foodOrder.id}/`) : null,
@@ -335,7 +347,8 @@ function Bar({ renderMode }: BarProps) {
                                 <Col className="h-100 overflow-auto">
                                     <CurrentOrder
                                         currentOrder={currentOrder}
-                                        removeOrderItem={removeOrderItem}
+                                        decrementItemQuantity={decrementItemQuantity}
+                                        incrementItemQuantity={incrementItemQuantity}
                                     />
                                 </Col>
                             </Row>
@@ -437,7 +450,8 @@ function Bar({ renderMode }: BarProps) {
                                 <Col className="h-100 overflow-auto">
                                     <CurrentOrder
                                         currentOrder={currentOrder}
-                                        removeOrderItem={removeOrderItem}
+                                        decrementItemQuantity={decrementItemQuantity}
+                                        incrementItemQuantity={incrementItemQuantity}
                                     />
                                 </Col>
                             </Row>
