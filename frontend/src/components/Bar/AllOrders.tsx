@@ -40,6 +40,10 @@ function AllOrders({ menuItems, onOrderDelete, onOrderDeliver, onOrderEdit, orde
                 )}
             </div>
             <OrderDetail
+                claimOrder={orderId => {
+                    onOrderDeliver(orderId, { status: OrderStatus.IN_TRANSIT})
+                    setShouldShowOrderDetail(false)
+                }}
                 closeOrderDetail={() => setShouldShowOrderDetail(false)}
                 deleteOrder={orderId => {
                     onOrderDelete(orderId)

@@ -59,6 +59,7 @@ export function onOrdersChange(
                 case OrderStatus.WAITING:
                 case OrderStatus.IN_PROGRESS:
                 case OrderStatus.DONE:
+                case OrderStatus.IN_TRANSIT:
                     orderDispatcher(prevState => {
                         const orderIndex = prevState.findIndex(order => order.id === receivedOrder.id)
                         prevState[orderIndex] = receivedOrder
@@ -75,6 +76,7 @@ export function onOrdersChange(
                 case OrderStatus.WAITING:
                 case OrderStatus.IN_PROGRESS:
                 case OrderStatus.DONE:
+                case OrderStatus.IN_TRANSIT:
                     orderDispatcher(prevState => prevState.filter(order => order.id !== receivedOrder.id))
                     break
                 case OrderStatus.DELIVERED:

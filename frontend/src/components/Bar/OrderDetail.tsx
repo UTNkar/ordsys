@@ -3,9 +3,10 @@ import Modal from 'react-modal';
 import { Button } from 'react-bootstrap';
 import './OrderDetail.scss';
 import OrderTicket from '../Order/OrderTicket';
-import { MenuItem, Order } from '../../@types';
+import { MenuItem, Order, OrderStatus } from '../../@types';
 
 interface OrderDetailProps {
+    claimOrder: (orderId: number) => void
     closeOrderDetail: () => void
     deleteOrder: (orderId: number) => void
     deliverOrder: (orderId: number) => void
@@ -16,7 +17,7 @@ interface OrderDetailProps {
 }
 
 function OrderDetail({
-    closeOrderDetail, deleteOrder, deliverOrder, editOrder, menuItems, order, show
+    claimOrder, closeOrderDetail, deleteOrder, deliverOrder, editOrder, menuItems, order, show
 }: OrderDetailProps) {
     if (order === null) {
         return null
@@ -37,10 +38,15 @@ function OrderDetail({
                         {order.status}
                     </OrderTicket>
                 </div>
-                <Button className="btn-success detail-view-button" onClick={() => deliverOrder(order.id)}>
-                    Delivered
-                </Button>
-                { editOrder ? 
+                {order.status !== OrderStatus.IN_TRANSIT ?
+                    <Button className="btn-info detail-view-button" onClick={() => claimOrder(order.id)}>
+                        Claim
+                    </Button> :
+                    <Button className="btn-success detail-view-button" onClick={() => deliverOrder(order.id)}>
+                        Deliver
+                    </Button>
+                }
+                { editOrder ?
                     <Button className="btn-secondary detail-view-button" onClick={() => editOrder(order)}>
                         Edit
                     </Button> :
