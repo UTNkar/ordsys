@@ -36,6 +36,7 @@ export interface OrderItem {
 export enum OrderStatus {
     WAITING = 'Waiting',
     IN_PROGRESS = 'In progress',
+    IN_TRANSIT = 'In transit',
     DONE = 'Done',
     DELIVERED = 'Delivered',
 }

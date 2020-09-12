@@ -79,6 +79,7 @@ class Order(models.Model):
         WAITING = 'Waiting'
         IN_PROGRESS = 'In progress'
         DONE = 'Done'
+        IN_TRANSIT = 'In transit'
         DELIVERED = 'Delivered'
 
     id = models.AutoField(primary_key=True)
