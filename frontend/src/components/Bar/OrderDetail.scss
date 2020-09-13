@@ -47,3 +47,12 @@
     width: 50%;
     padding: 1% 2%;
 }
+
+@media (max-width: 1280px) {
+        .order-detail-window-body {
+            width: 95%;
+        }
+        .order-detail {
+            width: 85%;
+        }
+    }
