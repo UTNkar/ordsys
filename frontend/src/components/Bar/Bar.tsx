@@ -53,7 +53,7 @@ function Bar({ renderMode }: BarProps) {
             switch (message.model_name) {
                 case 'Order':
                     onOrdersChange(message.payload as Order, message.type as DatabaseChangeType, setOrders)
-                    if (renderMode === BarRenderMode.WAITER) {
+                    if (renderMode === BarRenderMode.WAITER || renderMode === BarRenderMode.HISTORY) {
                         setOrders(prevState => prevState.sort(orderAscSorter))
                     } else {
                         setOrders(prevState => prevState.sort(orderDescSorter))
@@ -155,13 +155,19 @@ function Bar({ renderMode }: BarProps) {
     }
 
     function fetchMenuItemsAndOrders() {
+        let orderQuery = `/api/orders_with_order_items/?event=${getEventId()}`;
+        if (renderMode === BarRenderMode.HISTORY) {
+            orderQuery += `&max_age=1`
+        } else {
+            orderQuery += `&exclude_status=${OrderStatus.DELIVERED}`
+        }
         Promise.all([
             DjangoBackend.get<MenuItem[]>('/api/menu_items/?active=true'),
-            DjangoBackend.get<Order[]>(`/api/orders_with_order_items/?event=${getEventId()}&exclude_status=${OrderStatus.DELIVERED}`),
+            DjangoBackend.get<Order[]>(orderQuery),
         ])
             .then(([menuItems, orders]) => {
                 setMenuItems(menuItems.data)
-                if (renderMode === BarRenderMode.WAITER) {
+                if (renderMode === BarRenderMode.WAITER || renderMode === BarRenderMode.HISTORY) {
                     setOrders(orders.data.sort(orderAscSorter))
                 } else {
                     setOrders(orders.data.sort(orderDescSorter))
@@ -435,6 +441,30 @@ function Bar({ renderMode }: BarProps) {
         )
     }
 
+    function renderHistoryView() {
+        return (
+            <>
+                <Row className="bar-top">
+                    <Col className=" justify-content-center">
+                        <h3 className="pt-2 align-self-center">Order History (last hour)</h3>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col id="bar-all-orders-column">
+                        <AllOrders
+                            clickableOrders={false}
+                            menuItems={menuItems}
+                            orders={orders}
+                            onOrderDelete={modifyOrder}
+                            onOrderDeliver={modifyOrder}
+                            onOrderEdit={undefined}
+                        />
+                    </Col>
+                </Row>
+            </>
+        )
+    }
+
     function renderWaiterView() {
         return (
             <>
@@ -520,6 +550,8 @@ function Bar({ renderMode }: BarProps) {
                 return renderFullView()
             case (BarRenderMode.DELIVERY):
                 return renderDeliveryView()
+            case (BarRenderMode.HISTORY):
+                return renderHistoryView()
             case (BarRenderMode.WAITER):
                 return renderWaiterView()
         }

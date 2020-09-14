@@ -5,6 +5,7 @@ import OrderTicket from '../Order/OrderTicket';
 import { MenuItem, Order, OrderStatus } from '../../@types';
 
 interface AllOrdersProps {
+    clickableOrders?: boolean
     menuItems: MenuItem[]
     onOrderDelete: (orderId: number) => void
     onOrderDeliver: (orderId: number, newData: Order | object | undefined) => void
@@ -12,7 +13,7 @@ interface AllOrdersProps {
     orders: Order[]
 }
 
-function AllOrders({ menuItems, onOrderDelete, onOrderDeliver, onOrderEdit, orders }: AllOrdersProps) {
+function AllOrders({ clickableOrders = true, menuItems, onOrderDelete, onOrderDeliver, onOrderEdit, orders }: AllOrdersProps) {
     const [activeOrder, setActiveOrder] = useState<Order | null>(null)
     const [shouldShownOrderDetail, setShouldShowOrderDetail] = useState(false)
 
@@ -26,10 +27,14 @@ function AllOrders({ menuItems, onOrderDelete, onOrderDeliver, onOrderEdit, orde
                             createdTimestamp={order.created_timestamp}
                             menuItems={menuItems}
                             note={order.note}
-                            onClick={() => {
-                                setActiveOrder(order)
-                                setShouldShowOrderDetail(true)
-                            }}
+                            onClick={
+                                clickableOrders ?
+                                    () => {
+                                        setActiveOrder(order)
+                                        setShouldShowOrderDetail(true)
+                                    } :
+                                    undefined
+                            }
                             orderItems={order.order_items}
                             orderNumber={order.customer_number}
                             status={order.status.toLowerCase().replace(' ', '-')}

@@ -77,6 +77,10 @@ function App() {
                         path="/kitchen"
                         render={props => <Kitchen {...props} renderMode={KitchenRenderMode.FOOD} /> }
                     />
+                    <Route
+                        path="/history"
+                        render={props => <Bar {...props} renderMode={BarRenderMode.HISTORY} /> }
+                    />
                     <Route path="/statistics" component={Statistics} />
                     <Route
                         path="/tap"

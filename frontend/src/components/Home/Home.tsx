@@ -19,6 +19,11 @@ function Home() {
                     </Link>
                 </Col>
                 <Col xs={5} md={3} className="home-button">
+                    <Link to='/history'>
+                        <IconButton iconUrl='/assets/images/history.svg' text='Order History' />
+                    </Link>
+                </Col>
+                <Col xs={5} md={3} className="home-button">
                     <Link to='/kitchen'>
                         <IconButton iconUrl='/assets/images/pot.svg' text='Kitchen' />
                     </Link>
