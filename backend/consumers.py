@@ -10,7 +10,7 @@ from rest_framework.authtoken.models import Token
 from backend.models import User
 
 
-model_regex = re.compile('^backend\\.(Event|MenuItem|Order|OrderItem|Organisation|User)$')
+model_regex = re.compile('^backend\\.(MenuItem|Order|OrderItem|Organisation|User)$')
 
 
 @database_sync_to_async

@@ -3,9 +3,9 @@ from channels.layers import get_channel_layer
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
-from backend.models import Event, MenuItem, Order, Organisation, User
+from backend.models import MenuItem, Order, Organisation, User
 from backend.serializers import (
-    BaseOrderWithOrderItemsSerializer, EventSerializer, MenuItemSerializer, OrganisationWithUsersSerializer,
+    BaseOrderWithOrderItemsSerializer, MenuItemSerializer, OrganisationWithUsersSerializer,
     UserPublicSerializer
 )
 
@@ -14,7 +14,6 @@ async def _send_to_group(channel, group, payload):
     await channel.group_send(group, payload)
 
 
-@receiver((post_delete, post_save), sender=Event, dispatch_uid='event_signal')
 @receiver((post_delete, post_save), sender=MenuItem, dispatch_uid='menu_item_signal')
 @receiver((post_delete, post_save), sender=Order, dispatch_uid='order_signal')
 @receiver((post_delete, post_save), sender=Organisation, dispatch_uid='organisation_signal')
@@ -34,8 +33,6 @@ def notify_model_changed(sender, instance, **kwargs):
             # using stale order items data from the cache maintained by Django.
             instance = Order.objects.get(id=instance.id)
         serializer = BaseOrderWithOrderItemsSerializer(instance)
-    elif sender is Event:
-        serializer = EventSerializer(instance)
     elif sender is MenuItem:
         serializer = MenuItemSerializer(instance)
     elif sender is User:
