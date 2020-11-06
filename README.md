@@ -16,6 +16,12 @@ To begin, clone the repo and open the repository folder in your terminal.
 
 ### Backend
 
+#### Install redis
+
+On ubuntu, follow step 1 of this guide: [https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-18-04](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-18-04)
+
+On mac run `brew install redis`
+
 #### Creating a Python Virtual Environment
 
 ##### MacOS/Linux
