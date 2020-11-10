@@ -67,7 +67,7 @@ function MembershipChecker() {
             return
         }
         setIsCheckingPersonalId(true)
-        UtnMembership.post<UtnMembershipResponse>('/member_check_api', `ssn=${personalId}`)
+        UtnMembership.post<UtnMembershipResponse>('/member_check_api/', `ssn=${personalId}`)
             .then(response => {
                 setPersonalId('')
                 setIsMember(response.data.is_member)
