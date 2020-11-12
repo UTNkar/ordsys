@@ -29,7 +29,7 @@ python-decouple==3.3
 pytz==2020.4
 sentry-sdk==0.16.4
 service-identity==18.1.0
-six==1.14.0
+six==1.15.0
 sqlparse==0.3.1
 Twisted==20.3.0
 txaio==20.4.1
