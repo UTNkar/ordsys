@@ -5,7 +5,7 @@ async-timeout==3.0.1
 attrs==20.3.0
 autobahn==20.7.1
 Automat==20.2.0
-cffi==1.14.3
+cffi==1.14.4
 channels==2.4.0
 channels-redis==3.2.0
 constantly==15.1.0
