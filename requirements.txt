@@ -27,7 +27,7 @@ PyHamcrest==2.0.2
 pyOpenSSL==19.1.0
 python-decouple==3.4
 pytz==2020.4
-sentry-sdk==0.16.4
+sentry-sdk==0.19.5
 service-identity==18.1.0
 six==1.15.0
 sqlparse==0.4.1
