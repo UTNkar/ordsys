@@ -24,7 +24,7 @@ pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.20
 PyHamcrest==2.0.2
-pyOpenSSL==19.1.0
+pyOpenSSL==20.0.1
 python-decouple==3.4
 pytz==2020.5
 sentry-sdk==0.19.5
