@@ -1,7 +1,7 @@
 import sys
 
 from django.core import exceptions
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.utils.text import capfirst
 
 from backend.models import Organisation
@@ -20,21 +20,32 @@ class Command(BaseCommand):
                 message = self._get_input_message(org_name_field)
                 org_name = self.get_input_data(org_name_field, message)
                 if org_name:
-                    error_msg = self._validate_org_name(org_name, org_name_field)
+                    error_msg = self._validate_org_name(
+                        org_name, org_name_field
+                    )
                     if error_msg:
                         self.stderr.write(error_msg)
                         org_name = None
             org_data['name'] = org_name
             while org_data['theme'] is None:
                 message = self._get_input_message(
-                    org_theme_field, default=Organisation.ThemesEnum.UTN, choices=Organisation.ThemesEnum.values
+                    org_theme_field,
+                    default=Organisation.ThemesEnum.UTN,
+                    choices=Organisation.ThemesEnum.values
                 )
-                input_value = self.get_input_data(org_theme_field, message, default=Organisation.ThemesEnum.UTN)
+                input_value = self.get_input_data(
+                    org_theme_field,
+                    message,
+                    default=Organisation.ThemesEnum.UTN
+                )
                 if input_value in Organisation.ThemesEnum.values:
                     org_data['theme'] = input_value
             created_org = Organisation.objects.create(**org_data)
             if options['verbosity'] >= 1:
-                self.stdout.write(f'Organisation with id "{created_org.id}" created successfully!')
+                self.stdout.write(
+                    f'Organisation with id "{created_org.id}" \
+                    created successfully!'
+                )
         except KeyboardInterrupt:
             self.stderr.write('\nOperation cancelled.')
             sys.exit(1)
@@ -54,7 +65,9 @@ class Command(BaseCommand):
         return '%s%s%s: ' % (
             capfirst(field.verbose_name),
             " (leave blank to use '%s')" % default if default else '',
-            ". Choices are: " + ', '.join([choice for choice in choices]) if choices else '',
+            ". Choices are: " + ', '.join(
+                [choice for choice in choices]
+            ) if choices else '',
         )
 
     def _validate_org_name(self, org_name, org_field):

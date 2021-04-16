@@ -28,7 +28,10 @@ class Event(models.Model):
         db_table = 'event'
         ordering = ['org', 'name']
         constraints = [
-            models.UniqueConstraint(fields=['name', 'org'], name='event_name__org_key'),
+            models.UniqueConstraint(
+                fields=['name', 'org'],
+                name='event_name__org_key'
+            ),
         ]
 
 
@@ -41,7 +44,9 @@ class MenuItem(models.Model):
     active = models.BooleanField(
         default=True,
         verbose_name=_('active'),
-        help_text=_('Designates whether or not this item is currently on the menu.')
+        help_text=_(
+            'Designates whether or not this item is currently on the menu.'
+        )
     )
     beverage = models.BooleanField(
         default=False,
@@ -65,12 +70,18 @@ class MenuItem(models.Model):
         db_table = 'menu_item'
         ordering = ['org', 'beverage', 'item_name']
         constraints = [
-            models.UniqueConstraint(fields=['item_name', 'org'], name='item_name__org_key'),
+            models.UniqueConstraint(
+                fields=['item_name', 'org'],
+                name='item_name__org_key'
+            ),
         ]
         indexes = [
             models.Index(fields=['active'], name='menu_item_active_idx'),
             models.Index(fields=['beverage'], name='menu_item_beverage_idx'),
-            models.Index(fields=['org', 'beverage', 'item_name'], name='menu_item_ordering_idx'),
+            models.Index(
+                fields=['org', 'beverage', 'item_name'],
+                name='menu_item_ordering_idx'
+            ),
         ]
 
 
@@ -84,9 +95,12 @@ class Order(models.Model):
 
     id = models.AutoField(primary_key=True)
     beverages_only = models.BooleanField(
-        help_text=_('Specifies if the order contains only beverages or only food.')
+        help_text=_(
+            'Specifies if the order contains only beverages or only food.'
+        )
     )
-    # Represented as 'N' or 'NN'. Max length is 6 due to backwards compatibility with old 'NN - X' format.
+    # Represented as 'N' or 'NN'. Max length is 6 due to backwards
+    # compatibility with old 'NN - X' format.
     customer_number = models.CharField(
         max_length=6,
         verbose_name=_('customer_number')
@@ -136,7 +150,10 @@ class Order(models.Model):
         db_table = 'order'
         ordering = ['id']
         indexes = [
-            models.Index(fields=['beverages_only'], name='order_beverages_only_idx'),
+            models.Index(
+                fields=['beverages_only'],
+                name='order_beverages_only_idx'
+            ),
         ]
 
 
@@ -170,7 +187,10 @@ class OrderItem(models.Model):
         db_table = 'order_item'
         ordering = ['order', 'id']
         indexes = [
-            models.Index(fields=['order', 'id'], name='order_item_order_id__id_idx'),
+            models.Index(
+                fields=['order', 'id'],
+                name='order_item_order_id__id_idx'
+            ),
         ]
 
 
@@ -178,7 +198,8 @@ class Organisation(models.Model):
     class ThemesEnum(models.TextChoices):
         UTN = 'utn', 'UTN'
         UTNARM = 'utnarm', 'Utnarm'
-        TEKNOLOG_DATAVETARMOTTAGNINGEN = 'td', 'Teknolog- och datavetarmottagningen'
+        TEKNOLOG_DATAVETARMOTTAGNINGEN = \
+            'td', 'Teknolog- och datavetarmottagningen'
         KLUBBVERKET = 'klubbverket', 'Klubbverket'
         FORSRANNINGEN = 'forsranningen', 'Forsränningen'
         REBUSRALLYT = 'rebusrallyt', 'Rebusrallyt'
@@ -222,7 +243,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(
         verbose_name=_('staff status'),
         default=False,
-        help_text=_('Designates whether the user can log into this admin site.'),
+        help_text=_(
+            'Designates whether the user can log into this admin site.'
+        ),
     )
     org = models.ForeignKey(
         to=Organisation,

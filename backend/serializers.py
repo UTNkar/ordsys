@@ -45,7 +45,10 @@ class MenuItemSerializer(_BaseSerializer):
 
 class BaseOrderSerializer(_BaseSerializer):
     def update(self, instance, validated_data):
-        if instance.status != Order.StatusEnum.DELIVERED and validated_data['status'] == Order.StatusEnum.DELIVERED:
+        if (
+            instance.status != Order.StatusEnum.DELIVERED and
+            validated_data['status'] == Order.StatusEnum.DELIVERED
+        ):
             validated_data['delivered_timestamp'] = now()
         return super().update(instance, validated_data)
 
@@ -64,7 +67,8 @@ class OrderItemSerializer(_BaseSerializer):
 
 class RestrictiveUpdateOrderSerializer(BaseOrderSerializer):
     class Meta(BaseOrderSerializer.Meta):
-        read_only_fields = BaseOrderSerializer.Meta.read_only_fields + ('created_timestamp', 'event', 'user')
+        read_only_fields = BaseOrderSerializer.Meta.read_only_fields + \
+            ('created_timestamp', 'event', 'user')
 
 
 class BaseOrderWithOrderItemsSerializer(BaseOrderSerializer):
@@ -72,41 +76,55 @@ class BaseOrderWithOrderItemsSerializer(BaseOrderSerializer):
 
     class Meta(BaseOrderSerializer.Meta):
         fields = (
-            'id', 'beverages_only', 'created_timestamp', 'delivered_timestamp', 'event',
-            'customer_number', 'note', 'status', 'user', 'order_items'
+            'id', 'beverages_only', 'created_timestamp', 'delivered_timestamp',
+            'event', 'customer_number', 'note', 'status', 'user', 'order_items'
         )
-        read_only_fields = BaseOrderSerializer.Meta.read_only_fields + ('created_timestamp', 'user')
+        read_only_fields = BaseOrderSerializer.Meta.read_only_fields + \
+            ('created_timestamp', 'user')
 
 
-class RestrictiveUpdateOrderWithOrderItemsSerializer(BaseOrderWithOrderItemsSerializer):
+class RestrictiveUpdateOrderWithOrderItemsSerializer(BaseOrderWithOrderItemsSerializer):  # noqa
     class Meta(BaseOrderWithOrderItemsSerializer.Meta):
-        read_only_fields = BaseOrderWithOrderItemsSerializer.Meta.read_only_fields + ('event',)
+        read_only_fields = \
+            BaseOrderWithOrderItemsSerializer.Meta.read_only_fields + \
+            ('event',)
 
 
-class CreatableOrderWithOrderItemsSerializer(BaseOrderWithOrderItemsSerializer):
+class CreatableOrderWithOrderItemsSerializer(BaseOrderWithOrderItemsSerializer):  # noqa
     patchable_field_names = ('menu', 'quantity', 'special_requests')
 
     def create(self, validated_data):
         """
         Creates an order and all related order items.
         """
-        assert validated_data.__contains__('user') and not isinstance(validated_data['user'], AnonymousUser), \
-            'Creating an order requires a non-anonymous user instance passed as an argument "user"' \
-            'when calling the serializer\'s save() function, (serializer.save(user=user).'
+        assert (
+            validated_data.__contains__('user') and
+            not isinstance(validated_data['user'], AnonymousUser)
+        ), (
+            'Creating an order requires a non-anonymous user instance '
+            'passed as an argument "user" when calling the serializer\'s '
+            'save() function, (serializer.save(user=user).'
+        )
         order_items = validated_data.pop('order_items')
 
-        # Use bulk_create to avoid sending post_save signal before OrderItems are created.
-        # If we don't, the post_save signal payload won't contain any OrderItems.
-        # As bulk_create returns a list of objects created, we get the first and only order entry.
+        # Use bulk_create to avoid sending post_save signal before OrderItems
+        # are created. If we don't, the post_save signal payload won't contain
+        # any OrderItems. As bulk_create returns a list of objects created, we
+        # get the first and only order entry.
         order = Order.objects.bulk_create([Order(**validated_data)])[0]
 
-        batch = [OrderItem(
-            menu=order_item['menu'], order=order, quantity=order_item['quantity'],
-            special_requests=order_item.get('special_requests', '')) for order_item in order_items
+        batch = [
+            OrderItem(
+                menu=order_item['menu'],
+                order=order,
+                quantity=order_item['quantity'],
+                special_requests=order_item.get('special_requests', '')
+            ) for order_item in order_items
         ]
         OrderItem.objects.bulk_create(batch)
 
-        # Manually send the post save signal now that all OrderItems have been created.
+        # Manually send the post save signal now that all OrderItems have been
+        # created.
         post_save.send(
             sender=Order, instance=order, created=True,
             update_fields=None, raw=False, using=None,
@@ -115,31 +133,53 @@ class CreatableOrderWithOrderItemsSerializer(BaseOrderWithOrderItemsSerializer):
 
     def update(self, instance, validated_data):
         new_order_items_data = validated_data.pop('order_items', None)
+
         if new_order_items_data is not None:
             order_items = OrderItem.objects.filter(order=instance)
             db_items_len = len(order_items)
             new_order_items_len = len(new_order_items_data)
+
             for index in range(new_order_items_len, db_items_len):
                 order_items[index].delete()
-            update_loop_length = db_items_len if db_items_len < new_order_items_len else new_order_items_len
+
+            update_loop_length = db_items_len \
+                if db_items_len < new_order_items_len else new_order_items_len
+
             update_batch = []
             for index in range(update_loop_length):
                 order_item = order_items[index]
+
                 for attr, value in new_order_items_data[index].items():
                     setattr(order_item, attr, value)
+
                 update_batch.append(order_item)
-            OrderItem.objects.bulk_update(update_batch, self.patchable_field_names)
+
+            OrderItem.objects.bulk_update(
+                update_batch,
+                self.patchable_field_names
+            )
             if new_order_items_len > db_items_len:
                 create_batch = []
-                for index in range(new_order_items_len - db_items_len, new_order_items_len):
+                for index in range(
+                    new_order_items_len - db_items_len,
+                    new_order_items_len
+                ):
                     data = new_order_items_data[index]
                     req = data.get('special_requests', '')
                     create_batch.append(
-                        OrderItem(menu=data['menu'], order=instance, quantity=data['quantity'], special_requests=req)
+                        OrderItem(
+                            menu=data['menu'],
+                            order=instance,
+                            quantity=data['quantity'],
+                            special_requests=req
+                        )
                     )
+
                 OrderItem.objects.bulk_create(create_batch)
+
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
+
         instance.save()
         return instance
 
@@ -158,8 +198,8 @@ class OrganisationWithUsersSerializer(_BaseSerializer):
         fields = ('id', 'name', 'theme', 'users')
 
 
-# The unimplemented methods 'create' and 'update' will never be called as we have no model.
-# noinspection PyAbstractClass
+# The unimplemented methods 'create' and 'update' will never be called as we
+# have no model.
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(style={'input_type': 'password'})
@@ -169,9 +209,15 @@ class LoginSerializer(serializers.Serializer):
         password = attrs.get('password')
 
         if username and password:
-            user = authenticate(self.context['request'], username=username, password=password)
+            user = authenticate(
+                self.context['request'], username=username, password=password
+            )
             if user:
                 attrs['user'] = user
                 return attrs
-            raise exceptions.ValidationError(_('Unable to log in with the provided credentials.'))
-        raise exceptions.ValidationError(_('Must include both "username" and "password".'))
+            raise exceptions.ValidationError(
+                _('Unable to log in with the provided credentials.')
+            )
+        raise exceptions.ValidationError(
+            _('Must include both "username" and "password".')
+        )

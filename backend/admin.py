@@ -105,8 +105,8 @@ class MenuItemAdmin(ForeignKeyModelAdmin):
 class OrderAdmin(ForeignKeyModelAdmin):
     form = ModelWithOrganisationForm
     list_display = [
-        'get_order_name', 'get_event_name', 'beverages_only', 'created_timestamp',
-        'status', 'get_delivered_timestamp', 'user'
+        'get_order_name', 'get_event_name', 'beverages_only',
+        'created_timestamp', 'status', 'get_delivered_timestamp', 'user'
     ]
 
     def get_delivered_timestamp(self, obj):
@@ -125,7 +125,8 @@ class OrderAdmin(ForeignKeyModelAdmin):
     def get_fieldsets(self, request, obj=None):
         return (
             (None, {'fields': [
-                'beverages_only', 'customer_number', 'note', 'status', 'event', 'user'
+                'beverages_only', 'customer_number', 'note',
+                'status', 'event', 'user'
             ]}),
         )
 
@@ -154,7 +155,10 @@ class OrderAdmin(ForeignKeyModelAdmin):
 
 @admin.register(OrderItem)
 class OrderItemAdmin(ForeignKeyModelAdmin):
-    list_display = ['get_menu_name', 'get_order_name', 'get_event_name', 'quantity', 'special_requests']
+    list_display = [
+        'get_menu_name', 'get_order_name', 'get_event_name',
+        'quantity', 'special_requests'
+    ]
     list_filter = ['menu', 'order']
     search_fields = ['menu__item_name', 'order__event__name']
 
@@ -207,11 +211,17 @@ class UserAdmin(BaseUserAdmin, ForeignKeyModelAdmin):
     def get_fieldsets(self, request, obj=None):
         if not request.user.is_superuser:
             return (
-                (None, {'fields': ['username', 'password', 'confirm_password']}),
+                (None, {
+                    'fields': ['username', 'password', 'confirm_password']
+                }),
             )
         return (
-            (None, {'fields': ['username', 'password', 'confirm_password', 'org']}),
-            ('Permissions', {'fields': ['is_staff', 'is_superuser', 'groups']}),
+            (None, {
+                'fields': ['username', 'password', 'confirm_password', 'org']
+            }),
+            ('Permissions', {
+                'fields': ['is_staff', 'is_superuser', 'groups']
+            }),
         )
 
     def get_list_display(self, request):
