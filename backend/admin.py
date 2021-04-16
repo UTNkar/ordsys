@@ -7,16 +7,16 @@ from .models import Event, MenuItem, Order, OrderItem, Organisation, User
 class ForeignKeyModelAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'user':
-            kwargs['queryset'] = User.objects.all() if request.user.is_superuser \
-                                 else User.objects.filter(org=request.user.org)
-            kwargs['initial'] = 0
+            model = User
         elif db_field.name == 'order':
-            kwargs['queryset'] = Order.objects.all() if request.user.is_superuser \
-                                 else Order.objects.filter(user__org=request.user.org)
-            kwargs['initial'] = 0
+            model = Order
         elif db_field.name == 'menu':
-            kwargs['queryset'] = MenuItem.objects.all() if request.user.is_superuser \
-                                 else MenuItem.objects.filter(org=request.user.org)
+            model = MenuItem
+
+        if model:
+            kwargs['queryset'] = model.objects.all() \
+                if request.user.is_superuser \
+                else model.objects.filter(org=request.user.org)
             kwargs['initial'] = 0
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
