@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'TeXGyreAdventorBold';
     /*noinspection CssUnknownTarget*/
-    src: url('/assets/fonts/TeXGyreAdventorBold.ttf') format('truetype');
+    src: url('fonts/TeXGyreAdventorBold.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
 }
@@ -9,7 +9,7 @@
 @font-face {
     font-family: 'TeXGyreAdventorBoldItalic';
     /*noinspection CssUnknownTarget*/
-    src: url('/assets/fonts/TeXGyreAdventorBoldItalic.ttf') format('truetype');
+    src: url('fonts/TeXGyreAdventorBoldItalic.ttf') format('truetype');
     font-weight: bold;
     font-style: italic;
 }
@@ -17,7 +17,7 @@
 @font-face {
     font-family: 'TeXGyreAdventorItalic';
     /*noinspection CssUnknownTarget*/
-    src: url('/assets/fonts/TeXGyreAdventorItalic.ttf') format('truetype');
+    src: url('fonts/TeXGyreAdventorItalic.ttf') format('truetype');
     font-weight: normal;
     font-style: italic;
 }
@@ -25,7 +25,7 @@
 @font-face {
     font-family: 'TeXGyreAdventorRegular';
     /*noinspection CssUnknownTarget*/
-    src: url('/assets/fonts/TeXGyreAdventorRegular.ttf') format('truetype');
+    src: url('fonts/TeXGyreAdventorRegular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
