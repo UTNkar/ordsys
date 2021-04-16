@@ -40,6 +40,7 @@ jobs:
         
       # Frontend
       - name: Install npm packages
+        working-directory: ./frontend
         run: npm install
       
       # Uncomment when tests exist
