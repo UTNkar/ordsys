@@ -7,8 +7,9 @@ from rest_framework.response import Response
 from .models import Event, MenuItem, Order, Organisation
 from .filters import OrderFilter
 from .serializers import (
-    EventSerializer, MenuItemSerializer, RestrictiveUpdateOrderSerializer, BaseOrderWithOrderItemsSerializer,
-    CreatableOrderWithOrderItemsSerializer, RestrictiveUpdateOrderWithOrderItemsSerializer,
+    EventSerializer, MenuItemSerializer, RestrictiveUpdateOrderSerializer,
+    BaseOrderWithOrderItemsSerializer, CreatableOrderWithOrderItemsSerializer,
+    RestrictiveUpdateOrderWithOrderItemsSerializer,
     OrganisationWithUsersSerializer, LoginSerializer
 )
 
@@ -24,7 +25,9 @@ class EventView(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save(org=self.request.user.org)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
 
     def get_queryset(self):
         user = self.request.user
@@ -49,7 +52,10 @@ class MenuItemView(viewsets.ModelViewSet):
         return Order.objects.none()
 
 
-class OrderView(viewsets.GenericViewSet, mixins.DestroyModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin):
+class OrderView(
+    viewsets.GenericViewSet, mixins.DestroyModelMixin,
+    mixins.ListModelMixin, mixins.UpdateModelMixin
+):
     filterset_class = OrderFilter
     permission_classes = [IsAuthenticated]
     serializer_class = RestrictiveUpdateOrderSerializer
@@ -63,7 +69,9 @@ class OrderView(viewsets.GenericViewSet, mixins.DestroyModelMixin, mixins.ListMo
         return Order.objects.none()
 
 
-class ManageOrderWithOrderItemsView(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.UpdateModelMixin):
+class ManageOrderWithOrderItemsView(
+    viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.UpdateModelMixin
+):
     filterset_class = OrderFilter
     permission_classes = [IsAuthenticated]
 
@@ -72,12 +80,16 @@ class ManageOrderWithOrderItemsView(viewsets.GenericViewSet, mixins.CreateModelM
         serializer.is_valid(raise_exception=True)
         serializer.save(user=self.request.user)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
 
     def get_queryset(self):
         user = self.request.user
         if not user.is_superuser and user.is_active:
-            return Order.objects.filter(user__org=user.org).prefetch_related('order_items')
+            return Order.objects.filter(
+                user__org=user.org
+            ).prefetch_related('order_items')
         elif user.is_active:
             return Order.objects.prefetch_related('order_items')
         return Order.objects.none()
@@ -96,7 +108,9 @@ class OrderWithOrderItemsView(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if not user.is_superuser and user.is_active:
-            return Order.objects.filter(user__org=user.org).prefetch_related('order_items')
+            return Order.objects.filter(
+                user__org=user.org
+            ).prefetch_related('order_items')
         elif user.is_active:
             return Order.objects.prefetch_related('order_items')
         return Order.objects.none()
@@ -113,9 +127,13 @@ class LoginView(GenericAPIView):
     serializer_class = LoginSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=self.request.data, context={'request': request})
+        serializer = self.get_serializer(
+            data=self.request.data, context={'request': request}
+        )
         serializer.is_valid(raise_exception=True)
-        django_login(request=request, user=serializer.validated_data.get('user'))
+        django_login(
+            request=request, user=serializer.validated_data.get('user')
+        )
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
