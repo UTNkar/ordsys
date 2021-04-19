@@ -31,6 +31,6 @@ sentry-sdk==0.19.5
 service-identity==18.1.0
 six==1.15.0
 sqlparse==0.4.1
-Twisted==20.3.0
+Twisted==21.2.0
 txaio==20.12.1
 zope.interface==5.2.0
