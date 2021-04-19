@@ -1,5 +1,5 @@
 import React from 'react';
-import {menuItemSorter, orderDescSorter} from './sorters';
+import {menuItemSorter} from './sorters';
 import { DatabaseChangeType, MenuItem, Order, OrderStatus } from "../@types";
 
 export function onMenuItemsChange(
