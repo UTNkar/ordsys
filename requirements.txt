@@ -9,7 +9,7 @@ channels_redis==3.2.0
 Django[argon2]==3.2
 django-cors-headers==3.7.0
 django-filter==2.4.0
-djangorestframework==3.12.2
+djangorestframework==3.12.4
 
 # Postgresql
 psycopg2==2.8.6
