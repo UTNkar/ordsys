@@ -70,29 +70,6 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_ALLOW_ALL = False
 
-# Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-IS_RUNNING_TEST = 'test' in sys.argv
-
-if IS_RUNNING_TEST:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config('DB_NAME', default="ordsys"),
-            'USER': config('DB_USER', default="ordsys"),
-            'PASSWORD': config('DB_PASSWORD'),
-            'HOST': config('DB_HOST', default="127.0.0.1"),
-            'PORT': config('DB_PORT', default=5432),
-        }
-    }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
