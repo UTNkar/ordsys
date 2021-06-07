@@ -107,7 +107,6 @@ class CreatableOrderWithOrderItemsSerializer(BaseOrderWithOrderItemsSerializer):
         )
         order_items = validated_data.pop('order_items')
 
-
         # We want to avoid sending a post_save signal before all
         # OrderItems are created, otherwise duplicate orders would
         # appear on the front-end until the page is refreshed.
