@@ -107,11 +107,18 @@ class CreatableOrderWithOrderItemsSerializer(BaseOrderWithOrderItemsSerializer):
         )
         order_items = validated_data.pop('order_items')
 
-        # Use bulk_create to avoid sending post_save signal before OrderItems
-        # are created. If we don't, the post_save signal payload won't contain
-        # any OrderItems. As bulk_create returns a list of objects created, we
-        # get the first and only order entry.
-        order = Order.objects.bulk_create([Order(**validated_data)])[0]
+
+        # We want to avoid sending a post_save signal before all
+        # OrderItems are created, otherwise duplicate orders would
+        # appear on the front-end until the page is refreshed.
+        #
+        # For this purpose, no_signal is used until the post_save signal
+        # is manually sent further below.
+        order = Order(
+            **validated_data
+        )
+        order.no_signal = True
+        order.save()
 
         batch = [
             OrderItem(

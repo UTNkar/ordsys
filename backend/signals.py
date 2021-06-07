@@ -25,6 +25,14 @@ async def _send_to_group(channel, group, payload):
 )
 @receiver((post_delete, post_save), sender=User, dispatch_uid='user_signal')
 def notify_model_changed(sender, instance, **kwargs):
+    # If you want to prevent this function from notifying model changes,
+    # set the no_signal attribute to true.
+    # The no_signal attribute will be removed from the instance to only
+    # block this signal and not any future signals.
+    if hasattr(instance, 'no_signal') and instance.no_signal is True:
+        del instance.no_signal
+        return
+
     is_newly_created = kwargs.get('created', None)
     if is_newly_created is True:
         message_type = 'create'
@@ -36,7 +44,7 @@ def notify_model_changed(sender, instance, **kwargs):
     if sender is Order:
         if is_newly_created is False:
             # If the order was updated we must get fresh data from the
-            # database to avoid # using stale order items data from the
+            # database to avoid using stale order items data from the
             # cache maintained by Django.
             instance = Order.objects.get(id=instance.id)
         serializer = BaseOrderWithOrderItemsSerializer(instance)
