@@ -3,7 +3,7 @@ import { Route } from 'react-router-dom';
 import { MdClose } from 'react-icons/md';
 import { IconButton as MuiIconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { ProviderContext, SnackbarProvider } from 'notistack';
+import { SnackbarProvider } from 'notistack';
 import './App.scss';
 import Bar from './Bar/Bar';
 import EventSelector from './EventSelector/EventSelector';
@@ -42,8 +42,8 @@ const commonSnackbarStyles = {
 }
 
 const createSnackbarStyles = makeStyles({
-    error:   { ...commonSnackbarStyles },
-    info:    { ...commonSnackbarStyles },
+    error: { ...commonSnackbarStyles },
+    info: { ...commonSnackbarStyles },
     success: { ...commonSnackbarStyles },
     warning: {
         ...commonSnackbarStyles,
@@ -57,7 +57,7 @@ function App() {
     const [userHasSetEvent, setUserHasSetEvent] = useState(hasEvent)
     const [isEditingEvent, setIsEditingEvent] = useState(false)
 
-    const snackbarRef = useRef<ProviderContext>(null)
+    const snackbarRef = useRef<SnackbarProvider>(null)
     const snackbarClasses = createSnackbarStyles()
 
     function renderComponents() {
@@ -75,16 +75,16 @@ function App() {
                     />
                     <Route
                         path="/kitchen"
-                        render={props => <Kitchen {...props} renderMode={KitchenRenderMode.FOOD} /> }
+                        render={props => <Kitchen {...props} renderMode={KitchenRenderMode.FOOD} />}
                     />
                     <Route
                         path="/history"
-                        render={props => <Bar {...props} renderMode={BarRenderMode.HISTORY} /> }
+                        render={props => <Bar {...props} renderMode={BarRenderMode.HISTORY} />}
                     />
                     <Route path="/statistics" component={Statistics} />
                     <Route
                         path="/tap"
-                        render={props => <Kitchen {...props} renderMode={KitchenRenderMode.BEVERAGES} /> }
+                        render={props => <Kitchen {...props} renderMode={KitchenRenderMode.BEVERAGES} />}
                     />
                     <Route
                         path="/waiter"
@@ -116,7 +116,7 @@ function App() {
     return (
         <SnackbarProvider
             // Provides a default close button to all Snackbars not overriding 'action' prop
-            action={ key => (
+            action={key => (
                 <MuiIconButton
                     aria-label='Close'
                     color='inherit'
@@ -126,12 +126,12 @@ function App() {
                 >
                     <MdClose />
                 </MuiIconButton>
-            ) }
+            )}
             anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
             autoHideDuration={5000}
             classes={{
-                variantError:   snackbarClasses.error,
-                variantInfo:    snackbarClasses.info,
+                variantError: snackbarClasses.error,
+                variantInfo: snackbarClasses.info,
                 variantSuccess: snackbarClasses.success,
                 variantWarning: snackbarClasses.warning
             }}
