@@ -4,7 +4,7 @@ OrdSys is a web application designed to create, display, and manage order ticket
 various events held by the Uppsala Union of Engineering and Science Students. It is written in Python3 and Javascript 
 using Django and PostgreSQL for the backend and React & Bootstrap for the frontend. 
 
-![OrdSys Front Page](https://i.imgur.com/USQ3IQw.png)
+![OrdSys Front Page](https://i.ibb.co/D80JhCJ/ordsys.png)
 
 ## Requirements
 
@@ -39,12 +39,8 @@ If the versions are mis-matched, you may have to install each package of `requir
 
 ### Setting up the database
 
-1. Make a copy of `.env-template` and name it `.env` and fill in the needed variables. 
-Check `settings/dev.py` for what default values are used.
-2. To connect and create all required database tables, enter `./manage.py makemigrations`
-followed by `./manage.py migrate`.
-3. Create an organisation to associate your users with by running `./manage.py createorganisation`.
-4. Create a superuser so that you can log in with `./manage.py createsuperuser`.
+If you're using any other database engine than SQLite, make sure to set it up before running the backend.
+The database engine can be changed in the different settings files located in `./ordsys/settings`.
 
 #### Running the backend
 
