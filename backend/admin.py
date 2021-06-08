@@ -6,6 +6,7 @@ from .models import Event, MenuItem, Order, OrderItem, Organisation, User
 
 class ForeignKeyModelAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        model = None
         if db_field.name == 'user':
             model = User
         elif db_field.name == 'order':
