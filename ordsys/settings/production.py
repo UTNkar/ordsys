@@ -19,14 +19,15 @@ CORS_ORIGIN_WHITELIST = (
 )
 
 DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config('DB_NAME', default="ordsys"),
-            'USER': config('DB_USER', default="ordsys"),
-            'PASSWORD': config('DB_PASSWORD'),
-            'HOST': config('DB_HOST', default="127.0.0.1"),
-            'PORT': config('DB_PORT', default=5432),
-        }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME', default="ordsys"),
+        'USER': config('DB_USER', default="ordsys"),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST', default="127.0.0.1"),
+        'PORT': config('DB_PORT', default=5432),
+    }
+}
 
 sentry_sdk.init(
     dsn=config("SENTRY_DSN", default=""),
