@@ -5,6 +5,7 @@
 venv
 .env
 __pycache__
+*.sqlite3
 
 # The folder where static files are collected in production
 ordsys/static/

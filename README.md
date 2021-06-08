@@ -4,7 +4,7 @@ OrdSys is a web application designed to create, display, and manage order ticket
 various events held by the Uppsala Union of Engineering and Science Students. It is written in Python3 and Javascript 
 using Django and PostgreSQL for the backend and React & Bootstrap for the frontend. 
 
-![OrdSys Front Page](https://i.imgur.com/USQ3IQw.png)
+![OrdSys Front Page](https://i.ibb.co/D80JhCJ/ordsys.png)
 
 ## Requirements
 
@@ -25,11 +25,13 @@ On mac run `brew install redis`
 #### Creating a Python Virtual Environment
 
 ##### MacOS/Linux
+
 1. Run the command `source source_me.sh` to create and enter the virtual environment.
 2. Update pip to the latest version `pip install --upgrade pip`.
 3. Install the required Python dependencies with `pip install -r dev-requirements.txt`.
 
 ##### Windows
+
 1. Make sure you have the `virtualenv` and `virtualenvwrapper-win` packages installed on your system.
 If you don't, install them using `$ pip install virtualenv` or `$ pip install virtualenvwrapper-win`.
 2. Create a new virtual environment with `$ mkvirtualenv venv`. This will create a virtual environment called `venv` 
@@ -39,12 +41,10 @@ If the versions are mis-matched, you may have to install each package of `requir
 
 ### Setting up the database
 
-1. Make a copy of `.env-template` and name it `.env` and fill in the needed variables. 
-Check `settings/dev.py` for what default values are used.
-2. To connect and create all required database tables, enter `./manage.py makemigrations`
+1. To connect and create all required database tables, enter `./manage.py makemigrations`
 followed by `./manage.py migrate`.
-3. Create an organisation to associate your users with by running `./manage.py createorganisation`.
-4. Create a superuser so that you can log in with `./manage.py createsuperuser`.
+2. Create an organisation to associate your users with by running `./manage.py createorganisation`.
+3. Create a superuser so that you can log in with `./manage.py createsuperuser`.
 
 #### Running the backend
 
