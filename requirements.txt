@@ -11,9 +11,6 @@ django-cors-headers==3.7.0
 django-filter==2.4.0
 djangorestframework==3.12.4
 
-# Postgresql
-psycopg2==2.8.6
-
 # Handy config
 python-decouple==3.4
 
