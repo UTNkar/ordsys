@@ -37,11 +37,6 @@ and automatically enter it.
 3. Install the required Python dependencies with `(venv) $ pip install -r requirements.txt`.
 If the versions are mis-matched, you may have to install each package of `requirements.txt` manually.
 
-### Setting up the database
-
-If you're using any other database engine than SQLite, make sure to set it up before running the backend.
-The database engine can be changed in the different settings files located in `./ordsys/settings`.
-
 #### Running the backend
 
 1. Make sure you're in your virtual environment. If not, enter it using `source source_me.sh`
