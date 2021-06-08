@@ -25,17 +25,26 @@ On mac run `brew install redis`
 #### Creating a Python Virtual Environment
 
 ##### MacOS/Linux
+
 1. Run the command `source source_me.sh` to create and enter the virtual environment.
 2. Update pip to the latest version `pip install --upgrade pip`.
 3. Install the required Python dependencies with `pip install -r dev-requirements.txt`.
 
 ##### Windows
+
 1. Make sure you have the `virtualenv` and `virtualenvwrapper-win` packages installed on your system.
 If you don't, install them using `$ pip install virtualenv` or `$ pip install virtualenvwrapper-win`.
 2. Create a new virtual environment with `$ mkvirtualenv venv`. This will create a virtual environment called `venv` 
 and automatically enter it.
 3. Install the required Python dependencies with `(venv) $ pip install -r requirements.txt`.
 If the versions are mis-matched, you may have to install each package of `requirements.txt` manually.
+
+### Setting up the database
+
+1. To connect and create all required database tables, enter `./manage.py makemigrations`
+followed by `./manage.py migrate`.
+2. Create an organisation to associate your users with by running `./manage.py createorganisation`.
+3. Create a superuser so that you can log in with `./manage.py createsuperuser`.
 
 #### Running the backend
 
