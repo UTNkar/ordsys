@@ -13,6 +13,3 @@ djangorestframework==3.12.4
 
 # Handy config
 python-decouple==3.4
-
-# Sentry for logging
-sentry-sdk==0.19.5
