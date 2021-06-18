@@ -22,17 +22,17 @@ function Home() {
     }
     return (
         <Container className="home-buttons-container">
-            <p className="home-buttons-row-header">Basic views</p>
+            <p className="home-buttons-row-header">Ordering</p>
             <Row xs={2} className="home-buttons-row">
                 <Button iconUrl='glass.svg' buttonText='Bar' link='/bar' />
-                <Button iconUrl='pot.svg' buttonText='Kitchen' link='/kitchen' />
+                <Button iconUrl='waiter.svg' buttonText='Waiter' link='/waiter' />
             </Row>
 
-            <p className="home-buttons-row-header">Extra views</p>
+            <p className="home-buttons-row-header">Fullfilling/Delivery</p>
             <Row xs={2} md={3} className="home-buttons-row">
-                <Button iconUrl='take-away.svg' buttonText='Delivery' link='/bar' />
+                <Button iconUrl='pot.svg' buttonText='Kitchen' link='/kitchen' />
                 <Button iconUrl='beer.svg' buttonText='Tap' link='/tap' />
-                <Button iconUrl='waiter.svg' buttonText='Waiter' link='/waiter' />
+                <Button iconUrl='take-away.svg' buttonText='Delivery' link='/bar' />
             </Row>
 
             <p className="home-buttons-row-header">History</p>
