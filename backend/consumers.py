@@ -1,16 +1,14 @@
 import asyncio
 import re
 from typing import Coroutine, List
-
 from channels.auth import get_user
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-
 from backend.models import User
 
 
 model_regex = re.compile(
-    '^backend\\.(Event|MenuItem|Order|OrderItem|Organisation|User)$'
+    '^backend\\.(MenuItem|Order|OrderItem|Organisation|User)$'
 )
 
 
@@ -37,7 +35,7 @@ class ModelChangesConsumer(AsyncJsonWebsocketConsumer):
         else:
             await self.close()
 
-    async def notify_model_change(self, event):
+    async def notify_model_change(self, event):  # TODO: Event?
         # Ensure user is still authenticated before sending any data,
         # otherwise close the connection.
         user = await get_user(self.scope)

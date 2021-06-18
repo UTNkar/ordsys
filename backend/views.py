@@ -1,41 +1,16 @@
 from django.contrib.auth import login as django_login, logout as django_logout
 from rest_framework import viewsets, status, mixins
-from rest_framework.filters import SearchFilter
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from .models import Event, MenuItem, Order, Organisation
+from .models import MenuItem, Order, Organisation
 from .filters import OrderFilter
 from .serializers import (
-    EventSerializer, MenuItemSerializer, RestrictiveUpdateOrderSerializer,
+    MenuItemSerializer, RestrictiveUpdateOrderSerializer,
     BaseOrderWithOrderItemsSerializer, CreatableOrderWithOrderItemsSerializer,
     RestrictiveUpdateOrderWithOrderItemsSerializer,
     OrganisationWithUsersSerializer, LoginSerializer
 )
-
-
-class EventView(viewsets.ModelViewSet):
-    filter_backends = (SearchFilter,)
-    permission_classes = [IsAuthenticated]
-    search_fields = ('name',)
-    serializer_class = EventSerializer
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(org=self.request.user.org)
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
-        )
-
-    def get_queryset(self):
-        user = self.request.user
-        if not user.is_superuser and user.is_active:
-            return Event.objects.filter(org=user.org)
-        elif user.is_active:
-            return Event.objects.all()
-        return Event.objects.none()
 
 
 class MenuItemView(viewsets.ModelViewSet):

@@ -21,6 +21,6 @@ class OrderFilter(filters.FilterSet):
     class Meta:
         model = Order
         fields = (
-            'beverages_only', 'event', 'exclude_status',
+            'beverages_only', 'exclude_status',
             'max_age', 'user'
         )
