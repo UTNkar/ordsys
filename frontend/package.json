@@ -15,6 +15,7 @@
     "@types/react-router-dom": "^5.1.5",
     "axios": ">=0.21.1",
     "bootstrap": "4.6.0",
+    "http-proxy-middleware": "^0.19.1",
     "notistack": "^1.0.6",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0",
