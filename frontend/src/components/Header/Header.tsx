@@ -6,14 +6,11 @@ import { IconButton as MuiIconButton, useMediaQuery } from '@material-ui/core';
 import './Header.scss';
 
 interface HeaderProps {
-    eventName: string | null
-    onEditEventClick: () => void
     organisationLogo: string
-    showEditEvent: boolean
 }
 
 function Header({
-    eventName, onEditEventClick, organisationLogo, showEditEvent
+    organisationLogo
 }: HeaderProps) {
     const [date, setDate] = useState(new Date().toLocaleString('sv-SE'))
     const dateIntervalId = useRef<number | undefined>(undefined)
@@ -43,18 +40,6 @@ function Header({
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="header-nav">
-                    {eventName
-                        ? <Nav.Item>{eventName}</Nav.Item>
-                        : null
-                    }
-                    {showEditEvent
-                        ? <Nav.Item className='nav-item-with-button'>
-                            <MuiIconButton onClick={onEditEventClick}>
-                                <FaEdit color='#ffffff' />
-                            </MuiIconButton>
-                        </Nav.Item>
-                        : null
-                    }
                     {showDateAndTime
                         ? <Nav.Item>{date}</Nav.Item>
                         : null

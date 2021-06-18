@@ -12,7 +12,6 @@ import CurrentOrder from './CurrentOrder';
 import Menu from './Menu';
 import OrderNumber from './OrderNumber';
 import { DjangoBackend } from '../../api/DjangoBackend';
-import { getEventId } from '../../utils/event';
 import { orderAscSorter, orderDescSorter } from '../../utils/sorters';
 import { onMenuItemsChange, onOrdersChange } from '../../utils/realtimeModelUpdate';
 import { BarRenderMode, CurrentOrderItem, DatabaseChangeType, MenuItem, Order, OrderStatus } from '../../@types';
@@ -155,11 +154,11 @@ function Bar({ renderMode }: BarProps) {
     }
 
     function fetchMenuItemsAndOrders() {
-        let orderQuery = `/api/orders_with_order_items/?event=${getEventId()}`;
+        let orderQuery = `/api/orders_with_order_items/`;
         if (renderMode === BarRenderMode.HISTORY) {
-            orderQuery += `&max_age=1`
+            orderQuery += `?max_age=1`
         } else {
-            orderQuery += `&exclude_status=${OrderStatus.DELIVERED}`
+            orderQuery += `?exclude_status=${OrderStatus.DELIVERED}`
         }
         Promise.all([
             DjangoBackend.get<MenuItem[]>('/api/menu_items/?active=true'),
@@ -230,7 +229,6 @@ function Bar({ renderMode }: BarProps) {
 
     function onSubmitOrder(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         event.preventDefault()
-        const eventId = getEventId()
         const foodItems =
             currentOrder
                 .filter(item => !item.beverage)
@@ -243,13 +241,6 @@ function Bar({ renderMode }: BarProps) {
                 .map(item => {
                     return { menu: item.id, quantity: item.quantity, special_requests: item.mealNote }
                 })
-        if (isNaN(eventId) || eventId <= 0) {
-            // TODO redirect user to event selector page again
-            enqueueSnackbar('Your selected event is invalid!', {
-                variant: 'error',
-            })
-            return
-        }
         setIsSubmittingOrder(true)
         if (orderToEdit !== null) {
             const payload = {
@@ -259,7 +250,7 @@ function Bar({ renderMode }: BarProps) {
             }
             modifyOrder(orderToEdit.id, payload)
         } else {
-            const payloadBase = { event: eventId, customer_number: orderNumber, note: orderNote }
+            const payloadBase = { customer_number: orderNumber, note: orderNote }
             const foodPromise =
                 foodItems.length > 0
                     ? DjangoBackend.post<Order>('/api/manage_orders_with_order_items/', {

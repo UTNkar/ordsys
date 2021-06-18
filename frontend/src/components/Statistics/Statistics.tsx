@@ -1,32 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Button as MuiButton, TextField } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import './Statistics.scss';
 import { CanvasJSChart } from '../../libs/canvasjs.react';
 import { DjangoBackend } from '../../api/DjangoBackend';
-import { Event, MenuItem, Order } from '../../@types';
+import { MenuItem, Order } from '../../@types';
 
 function Statistics() {
-    const [events, setEvents] = useState<Event[]>([])
     const [menuItems, setMenuItems] = useState<MenuItem[]>([])
     const [isLoadingData, setIsLoadingData] = useState(false)
-    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
     const [chartOptions, setChartOptions] = useState({})
 
     useEffect(() => {
-        Promise.all([DjangoBackend.get<Event[]>('/api/events/'), DjangoBackend.get<MenuItem[]>('/api/menu_items/')])
-            .then(([events, menuItems]) => {
-                setEvents(events.data)
+        Promise.all([DjangoBackend.get<MenuItem[]>('/api/menu_items/')])
+            .then(([menuItems]) => {
                 setMenuItems(menuItems.data)
             })
             .catch(reason => console.log(reason.response))
     }, [])
 
-    function onEventSubmit(event: React.FormEvent<HTMLFormElement>) {
+    function onDateSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
         setIsLoadingData(true)
-        DjangoBackend.get<Order[]>(`/api/orders_with_order_items/?event=${selectedEvent?.id}`)
+        DjangoBackend.get<Order[]>(`/api/orders_with_order_items/`)
             .then(orders => {
                 const dataPoints: { label: string, y: number }[] = []
                 orders.data.forEach(order => {
@@ -44,7 +40,7 @@ function Statistics() {
                     animationEnabled: true,
                     exportEnabled: false,
                     title: {
-                        text: `Breakdown of orders for event "${selectedEvent?.name}"`
+                        text: `Breakdown of orders for organisation`
                     },
                     data: [{
                         type: 'pie',
@@ -57,7 +53,6 @@ function Statistics() {
                         dataPoints,
                     }]
                 })
-                setSelectedEvent(null)
             })
             .catch(reason => console.log(reason.response))
             .finally(() => setIsLoadingData(false))
@@ -71,34 +66,16 @@ function Statistics() {
                     // @ts-ignore
                     align="center"
                 >
-                    <form noValidate autoComplete="off" onSubmit={onEventSubmit}>
-                        <Autocomplete
-                            autoHighlight
-                            className="statistics-event-selector"
-                            clearOnBlur={false}
-                            disabled={isLoadingData}
-                            getOptionLabel={option => option.name}
-                            onChange={(e, newValue) => setSelectedEvent(newValue)}
-                            options={events}
-                            renderOption={option => option.name}
-                            renderInput={props =>
-                                <TextField
-                                    {...props}
-                                    label="Search for an event"
-                                    variant="outlined"
-                                />
-                            }
-                            value={selectedEvent}
-                        />
+                    <form noValidate autoComplete="off" onSubmit={onDateSubmit}>
                         <MuiButton
                             className="statistics-event-submit"
                             color="primary"
-                            disabled={selectedEvent === null || isLoadingData}
+                            disabled={isLoadingData}
                             size="large"
                             type="submit"
                             variant="contained"
                         >
-                            {isLoadingData ? 'Crunching the data...' : 'Confirm event'}
+                            {isLoadingData ? 'Crunching the data...' : 'Load selected date'}
                         </MuiButton>
                     </form>
                 </Col>
