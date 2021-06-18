@@ -5,44 +5,40 @@ import './Home.scss';
 import IconButton from './IconButton';
 
 function Home() {
+    interface ButtonProps {
+        link: string
+        iconUrl: string,
+        buttonText: string
+    }
+
+    function Button({ link, iconUrl, buttonText }: ButtonProps) {
+        return (
+            <Col xs={5} md={3} className="home-button">
+                <Link to={link}>
+                    <IconButton iconUrl={"/assets/images/" + iconUrl} text={buttonText} />
+                </Link>
+            </Col>
+        )
+    }
     return (
         <Container className="home-buttons-container">
+            <p className="home-buttons-row-header">Basic views</p>
+            <Row xs={2} className="home-buttons-row">
+                <Button iconUrl='glass.svg' buttonText='Bar' link='/bar' />
+                <Button iconUrl='pot.svg' buttonText='Kitchen' link='/kitchen' />
+            </Row>
+
+            <p className="home-buttons-row-header">Extra views</p>
             <Row xs={2} md={3} className="home-buttons-row">
-                <Col xs={5} md={3} className="home-button">
-                    <Link to='/bar'>
-                        <IconButton iconUrl='/assets/images/glass.svg' text='Bar' />
-                    </Link>
-                </Col>
-                <Col xs={5} md={3} className="home-button">
-                    <Link to='/delivery'>
-                        <IconButton iconUrl='/assets/images/take-away.svg' text='Delivery' />
-                    </Link>
-                </Col>
-                <Col xs={5} md={3} className="home-button">
-                    <Link to='/history'>
-                        <IconButton iconUrl='/assets/images/history.svg' text='Order History' />
-                    </Link>
-                </Col>
-                <Col xs={5} md={3} className="home-button">
-                    <Link to='/kitchen'>
-                        <IconButton iconUrl='/assets/images/pot.svg' text='Kitchen' />
-                    </Link>
-                </Col>
-                <Col xs={5} md={3} className="home-button">
-                    <Link to='/tap'>
-                        <IconButton iconUrl='/assets/images/beer.svg' text='Tap' />
-                    </Link>
-                </Col>
-                <Col xs={5} md={3} className="home-button">
-                    <Link to='/statistics'>
-                        <IconButton iconUrl='/assets/images/chart.svg' text='Statistics' />
-                    </Link>
-                </Col>
-                <Col xs={5} md={3} className="home-button">
-                    <Link to='/waiter'>
-                        <IconButton iconUrl='/assets/images/waiter.svg' text='Waiter' />
-                    </Link>
-                </Col>
+                <Button iconUrl='take-away.svg' buttonText='Delivery' link='/bar' />
+                <Button iconUrl='beer.svg' buttonText='Tap' link='/tap' />
+                <Button iconUrl='waiter.svg' buttonText='Waiter' link='/waiter' />
+            </Row>
+
+            <p className="home-buttons-row-header">History</p>
+            <Row xs={2} md={3} className="home-buttons-row">
+                <Button iconUrl='chart.svg' buttonText='Statistics' link='/statistics' />
+                <Button iconUrl='history.svg' buttonText='Order History' link='/history' />
             </Row>
         </Container>
     );
