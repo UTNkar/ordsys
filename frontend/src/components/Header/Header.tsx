@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Nav, Navbar } from 'react-bootstrap';
-import { FaEdit } from 'react-icons/fa'
-import { IconButton as MuiIconButton, useMediaQuery } from '@material-ui/core';
+import { useMediaQuery } from '@material-ui/core';
 import './Header.scss';
 
 interface HeaderProps {
