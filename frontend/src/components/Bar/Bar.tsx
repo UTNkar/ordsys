@@ -156,6 +156,7 @@ function Bar({ renderMode }: BarProps) {
     function fetchMenuItemsAndOrders() {
         let orderQuery = `/api/orders_with_order_items/`;
         if (renderMode === BarRenderMode.HISTORY) {
+            // For the order history view, we only want last hour's orders
             orderQuery += `?max_age=1`
         } else {
             orderQuery += `?exclude_status=${OrderStatus.DELIVERED}`

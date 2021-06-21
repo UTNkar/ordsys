@@ -5,11 +5,16 @@ import './Statistics.scss';
 import { CanvasJSChart } from '../../libs/canvasjs.react';
 import { DjangoBackend } from '../../api/DjangoBackend';
 import { MenuItem, Order } from '../../@types';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
 function Statistics() {
+    const [startDate, setStartDate] = useState(new Date(Date.now()-3600000))
+    const [endDate, setEndDate] = useState(new Date())
     const [menuItems, setMenuItems] = useState<MenuItem[]>([])
     const [isLoadingData, setIsLoadingData] = useState(false)
     const [chartOptions, setChartOptions] = useState({})
+
 
     useEffect(() => {
         Promise.all([DjangoBackend.get<MenuItem[]>('/api/menu_items/')])
@@ -20,6 +25,7 @@ function Statistics() {
     }, [])
 
     function onDateSubmit(event: React.FormEvent<HTMLFormElement>) {
+        alert("This is where we would filter from "+startDate+" to "+endDate)
         event.preventDefault()
         setIsLoadingData(true)
         DjangoBackend.get<Order[]>(`/api/orders_with_order_items/`)
@@ -40,7 +46,7 @@ function Statistics() {
                     animationEnabled: true,
                     exportEnabled: false,
                     title: {
-                        text: `Breakdown of orders for organisation`
+                        text: `Breakdown of orders for interval:`
                     },
                     data: [{
                         type: 'pie',
@@ -62,11 +68,42 @@ function Statistics() {
         <Container className="flex-grow-1">
             <Row className="h-25 justify-content-center">
                 <Col
-                    className="col-auto w-50"
+                    className="col-auto w-75"
                     // @ts-ignore
                     align="center"
                 >
+                    <h2 className="pr-2 pt-2 align-self-center">Order Statistics</h2>
                     <form noValidate autoComplete="off" onSubmit={onDateSubmit}>
+                        <Row
+                            className='w-50 justify-content-between statistics-input-row'
+                        >
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <DateTimePicker
+                                    // @ts-ignore
+                                    value={startDate}
+                                    // @ts-ignore
+                                    onChange={setStartDate}
+                                    ampm={false}
+                                    disabled={isLoadingData}
+                                    minutesStep={5}
+                                    showTodayButton={true}
+                                    label={"Start date"}
+                                    helperText={"The date and time to filter from"}
+                                />
+                                <DateTimePicker
+                                    // @ts-ignore
+                                    value={endDate}
+                                    // @ts-ignore
+                                    onChange={setEndDate}
+                                    ampm={false}
+                                    disabled={isLoadingData}
+                                    minutesStep={5}
+                                    showTodayButton={true}
+                                    label={"End date"}
+                                    helperText={"The date and time to filter to"}
+                                />
+                            </MuiPickersUtilsProvider>
+                        </Row>
                         <MuiButton
                             className="statistics-event-submit"
                             color="primary"
@@ -75,7 +112,7 @@ function Statistics() {
                             type="submit"
                             variant="contained"
                         >
-                            {isLoadingData ? 'Crunching the data...' : 'Load selected date'}
+                            {isLoadingData ? 'Crunching the data...' : 'Load selected interval'}
                         </MuiButton>
                     </form>
                 </Col>
