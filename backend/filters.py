@@ -8,12 +8,15 @@ class OrderFilter(filters.FilterSet):
     exclude_status = filters.ChoiceFilter(
         field_name='status', exclude=True, choices=Order.StatusEnum.choices
     )
-    max_age = filters.NumberFilter(
+    max_hours = filters.NumberFilter(
         field_name='created_timestamp',
         method='get_younger_than_n_hours',
         label='Get orders younger than n hours',
     )
-    min_age = filters.NumberFilter(
+    # DateTime for the following functions must be in ISO format
+    # as per https://www.w3.org/TR/NOTE-datetime
+    # In short: YYYY-MM-DDThh:mm:ss.sTZD
+    # For this, the javascript date function .toISOString() can be used
         field_name='created_timestamp',
         method='get_older_than_n_hours',
         label='Get orders older than n hours',
