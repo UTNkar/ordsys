@@ -7,6 +7,7 @@ import { DjangoBackend } from '../../api/DjangoBackend';
 import { MenuItem, Order } from '../../@types';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import { useSnackbar } from 'notistack';
 
 function Statistics() {
     const [startDate, setStartDate] = useState(new Date(Date.now()-3600*24*1000))
@@ -14,6 +15,7 @@ function Statistics() {
     const [menuItems, setMenuItems] = useState<MenuItem[]>([])
     const [isLoadingData, setIsLoadingData] = useState(false)
     const [chartOptions, setChartOptions] = useState({})
+    const { enqueueSnackbar } = useSnackbar()
 
 
     useEffect(() => {
@@ -27,11 +29,13 @@ function Statistics() {
     function onDateSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
         setIsLoadingData(true)
+        var hasValue = false;
         DjangoBackend.get<Order[]>('/api/orders_with_order_items/?younger_than='
             +startDate.toISOString()+'&older_than='+endDate.toISOString())
             .then(orders => {
                 const dataPoints: { label: string, y: number }[] = []
                 orders.data.forEach(order => {
+                    hasValue = true;
                     order.order_items.forEach(orderItem => {
                         const menuItem = menuItems.find(item => item.id === orderItem.menu) as MenuItem
                         const dataPointIndex = dataPoints.findIndex(item => item.label === menuItem.item_name)
@@ -42,6 +46,10 @@ function Statistics() {
                         }
                     })
                 })
+                if (!hasValue)
+                    enqueueSnackbar('No orders found for the selected interval.', {
+                        variant: 'info',
+                    })
                 setChartOptions({
                     animationEnabled: true,
                     exportEnabled: true,
@@ -114,13 +122,11 @@ function Statistics() {
                 </Col>
             </Row>
             <Row>
-
                 <Col>
-                    <CanvasJSChart options={chartOptions} />
+                        <CanvasJSChart options={chartOptions} />
                 </Col>
             </Row>
         </Container>
     );
 }
-
 export default Statistics
