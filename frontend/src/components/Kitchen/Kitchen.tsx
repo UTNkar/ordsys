@@ -5,7 +5,6 @@ import { useWebSocket, WebSocketPath } from '../../hooks';
 import './Kitchen.scss';
 import OrderTicket from '../Order/OrderTicket';
 import { DjangoBackend } from '../../api/DjangoBackend';
-import { getEventId } from '../../utils/event';
 import { onMenuItemsChange, onOrdersChange } from '../../utils/realtimeModelUpdate';
 import { DatabaseChangeType, KitchenRenderMode, MenuItem, Order, OrderStatus } from '../../@types';
 import { SnackbarKey, useSnackbar } from "notistack";
@@ -107,7 +106,7 @@ function Kitchen({ renderMode }: KitchenProps) {
         Promise.all([
             DjangoBackend.get<MenuItem[]>('/api/menu_items/?active=true'),
             DjangoBackend.get<Order[]>(
-                `/api/orders_with_order_items/?event=${getEventId()}&beverages_only=${getBeveragesOnly}&exclude_status=${OrderStatus.DELIVERED}`
+                `/api/orders_with_order_items/?beverages_only=${getBeveragesOnly}&exclude_status=${OrderStatus.DELIVERED}`
             ),
         ])
             .then(([menuItemsResponse, ordersResponse]) => {

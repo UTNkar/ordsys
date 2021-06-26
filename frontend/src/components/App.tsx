@@ -6,14 +6,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import { SnackbarProvider } from 'notistack';
 import './App.scss';
 import Bar from './Bar/Bar';
-import EventSelector from './EventSelector/EventSelector';
 import Header from './Header/Header';
 import Home from './Home/Home';
 import Kitchen from './Kitchen/Kitchen';
 import Login from './Login/Login';
 import Statistics from './Statistics/Statistics';
 import { isAuthenticated } from '../utils/authenticationHelper';
-import { getEventName, hasEvent } from '../utils/event';
 import { getAppliedTheme } from '../utils/theme';
 import { BarRenderMode, KitchenRenderMode } from '../@types';
 
@@ -54,14 +52,12 @@ const createSnackbarStyles = makeStyles({
 
 function App() {
     const [userIsAuthenticated, setUserIsAuthenticated] = useState(isAuthenticated)
-    const [userHasSetEvent, setUserHasSetEvent] = useState(hasEvent)
-    const [isEditingEvent, setIsEditingEvent] = useState(false)
 
     const snackbarRef = useRef<SnackbarProvider>(null)
     const snackbarClasses = createSnackbarStyles()
 
     function renderComponents() {
-        if (userIsAuthenticated && userHasSetEvent) {
+        if (userIsAuthenticated) {
             return (
                 <>
                     <Route exact path="/" component={Home} />
@@ -91,20 +87,6 @@ function App() {
                         render={props => <Bar {...props} renderMode={BarRenderMode.WAITER} />}
                     />
                 </>
-            );
-        } else if (userIsAuthenticated) {
-            return (
-                <EventSelector
-                    isEditingEvent={isEditingEvent}
-                    onEditCancel={() => {
-                        setIsEditingEvent(false)
-                        setUserHasSetEvent(true)
-                    }}
-                    onEventChosen={() => {
-                        setIsEditingEvent(false)
-                        setUserHasSetEvent(true)
-                    }}
-                />
             );
         } else {
             return (
@@ -138,13 +120,7 @@ function App() {
             ref={snackbarRef}
         >
             <Header
-                eventName={isEditingEvent ? null : getEventName()}
-                onEditEventClick={() => {
-                    setIsEditingEvent(true)
-                    setUserHasSetEvent(false)
-                }}
                 organisationLogo={`/assets/images/${getAppliedTheme() ?? 'utn'}.png`}
-                showEditEvent={userHasSetEvent}
             />
             {renderComponents()}
         </SnackbarProvider>
