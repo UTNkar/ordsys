@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import { Button as MuiButton, TextField } from '@material-ui/core';
+import { Button as MuiButton } from '@material-ui/core';
 import './Statistics.scss';
 import { CanvasJSChart } from '../../libs/canvasjs.react';
 import { DjangoBackend } from '../../api/DjangoBackend';
@@ -9,7 +9,7 @@ import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
 function Statistics() {
-    const [startDate, setStartDate] = useState(new Date(Date.now()-3600000))
+    const [startDate, setStartDate] = useState(new Date(Date.now()-3600*24*1000))
     const [endDate, setEndDate] = useState(new Date())
     const [menuItems, setMenuItems] = useState<MenuItem[]>([])
     const [isLoadingData, setIsLoadingData] = useState(false)
@@ -25,10 +25,10 @@ function Statistics() {
     }, [])
 
     function onDateSubmit(event: React.FormEvent<HTMLFormElement>) {
-        alert("This is where we would filter from "+startDate+" to "+endDate)
         event.preventDefault()
         setIsLoadingData(true)
-        DjangoBackend.get<Order[]>(`/api/orders_with_order_items/`)
+        DjangoBackend.get<Order[]>('/api/orders_with_order_items/?younger_than='
+            +startDate.toISOString()+'&older_than='+endDate.toISOString())
             .then(orders => {
                 const dataPoints: { label: string, y: number }[] = []
                 orders.data.forEach(order => {
@@ -66,7 +66,7 @@ function Statistics() {
 
     return (
         <Container className="flex-grow-1">
-            <Row className="h-25 justify-content-center">
+            <Row className="justify-content-center">
                 <Col
                     className="col-auto w-75"
                     // @ts-ignore
@@ -105,7 +105,7 @@ function Statistics() {
                             </MuiPickersUtilsProvider>
                         </Row>
                         <MuiButton
-                            className="statistics-event-submit"
+                            className="statistics-submit"
                             color="primary"
                             disabled={isLoadingData}
                             size="large"
@@ -117,7 +117,8 @@ function Statistics() {
                     </form>
                 </Col>
             </Row>
-            <Row className="h-75">
+            <Row>
+
                 <Col>
                     <CanvasJSChart options={chartOptions} />
                 </Col>
