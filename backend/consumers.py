@@ -35,7 +35,7 @@ class ModelChangesConsumer(AsyncJsonWebsocketConsumer):
         else:
             await self.close()
 
-    async def notify_model_change(self, event):  # TODO: Event?
+    async def notify_model_change(self, event):
         # Ensure user is still authenticated before sending any data,
         # otherwise close the connection.
         user = await get_user(self.scope)
