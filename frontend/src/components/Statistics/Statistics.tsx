@@ -44,13 +44,9 @@ function Statistics() {
                 })
                 setChartOptions({
                     animationEnabled: true,
-                    exportEnabled: false,
-                    title: {
-                        text: `Breakdown of orders for interval:`
-                    },
+                    exportEnabled: true,
                     data: [{
-                        type: 'pie',
-                        startAngle: 270,
+                        type: 'bar',
                         toolTipContent: "<b>{label}</b>: {y} st",
                         showInLegend: true,
                         legendText: '{label}',
