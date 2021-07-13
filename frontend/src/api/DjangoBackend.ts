@@ -3,10 +3,10 @@ import Axios from "axios";
 let baseURL = "";
 
 if (process.env.NODE_ENV === 'production') {
-    baseURL = "https://ordsysbackend.utn.se";
+    baseURL = "https://ordsys.utn.se/admin";
 }
 else {
-    baseURL = "http://localhost:8000";
+    baseURL = "http://localhost:3000/admin";
 }
 
 export const DjangoBackend = Axios.create({
