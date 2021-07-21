@@ -215,6 +215,9 @@ class UserAdmin(BaseUserAdmin, ForeignKeyModelAdmin):
                 (None, {
                     'fields': ['username', 'password', 'confirm_password']
                 }),
+                ('Permissions', {
+                    'fields': ['is_staff', 'groups']
+                }),
             )
         return (
             (None, {
