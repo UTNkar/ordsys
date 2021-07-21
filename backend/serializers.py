@@ -77,7 +77,6 @@ class RestrictiveUpdateOrderWithOrderItemsSerializer(BaseOrderWithOrderItemsSeri
     class Meta(BaseOrderWithOrderItemsSerializer.Meta):
         read_only_fields = \
             BaseOrderWithOrderItemsSerializer.Meta.read_only_fields
-# + \('event',)
 
 
 class CreatableOrderWithOrderItemsSerializer(BaseOrderWithOrderItemsSerializer):  # noqa

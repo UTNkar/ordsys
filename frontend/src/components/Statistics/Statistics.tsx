@@ -29,7 +29,7 @@ function Statistics() {
     function onDateSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
         setIsLoadingData(true)
-        var hasValue = false;
+        let hasValue = false;
         DjangoBackend.get<Order[]>('/api/orders_with_order_items/?younger_than='
             +startDate.toISOString()+'&older_than='+endDate.toISOString())
             .then(orders => {
