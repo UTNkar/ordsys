@@ -1,35 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import { Button as MuiButton, TextField } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { Button as MuiButton } from '@material-ui/core';
 import './Statistics.scss';
 import { CanvasJSChart } from '../../libs/canvasjs.react';
 import { DjangoBackend } from '../../api/DjangoBackend';
-import { Event, MenuItem, Order } from '../../@types';
+import { MenuItem, Order } from '../../@types';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+import { useSnackbar } from 'notistack';
 
 function Statistics() {
-    const [events, setEvents] = useState<Event[]>([])
+    const [startDate, setStartDate] = useState(new Date(Date.now()-3600*24*1000))
+    const [endDate, setEndDate] = useState(new Date())
     const [menuItems, setMenuItems] = useState<MenuItem[]>([])
     const [isLoadingData, setIsLoadingData] = useState(false)
-    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
     const [chartOptions, setChartOptions] = useState({})
+    const { enqueueSnackbar } = useSnackbar()
+
 
     useEffect(() => {
-        Promise.all([DjangoBackend.get<Event[]>('/api/events/'), DjangoBackend.get<MenuItem[]>('/api/menu_items/')])
-            .then(([events, menuItems]) => {
-                setEvents(events.data)
+        Promise.all([DjangoBackend.get<MenuItem[]>('/api/menu_items/')])
+            .then(([menuItems]) => {
                 setMenuItems(menuItems.data)
             })
             .catch(reason => console.log(reason.response))
     }, [])
 
-    function onEventSubmit(event: React.FormEvent<HTMLFormElement>) {
+    function onDateSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
         setIsLoadingData(true)
-        DjangoBackend.get<Order[]>(`/api/orders_with_order_items/?event=${selectedEvent?.id}`)
+        let hasValue = false;
+        DjangoBackend.get<Order[]>('/api/orders_with_order_items/?younger_than='
+            +startDate.toISOString()+'&older_than='+endDate.toISOString())
             .then(orders => {
                 const dataPoints: { label: string, y: number }[] = []
                 orders.data.forEach(order => {
+                    hasValue = true;
                     order.order_items.forEach(orderItem => {
                         const menuItem = menuItems.find(item => item.id === orderItem.menu) as MenuItem
                         const dataPointIndex = dataPoints.findIndex(item => item.label === menuItem.item_name)
@@ -40,15 +46,15 @@ function Statistics() {
                         }
                     })
                 })
+                if (!hasValue)
+                    enqueueSnackbar('No orders found for the selected interval.', {
+                        variant: 'info',
+                    })
                 setChartOptions({
                     animationEnabled: true,
-                    exportEnabled: false,
-                    title: {
-                        text: `Breakdown of orders for event "${selectedEvent?.name}"`
-                    },
+                    exportEnabled: true,
                     data: [{
-                        type: 'pie',
-                        startAngle: 270,
+                        type: 'bar',
                         toolTipContent: "<b>{label}</b>: {y} st",
                         showInLegend: true,
                         legendText: '{label}',
@@ -57,7 +63,6 @@ function Statistics() {
                         dataPoints,
                     }]
                 })
-                setSelectedEvent(null)
             })
             .catch(reason => console.log(reason.response))
             .finally(() => setIsLoadingData(false))
@@ -65,51 +70,63 @@ function Statistics() {
 
     return (
         <Container className="flex-grow-1">
-            <Row className="h-25 justify-content-center">
+            <Row className="justify-content-center">
                 <Col
-                    className="col-auto w-50"
+                    className="col-auto w-75"
                     // @ts-ignore
                     align="center"
                 >
-                    <form noValidate autoComplete="off" onSubmit={onEventSubmit}>
-                        <Autocomplete
-                            autoHighlight
-                            className="statistics-event-selector"
-                            clearOnBlur={false}
-                            disabled={isLoadingData}
-                            getOptionLabel={option => option.name}
-                            onChange={(e, newValue) => setSelectedEvent(newValue)}
-                            options={events}
-                            renderOption={option => option.name}
-                            renderInput={props =>
-                                <TextField
-                                    {...props}
-                                    label="Search for an event"
-                                    variant="outlined"
+                    <h2 className="pr-2 pt-2 align-self-center">Order Statistics</h2>
+                    <form noValidate autoComplete="off" onSubmit={onDateSubmit}>
+                        <Row
+                            className='w-50 justify-content-between statistics-input-row'
+                        >
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <DateTimePicker
+                                    // @ts-ignore
+                                    value={startDate}
+                                    // @ts-ignore
+                                    onChange={setStartDate}
+                                    ampm={false}
+                                    disabled={isLoadingData}
+                                    minutesStep={5}
+                                    showTodayButton={true}
+                                    label={"Start date"}
+                                    helperText={"The date and time to filter from"}
                                 />
-                            }
-                            value={selectedEvent}
-                        />
+                                <DateTimePicker
+                                    // @ts-ignore
+                                    value={endDate}
+                                    // @ts-ignore
+                                    onChange={setEndDate}
+                                    ampm={false}
+                                    disabled={isLoadingData}
+                                    minutesStep={5}
+                                    showTodayButton={true}
+                                    label={"End date"}
+                                    helperText={"The date and time to filter to"}
+                                />
+                            </MuiPickersUtilsProvider>
+                        </Row>
                         <MuiButton
-                            className="statistics-event-submit"
+                            className="statistics-submit"
                             color="primary"
-                            disabled={selectedEvent === null || isLoadingData}
+                            disabled={isLoadingData}
                             size="large"
                             type="submit"
                             variant="contained"
                         >
-                            {isLoadingData ? 'Crunching the data...' : 'Confirm event'}
+                            {isLoadingData ? 'Crunching the data...' : 'Load selected interval'}
                         </MuiButton>
                     </form>
                 </Col>
             </Row>
-            <Row className="h-75">
+            <Row>
                 <Col>
-                    <CanvasJSChart options={chartOptions} />
+                        <CanvasJSChart options={chartOptions} />
                 </Col>
             </Row>
         </Container>
     );
 }
-
 export default Statistics

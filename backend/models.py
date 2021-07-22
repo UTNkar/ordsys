@@ -5,36 +5,6 @@ from django.utils.translation import gettext_lazy as _
 from .managers import UserManager
 
 
-class Event(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(
-        max_length=100,
-        verbose_name=_('event name'),
-    )
-    org = models.ForeignKey(
-        to='Organisation',
-        on_delete=models.CASCADE,
-        verbose_name=_('organisation'),
-        help_text=_('The organisation that arranged this event.'),
-    )
-
-    def __str__(self):
-        return f'{self.name} ({self.org})'
-
-    def get_org_id(self):
-        return self.org.id
-
-    class Meta:
-        db_table = 'event'
-        ordering = ['org', 'name']
-        constraints = [
-            models.UniqueConstraint(
-                fields=['name', 'org'],
-                name='event_name__org_key'
-            ),
-        ]
-
-
 class MenuItem(models.Model):
     id = models.AutoField(primary_key=True)
     item_name = models.CharField(
@@ -127,12 +97,6 @@ class Order(models.Model):
         verbose_name=_('status'),
         help_text=_('The current status of the order.'),
     )
-    event = models.ForeignKey(
-        to=Event,
-        on_delete=models.CASCADE,
-        verbose_name=_('event'),
-        help_text=_('During which event the order was placed.'),
-    )
     user = models.ForeignKey(
         to='User',
         on_delete=models.CASCADE,
@@ -141,10 +105,10 @@ class Order(models.Model):
     )
 
     def __str__(self):
-        return f'Order #{self.id} ({self.event})'
+        return f'Order #{self.id} ({self.user.org})'
 
     def get_org_id(self):
-        return self.event.org.id
+        return self.user.get_org_id()
 
     class Meta:
         db_table = 'order'
