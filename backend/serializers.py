@@ -4,14 +4,12 @@ from django.db.models.signals import post_save
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers, exceptions
-from .models import Event, MenuItem, Order, OrderItem, User, Organisation
+from .models import MenuItem, Order, OrderItem, User, Organisation
 
 
 def _get_group_name(caller):
     if isinstance(caller, BaseOrderSerializer):
         return 'backend.Order'
-    elif isinstance(caller, EventSerializer):
-        return 'backend.Event'
     elif isinstance(caller, MenuItemSerializer):
         return 'backend.MenuItem'
     elif isinstance(caller, UserPublicSerializer):
@@ -26,14 +24,6 @@ def _get_group_name(caller):
 class _BaseSerializer(serializers.ModelSerializer):
     def get_group_name(self):
         return _get_group_name(self)
-
-
-class EventSerializer(_BaseSerializer):
-    org = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
-
-    class Meta:
-        model = Event
-        fields = '__all__'
 
 
 class MenuItemSerializer(_BaseSerializer):
@@ -68,7 +58,7 @@ class OrderItemSerializer(_BaseSerializer):
 class RestrictiveUpdateOrderSerializer(BaseOrderSerializer):
     class Meta(BaseOrderSerializer.Meta):
         read_only_fields = BaseOrderSerializer.Meta.read_only_fields + \
-            ('created_timestamp', 'event', 'user')
+            ('created_timestamp', 'user')
 
 
 class BaseOrderWithOrderItemsSerializer(BaseOrderSerializer):
@@ -77,7 +67,7 @@ class BaseOrderWithOrderItemsSerializer(BaseOrderSerializer):
     class Meta(BaseOrderSerializer.Meta):
         fields = (
             'id', 'beverages_only', 'created_timestamp', 'delivered_timestamp',
-            'event', 'customer_number', 'note', 'status', 'user', 'order_items'
+            'customer_number', 'note', 'status', 'user', 'order_items'
         )
         read_only_fields = BaseOrderSerializer.Meta.read_only_fields + \
             ('created_timestamp', 'user')
@@ -86,8 +76,7 @@ class BaseOrderWithOrderItemsSerializer(BaseOrderSerializer):
 class RestrictiveUpdateOrderWithOrderItemsSerializer(BaseOrderWithOrderItemsSerializer):  # noqa
     class Meta(BaseOrderWithOrderItemsSerializer.Meta):
         read_only_fields = \
-            BaseOrderWithOrderItemsSerializer.Meta.read_only_fields + \
-            ('event',)
+            BaseOrderWithOrderItemsSerializer.Meta.read_only_fields
 
 
 class CreatableOrderWithOrderItemsSerializer(BaseOrderWithOrderItemsSerializer):  # noqa

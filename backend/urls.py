@@ -1,6 +1,6 @@
 from django.urls import path, include, re_path
 from .views import (
-    EventView, MenuItemView, OrderView, OrderWithOrderItemsView,
+    MenuItemView, OrderView, OrderWithOrderItemsView,
     ManageOrderWithOrderItemsView, OrganisationWithUsersView,
     LoginView, LogoutView
 )
@@ -8,7 +8,6 @@ from rest_framework import routers
 
 
 router = routers.DefaultRouter()
-router.register('events', EventView, 'event')
 router.register('menu_items', MenuItemView, 'menu_item')
 router.register('orders', OrderView, 'order')
 router.register(
