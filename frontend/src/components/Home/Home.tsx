@@ -13,7 +13,7 @@ function Home() {
 
     function Button({ link, iconUrl, buttonText }: ButtonProps) {
         return (
-            <Col xs={5} md={3} className="home-button">
+            <Col xs={4} md={2} className="home-button">
                 <Link to={link}>
                     <IconButton iconUrl={"/assets/images/" + iconUrl} text={buttonText} />
                 </Link>
