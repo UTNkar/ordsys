@@ -1,31 +1,23 @@
-@media (min-width: 0px) {
-    .icon-button-img {
-        height: 60px;
-        width: 60px;
-    }
-
-    .icon-button-text {
-        font-size: 1.25em;
-    }
-}
-
-@media (min-width: 1000px) {
-    .icon-button-img {
-        height: 100px;
-        width: 100px;
-    }
-
-    .icon-button-text {
-        font-size: 1.5em;
-    }
-}
-
 .icon-button-img {
-    margin-top: 1em;
-    margin-bottom: 0.1em;
+    height: 3.75rem;
+    width: 3.75rem;
+    margin-top: 0.5rem;
+    opacity: 0.85;
 }
 
 .icon-button-text {
-    padding-top: 0.25em;
-    padding-bottom: 0.5em;
+    font-size: 1.25rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.75rem;
+}
+
+@media (min-width: 992px) {
+    .icon-button-img {
+        height: 4rem;
+        width: 4rem;
+    }
+
+    .icon-button-text {
+        font-size: 1.5rem;
+    }
 }
