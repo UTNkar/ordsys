@@ -41,8 +41,7 @@ If the versions are mis-matched, you may have to install each package of `requir
 
 ### Setting up the database
 
-1. To connect and create all required database tables, enter `./manage.py makemigrations`
-followed by `./manage.py migrate`.
+1. Create all required database tables, enter `./manage.py migrate`.
 2. Create an organisation to associate your users with by running `./manage.py createorganisation`.
 3. Create a superuser so that you can log in with `./manage.py createsuperuser`.
 
