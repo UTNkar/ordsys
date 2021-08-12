@@ -7,7 +7,7 @@ const basePath = "ws";
 
 if (process.env.NODE_ENV === 'production') {
     protocol = "wss";
-    hostname = 'ordsysbackend.utn.se';
+    hostname = 'ordsys.utn.se';
     port = 443;
 } else {
     protocol = "ws";
