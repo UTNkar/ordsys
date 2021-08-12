@@ -3,7 +3,7 @@ import reactUseWebSocket, { Options } from 'react-use-websocket';
 let protocol = "";
 let hostname = "";
 let port = 0;
-const basePath = "ws";
+let basePath = "admin/ws";
 
 if (process.env.NODE_ENV === 'production') {
     protocol = "wss";
@@ -12,7 +12,7 @@ if (process.env.NODE_ENV === 'production') {
 } else {
     protocol = "ws";
     hostname = 'localhost';
-    port = 8000;
+    port = 3000;
 }
 
 
