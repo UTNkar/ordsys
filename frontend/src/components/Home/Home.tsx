@@ -32,7 +32,7 @@ function Home() {
             <Row xs={2} md={3} className="home-buttons-row">
                 <Button iconUrl='pot.svg' buttonText='Kitchen' link='/kitchen' />
                 <Button iconUrl='beer.svg' buttonText='Tap' link='/tap' />
-                <Button iconUrl='take-away.svg' buttonText='Delivery' link='/bar' />
+                <Button iconUrl='take-away.svg' buttonText='Delivery' link='/delivery' />
             </Row>
 
             <p className="home-buttons-row-header">History</p>
