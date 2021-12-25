@@ -77,6 +77,7 @@ function App() {
                         path="/history"
                         render={props => <Bar {...props} renderMode={BarRenderMode.HISTORY} />}
                     />
+                    <Route path="/pickup" component={Home} />
                     <Route path="/statistics" component={Statistics} />
                     <Route
                         path="/tap"
