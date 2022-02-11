@@ -3,7 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { FaUndo } from 'react-icons/fa';
 import { MdClose } from 'react-icons/md';
-import { Button as MuiButton, IconButton as MuiIconButton } from '@material-ui/core';
+import { Button as MuiButton, IconButton as MuiIconButton } from '@mui/material';
 import { SnackbarKey, useSnackbar } from 'notistack';
 import { useWebSocket, WebSocketPath } from '../../hooks';
 import './Bar.scss';

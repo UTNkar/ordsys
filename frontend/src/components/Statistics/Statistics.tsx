@@ -1,17 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import { Button as MuiButton } from '@material-ui/core';
+import { Button as MuiButton, TextField } from '@mui/material';
 import './Statistics.scss';
 import { CanvasJSChart } from '../../libs/canvasjs.react';
 import { DjangoBackend } from '../../api/DjangoBackend';
 import { MenuItem, Order } from '../../@types';
-import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { DateTimePicker, LocalizationProvider } from '@mui/lab';
 import DateFnsUtils from '@date-io/date-fns';
+import { subDays } from 'date-fns';
+import { sv } from "date-fns/locale";
 import { useSnackbar } from 'notistack';
 
+const DATE_TIME_PICKER_COMMON_PROPS = Object.freeze({
+    mask: "____-__-__ __:__",
+    disableFuture: true,
+    minutesStep: 5,
+    showTodayButton: true,
+});
+
 function Statistics() {
-    const [startDate, setStartDate] = useState(new Date(Date.now()-3600*24*1000))
     const [endDate, setEndDate] = useState(new Date())
+    const [startDate, setStartDate] = useState(subDays(endDate, 1));
     const [menuItems, setMenuItems] = useState<MenuItem[]>([])
     const [isLoadingData, setIsLoadingData] = useState(false)
     const [chartOptions, setChartOptions] = useState({})
@@ -79,34 +88,41 @@ function Statistics() {
                     <h2 className="pr-2 pt-2 align-self-center">Order Statistics</h2>
                     <form noValidate autoComplete="off" onSubmit={onDateSubmit}>
                         <Row
-                            className='w-50 justify-content-between statistics-input-row'
+                            className='w-75 justify-content-between my-4'
                         >
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <LocalizationProvider dateAdapter={DateFnsUtils} locale={sv}>
                                 <DateTimePicker
-                                    // @ts-ignore
+                                    {...DATE_TIME_PICKER_COMMON_PROPS}
                                     value={startDate}
                                     // @ts-ignore
                                     onChange={setStartDate}
-                                    ampm={false}
                                     disabled={isLoadingData}
-                                    minutesStep={5}
-                                    showTodayButton={true}
+                                    maxDateTime={endDate}
                                     label={"Start date"}
-                                    helperText={"The date and time to filter from"}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            helperText="The date and time to filter from"
+                                            variant="outlined"
+                                        />
+                                    )}
                                 />
                                 <DateTimePicker
-                                    // @ts-ignore
+                                    {...DATE_TIME_PICKER_COMMON_PROPS}
                                     value={endDate}
                                     // @ts-ignore
                                     onChange={setEndDate}
-                                    ampm={false}
                                     disabled={isLoadingData}
-                                    minutesStep={5}
-                                    showTodayButton={true}
                                     label={"End date"}
-                                    helperText={"The date and time to filter to"}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            helperText="The date and time to filter to"
+                                            variant="outlined"
+                                        />
+                                    )}
                                 />
-                            </MuiPickersUtilsProvider>
+                            </LocalizationProvider>
                         </Row>
                         <MuiButton
                             className="statistics-submit"

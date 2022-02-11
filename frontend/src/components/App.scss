@@ -5,3 +5,35 @@
 .h-40 {
     height: 40% !important;
 }
+
+.base-snackbar {
+  & .SnackbarItem-action {
+    & .MuiButton-root {
+      color: inherit;
+
+      & .MuiButton-label {
+        font-family: "TexGyreAdventorRegular", sans-serif;
+        font-size: 1.2em;
+        margin-bottom: 1px;
+      }
+    }
+  }
+  & .SnackbarItem-message {
+    font-family: "TeXGyreAdventorRegular", sans-serif;
+    font-size: 1.4em;
+    margin-bottom: 3px;
+
+    .MuiSvgIcon-root {
+      margin-top: 2px;
+    }
+  }
+}
+
+.warning-snackbar {
+  & .SnackbarItem-action {
+    color: black;
+  }
+  & .SnackbarItem-message {
+    color: black;
+  }
+}
