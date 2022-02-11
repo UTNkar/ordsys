@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { FaUndo } from 'react-icons/fa';
 import { MdClose } from 'react-icons/md';
@@ -17,7 +16,7 @@ import { onMenuItemsChange, onOrdersChange } from '../../utils/realtimeModelUpda
 import { BarRenderMode, CurrentOrderItem, DatabaseChangeType, MenuItem, Order, OrderStatus } from '../../@types';
 import MembershipChecker from '../MembershipChecker/MembershipChecker';
 
-interface BarProps extends RouteComponentProps {
+interface BarProps {
     renderMode: BarRenderMode
 }
 

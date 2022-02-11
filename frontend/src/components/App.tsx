@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { MdClose } from 'react-icons/md';
 import { IconButton, StyledEngineProvider } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
@@ -23,35 +23,35 @@ function App() {
     function renderComponents() {
         if (userIsAuthenticated) {
             return (
-                <>
-                    <Route exact path="/" component={Home} />
+                <Routes>
+                    <Route path="/" element={<Home />} />
                     <Route
                         path="/bar"
-                        render={props => <Bar {...props} renderMode={BarRenderMode.FULL} />}
+                        element={<Bar renderMode={BarRenderMode.FULL} />}
                     />
                     <Route
                         path="/delivery"
-                        render={props => <Bar {...props} renderMode={BarRenderMode.DELIVERY} />}
+                        element={<Bar renderMode={BarRenderMode.DELIVERY} />}
                     />
                     <Route
                         path="/kitchen"
-                        render={props => <Kitchen {...props} renderMode={KitchenRenderMode.FOOD} />}
+                        element={<Kitchen renderMode={KitchenRenderMode.FOOD} />}
                     />
                     <Route
                         path="/history"
-                        render={props => <Bar {...props} renderMode={BarRenderMode.HISTORY} />}
+                        element={<Bar renderMode={BarRenderMode.HISTORY} />}
                     />
-                    <Route path="/pickup" component={Pickup} />
-                    <Route path="/statistics" component={Statistics} />
+                    <Route path="/pickup" element={<Pickup />} />
+                    <Route path="/statistics" element={<Statistics />} />
                     <Route
                         path="/tap"
-                        render={props => <Kitchen {...props} renderMode={KitchenRenderMode.BEVERAGES} />}
+                        element={<Kitchen renderMode={KitchenRenderMode.BEVERAGES} />}
                     />
                     <Route
                         path="/waiter"
-                        render={props => <Bar {...props} renderMode={BarRenderMode.WAITER} />}
+                        element={<Bar renderMode={BarRenderMode.WAITER} />}
                     />
-                </>
+                </Routes>
             );
         } else {
             return (
