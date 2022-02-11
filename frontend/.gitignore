@@ -24,6 +24,5 @@ yarn-debug.log*
 yarn-error.log*
 
 package-lock.json
-yarn.lock
 
 react-app-env.d.ts
