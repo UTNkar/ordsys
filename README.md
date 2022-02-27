@@ -54,9 +54,10 @@ The backend can now be accessed at http://localhost:8000/.
 
 ### Frontend
 
-1. `cd` to `frontend/`
-2. Install the required dependencies using either `$ npm install` or `$ yarn install`.
-3. Run the frontend using `$ npm start` or `$ yarn start`. It should automatically open in your web browser. If not,
+1. Install node version 16 using [nvm](https://github.com/nvm-sh/nvm)
+2. `cd` to `frontend/`
+3. Install the required dependencies using either `$ npm install` or `$ yarn install`.
+4. Run the frontend using `$ npm start` or `$ yarn start`. It should automatically open in your web browser. If not,
 you can open your web browser and browse to http://localhost:3000/.
 
 __Note__: Running the frontend with `start` launches it in development mode. To build and deploy to a production
