@@ -9,7 +9,7 @@ channels_redis==3.3.1
 Django[argon2]==3.2.6
 django-cors-headers==3.11.0
 django-filter==2.4.0
-djangorestframework==3.12.4
+djangorestframework==3.13.1
 
 # Handy config
 python-decouple==3.4
