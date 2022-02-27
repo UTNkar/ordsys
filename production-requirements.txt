@@ -4,4 +4,4 @@
 sentry-sdk==1.5.6
 
 # Postgresql
-psycopg2==2.9.1
+psycopg2==2.9.3
