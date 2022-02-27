@@ -10,6 +10,7 @@ interface MenuProps {
 
 function Menu({ menuItems, onMenuItemClick }: MenuProps) {
     return (
+        menuItems.length    ?
         <CardColumns className="menu-items mt-3">
             {menuItems.map(item =>
                 <Card
@@ -23,6 +24,7 @@ function Menu({ menuItems, onMenuItemClick }: MenuProps) {
                 </Card>
             )}
         </CardColumns>
+        :   <h5>No menu items found. Are there any?</h5>
     );
 }
 
