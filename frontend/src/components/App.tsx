@@ -10,6 +10,7 @@ import Header from './Header/Header';
 import Home from './Home/Home';
 import Kitchen from './Kitchen/Kitchen';
 import Login from './Login/Login';
+import Pickup from './Pickup/Pickup';
 import Statistics from './Statistics/Statistics';
 import { isAuthenticated } from '../utils/authenticationHelper';
 import { getAppliedTheme } from '../utils/theme';
@@ -77,7 +78,7 @@ function App() {
                         path="/history"
                         render={props => <Bar {...props} renderMode={BarRenderMode.HISTORY} />}
                     />
-                    <Route path="/pickup" component={Home} />
+                    <Route path="/pickup" component={Pickup} />
                     <Route path="/statistics" component={Statistics} />
                     <Route
                         path="/tap"
