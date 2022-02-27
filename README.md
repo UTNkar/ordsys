@@ -8,7 +8,7 @@ using Django and PostgreSQL for the backend and React & Bootstrap for the fronte
 
 ## Requirements
 
-The application requires Python (version 3.6 or greater), Node.js (Version 14 or greater), and PostgreSQL to be installed on your system.
+The application requires Python (version 3.8 or greater), Node.js (Version 16) by using [nvm](https://github.com/nvm-sh/nvm).
 
 ## Installation
 
@@ -54,7 +54,6 @@ The backend can now be accessed at http://localhost:8000/.
 
 ### Frontend
 
-1. Install node version 16 using [nvm](https://github.com/nvm-sh/nvm)
 2. `cd` to `frontend/`
 3. Install the required dependencies using either `$ npm install` or `$ yarn install`.
 4. Run the frontend using `$ npm start` or `$ yarn start`. It should automatically open in your web browser. If not,
