@@ -3,7 +3,7 @@ asgiref==3.4.1
 
 # Websockets
 channels==3.0.4
-channels_redis==3.3.0
+channels_redis==3.3.1
 
 # Django
 Django[argon2]==3.2.6
