@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import AnonymousUser
 from django.db.models.signals import post_save
 from django.utils.timezone import now
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers, exceptions
 from .models import MenuItem, Order, OrderItem, User, Organisation
 
