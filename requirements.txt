@@ -12,4 +12,4 @@ django-filter==21.1
 djangorestframework==3.13.1
 
 # Handy config
-python-decouple==3.4
+python-decouple==3.6
