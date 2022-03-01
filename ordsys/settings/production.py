@@ -18,6 +18,8 @@ CORS_ORIGIN_WHITELIST = (
     'https://ordsys.utn.se',
 )
 
+CSRF_TRUSTED_ORIGINS = ['https://ordsys.utn.se']
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
