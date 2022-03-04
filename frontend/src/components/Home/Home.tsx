@@ -28,15 +28,16 @@ function Home() {
                 <Button iconUrl='waiter.svg' buttonText='Waiter' link='/waiter' />
             </Row>
 
-            <p className="home-buttons-row-header">Fullfilling/Delivery</p>
+            <p className="home-buttons-row-header">Fulfilling/Delivery</p>
             <Row xs={2} md={3} className="home-buttons-row">
                 <Button iconUrl='pot.svg' buttonText='Kitchen' link='/kitchen' />
                 <Button iconUrl='beer.svg' buttonText='Tap' link='/tap' />
                 <Button iconUrl='take-away.svg' buttonText='Delivery' link='/delivery' />
             </Row>
 
-            <p className="home-buttons-row-header">History</p>
+            <p className="home-buttons-row-header">Overview</p>
             <Row xs={2} md={3} className="home-buttons-row">
+                <Button iconUrl='pickup.svg' buttonText='Pickup' link='/pickup' />
                 <Button iconUrl='chart.svg' buttonText='Statistics' link='/statistics' />
                 <Button iconUrl='history.svg' buttonText='Order History' link='/history' />
             </Row>
