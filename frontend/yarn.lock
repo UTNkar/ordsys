@@ -9773,10 +9773,10 @@
     "loose-envify" "^1.4.0"
     "prop-types" "^15.6.2"
 
-"react-use-websocket@^2.1.1":
-  "integrity" "sha512-jV6OxXuxWi6BiPVlbAJd/uWNaoQwkeGARFO9f6HidJeWUatB4J2UopbxI/fduiGpcpHGhRAmpLdfVjeRzrcTnQ=="
-  "resolved" "https://registry.npmjs.org/react-use-websocket/-/react-use-websocket-2.9.1.tgz"
-  "version" "2.9.1"
+react-use-websocket@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-use-websocket/-/react-use-websocket-3.0.0.tgz#754cb8eea76f55d31c5676d4abe3e573bc2cea04"
+  integrity sha512-BInlbhXYrODBPKIplDAmI0J1VPM+1KhCLN09o+dzgQ8qMyrYs4t5kEYmCrTqyRuMTmpahylHFZWQXpfYyDkqOw==
 
 "react@*", "react@^0.14.0 || ^15.0.0 || ^16 || ^17", "react@^16.8.0 || ^17.0.0", "react@^17.0.2", "react@>= 16", "react@>= 16.8.0", "react@>=0.14.0", "react@>=15.0.0", "react@>=16.3.0", "react@>=16.3.2", "react@>=16.6.0", "react@>=16.8", "react@>=16.8.0", "react@17.0.2":
   "integrity" "sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA=="
