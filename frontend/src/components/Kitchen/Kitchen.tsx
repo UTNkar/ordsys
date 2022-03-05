@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { RouteComponentProps } from 'react-router';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { useWebSocket, WebSocketPath } from '../../hooks';
 import './Kitchen.scss';
@@ -32,7 +31,7 @@ function changeOrderStatus(order: Order, newStatus: OrderStatus) {
         .catch(reason => console.log(reason))
 }
 
-interface KitchenProps extends RouteComponentProps {
+interface KitchenProps {
     renderMode: KitchenRenderMode
 }
 
