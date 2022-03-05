@@ -8,19 +8,39 @@ class OrderFilter(filters.FilterSet):
     exclude_status = filters.ChoiceFilter(
         field_name='status', exclude=True, choices=Order.StatusEnum.choices
     )
-    max_age = filters.NumberFilter(
+    max_hours = filters.NumberFilter(
         field_name='created_timestamp',
-        method='get_past_n_hours',
-        label="Past n hours"
+        method='get_younger_than_n_hours',
+        label='Get orders younger than n hours',
+    )
+    # DateTime for the following functions must be in ISO format
+    # as per https://www.w3.org/TR/NOTE-datetime
+    # In short: YYYY-MM-DDThh:mm:ss.sTZD
+    # For this, the javascript date function .toISOString() can be used
+    younger_than = filters.DateTimeFilter(
+        field_name='created_timestamp',
+        method='get_younger_than_datetime',
+        label='Get orders younger than the given datetime'
+    )
+    older_than = filters.DateTimeFilter(
+        field_name='created_timestamp',
+        method='get_older_than_datetime',
+        label='Get orders older than the given datetime'
     )
 
-    def get_past_n_hours(self, queryset, field_name, value):
+    def get_younger_than_n_hours(self, queryset, field_name, value):
         time_threshold = timezone.now() - timedelta(hours=int(value))
         return queryset.filter(created_timestamp__gte=time_threshold)
+
+    def get_younger_than_datetime(self, queryset, field_name, value):
+        return queryset.filter(created_timestamp__gte=value)
+
+    def get_older_than_datetime(self, queryset, field_name, value):
+        return queryset.filter(created_timestamp__lte=value)
 
     class Meta:
         model = Order
         fields = (
-            'beverages_only', 'event', 'exclude_status',
-            'max_age', 'user'
+            'beverages_only', 'exclude_status',
+            'max_hours', 'younger_than', 'older_than', 'user'
         )

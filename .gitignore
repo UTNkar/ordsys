@@ -10,4 +10,7 @@ __pycache__
 # The folder where static files are collected in production
 ordsys/static/
 
+# Redis dumps
+dump.rdb
+
 .vscode/

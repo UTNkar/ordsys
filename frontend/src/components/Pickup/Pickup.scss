@@ -1,0 +1,13 @@
+.bar-top.row {
+    height: 6.5vh;
+
+    h3 {
+        font-family: "TeXGyreAdventorBold", sans-serif;
+        text-align: center;
+    }
+}
+
+.row.menu {
+    flex: 0 3 75%;
+    overflow-y: auto;
+}

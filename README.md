@@ -8,7 +8,7 @@ using Django and PostgreSQL for the backend and React & Bootstrap for the fronte
 
 ## Requirements
 
-The application requires Python (version 3.6 or greater), Node.js (Version 14 or greater), and PostgreSQL to be installed on your system.
+The application requires Python (version 3.8 or greater), Node.js (Version 16) by using [nvm](https://github.com/nvm-sh/nvm).
 
 ## Installation
 
@@ -41,8 +41,7 @@ If the versions are mis-matched, you may have to install each package of `requir
 
 ### Setting up the database
 
-1. To connect and create all required database tables, enter `./manage.py makemigrations`
-followed by `./manage.py migrate`.
+1. Create all required database tables, enter `./manage.py migrate`.
 2. Create an organisation to associate your users with by running `./manage.py createorganisation`.
 3. Create a superuser so that you can log in with `./manage.py createsuperuser`.
 
@@ -56,10 +55,10 @@ The backend can now be accessed at http://localhost:8000/.
 ### Frontend
 
 1. `cd` to `frontend/`
-2. Install the required dependencies using either `$ npm install` or `$ yarn install`.
-3. Run the frontend using `$ npm start` or `$ yarn start`. It should automatically open in your web browser. If not,
+2. Install the required dependencies using `$ yarn install`.
+3. Run the frontend using `$ yarn start`. It should automatically open in your web browser. If not,
 you can open your web browser and browse to http://localhost:3000/.
 
 __Note__: Running the frontend with `start` launches it in development mode. To build and deploy to a production
-environment, use `$ npm run build` or `$ yarn build`, and follow the appropriate steps at the
+environment, use `$ yarn build`, and follow the appropriate steps at the
 [official guide](https://create-react-app.dev/docs/deployment/).

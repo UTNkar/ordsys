@@ -38,22 +38,21 @@ function OrderDetail({
                         {order.status}
                     </OrderTicket>
                 </div>
-                {order.status !== OrderStatus.IN_TRANSIT ?
+                {order.status !== OrderStatus.IN_TRANSIT &&
                     <Button className="btn-info detail-view-button" onClick={() => claimOrder(order.id)}>
-                        Claim
-                    </Button> :
-                    <Button className="btn-success detail-view-button" onClick={() => deliverOrder(order.id)}>
-                        Deliver
+                        Mark as claimed
                     </Button>
                 }
-                { editOrder ?
+                <Button className="btn-success detail-view-button" onClick={() => deliverOrder(order.id)}>
+                        Mark as delivered
+                </Button>
+                { editOrder &&
                     <Button className="btn-secondary detail-view-button" onClick={() => editOrder(order)}>
-                        Edit
-                    </Button> :
-                    null
+                        Edit order
+                    </Button>
                 }
                 <Button className="btn-danger detail-view-button" onClick={() => deleteOrder(order.id)}>
-                    Delete
+                    Delete order
                 </Button>
             </div>
         </Modal>
