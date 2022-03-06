@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { Button as MuiButton, CircularProgress, TextField } from '@material-ui/core';
-import { green, red } from '@material-ui/core/colors';
+import { Button as MuiButton, CircularProgress, TextField } from '@mui/material';
+import { green, red } from '@mui/material/colors';
 import { useSnackbar } from 'notistack';
 import { UtnMembership, UtnMembershipResponse } from '../../api/UtnMembership';
 import './MembershipChecker.scss';

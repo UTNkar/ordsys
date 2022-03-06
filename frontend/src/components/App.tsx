@@ -1,8 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Route } from 'react-router-dom';
 import { MdClose } from 'react-icons/md';
-import { IconButton as MuiIconButton } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { IconButton, StyledEngineProvider } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
 import './App.scss';
 import Bar from './Bar/Bar';
@@ -16,46 +15,10 @@ import { isAuthenticated } from '../utils/authenticationHelper';
 import { getAppliedTheme } from '../utils/theme';
 import { BarRenderMode, KitchenRenderMode } from '../@types';
 
-const commonSnackbarStyles = {
-    '& .MuiSnackbarContent-action': {
-        '& .MuiButton-root': {
-            '& .MuiButton-label': {
-                fontFamily: 'TeXGyreAdventorBold',
-                fontSize: '1.2em',
-                // Properly centers the action text
-                marginBottom: '1px',
-            },
-            color: 'inherit'
-        },
-    },
-    '& .MuiSnackbarContent-message': {
-        fontFamily: 'TeXGyreAdventorRegular',
-        fontSize: '1.4em',
-        // Properly centers the message text
-        marginBottom: '3px',
-        '& * .MuiSvgIcon-root': {
-            // Properly centers the icon
-            marginTop: '2px',
-        },
-    },
-}
-
-const createSnackbarStyles = makeStyles({
-    error: { ...commonSnackbarStyles },
-    info: { ...commonSnackbarStyles },
-    success: { ...commonSnackbarStyles },
-    warning: {
-        ...commonSnackbarStyles,
-        // Use black on orange instead of white on orange for better readability
-        color: 'black',
-    }
-})
-
 function App() {
     const [userIsAuthenticated, setUserIsAuthenticated] = useState(isAuthenticated)
 
     const snackbarRef = useRef<SnackbarProvider>(null)
-    const snackbarClasses = createSnackbarStyles()
 
     function renderComponents() {
         if (userIsAuthenticated) {
@@ -98,34 +61,37 @@ function App() {
     }
 
     return (
-        <SnackbarProvider
-            // Provides a default close button to all Snackbars not overriding 'action' prop
-            action={key => (
-                <MuiIconButton
-                    aria-label='Close'
-                    color='inherit'
-                    onClick={() => snackbarRef.current?.closeSnackbar(key)}
-                    size='medium'
-                    title='Close'
-                >
-                    <MdClose />
-                </MuiIconButton>
-            )}
-            anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
-            autoHideDuration={5000}
-            classes={{
-                variantError: snackbarClasses.error,
-                variantInfo: snackbarClasses.info,
-                variantSuccess: snackbarClasses.success,
-                variantWarning: snackbarClasses.warning
-            }}
-            ref={snackbarRef}
-        >
-            <Header
-                organisationLogo={`/assets/images/${getAppliedTheme() ?? 'utn'}.png`}
-            />
-            {renderComponents()}
-        </SnackbarProvider>
+        <StyledEngineProvider injectFirst>
+            <SnackbarProvider
+                // Provides a default close button to all Snackbars not overriding 'action' prop
+                action={key => (
+                    <IconButton
+                        aria-label='Close'
+                        color='inherit'
+                        onClick={() => snackbarRef.current?.closeSnackbar(key)}
+                        size='medium'
+                        title='Close'
+                    >
+                        <MdClose />
+                    </IconButton>
+                )}
+                maxSnack={4}
+                anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
+                autoHideDuration={5000}
+                classes={{
+                    variantError: "base-snackbar",
+                    variantInfo: "base-snackbar",
+                    variantSuccess: "base-snackbar",
+                    variantWarning: "base-snackbar warning-snackbar",
+                }}
+                ref={snackbarRef}
+            >
+                <Header
+                    organisationLogo={`/assets/images/${getAppliedTheme() ?? 'utn'}.png`}
+                />
+                {renderComponents()}
+            </SnackbarProvider>
+        </StyledEngineProvider>
     );
 }
 

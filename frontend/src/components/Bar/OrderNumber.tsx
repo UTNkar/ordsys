@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { FaPaperPlane } from 'react-icons/fa';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 import './OrderNumber.scss';
 
 interface OrderNumberProps {

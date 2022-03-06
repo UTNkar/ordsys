@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@mui/material/IconButton';
 import { MdAdd as IncrementIcon, MdRemove as DecrementIcon } from 'react-icons/md';
 import './CurrentOrder.scss';
 import { CurrentOrderItem } from '../../@types';

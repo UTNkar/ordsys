@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button as MuiButton, CircularProgress, MenuItem, TextField } from '@material-ui/core';
+import {
+    Button as MuiButton,
+    CircularProgress,
+    MenuItem,
+    TextField,
+} from '@mui/material';
 import { useSnackbar } from 'notistack';
 import './Login.scss';
 import FlexContainer from '../FlexContainer/FlexContainer';
