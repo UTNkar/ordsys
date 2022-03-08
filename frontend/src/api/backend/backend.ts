@@ -26,13 +26,15 @@ const fetchBaseQueryWithRetries = retry(fetchBaseQuery({
     },
 }), { maxRetries: 3 });
 
-export const TAG_TYPES = Object.freeze({});
+export const TAG_TYPES = Object.freeze({
+    AUTHENTICATION_STATUS: "Authentication status",
+});
 
 const backendBaseApi = createApi({
     reducerPath: "backend",
     baseQuery: fetchBaseQueryWithRetries,
     endpoints: () => ({}),
-    tagTypes: Object.values(TAG_TYPES) as string[],
+    tagTypes: Object.values(TAG_TYPES),
 });
 
 export default backendBaseApi;
