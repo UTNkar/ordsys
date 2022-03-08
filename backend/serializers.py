@@ -185,6 +185,18 @@ class UserPublicSerializer(_BaseSerializer):
         fields = ('id', 'username')
 
 
+class UserWithThemeSerializer(UserPublicSerializer):
+    theme = serializers.SerializerMethodField()
+
+    # noinspection PyMethodMayBeStatic
+    def get_theme(self, user):
+        return user.org.theme
+
+    class Meta(UserPublicSerializer.Meta):
+        model = User
+        fields = UserPublicSerializer.Meta.fields + ('theme',)
+
+
 class OrganisationWithUsersSerializer(_BaseSerializer):
     users = UserPublicSerializer(many=True)
 
