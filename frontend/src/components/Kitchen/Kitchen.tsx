@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
-import { useWebSocket, WebSocketPath } from '../../hooks';
+import { useMenuItems, useWebSocket, WebSocketPath } from '../../hooks';
 import './Kitchen.scss';
 import OrderTicket from '../Order/OrderTicket';
 import { DjangoBackend } from '../../api/DjangoBackend';
-import { onMenuItemsChange, onOrdersChange } from '../../utils/realtimeModelUpdate';
+import { onOrdersChange } from '../../utils/realtimeModelUpdate';
 import { DatabaseChangeType, KitchenRenderMode, MenuItem, Order, OrderStatus } from '../../@types';
 import { SnackbarKey, useSnackbar } from "notistack";
 
@@ -36,7 +36,7 @@ interface KitchenProps {
 }
 
 function Kitchen({ renderMode }: KitchenProps) {
-    const [menuItems, setMenuItems] = useState<MenuItem[]>([])
+    const { menuItems } = useMenuItems();
     const [orders, setOrders] = useState<Order[]>([])
 
     const componentIsMounted = useRef(true)
@@ -53,7 +53,7 @@ function Kitchen({ renderMode }: KitchenProps) {
                 closeSnackbar(currentNetworkErrorKey)
                 networkErrorSnackbarKey.current = null
             }
-            sendJsonMessage({ models: ['backend.Order', 'backend.MenuItem'] })
+            sendJsonMessage({ models: ['backend.Order'] })
         },
         onMessage: event => {
             const message = JSON.parse(event.data)
@@ -64,9 +64,6 @@ function Kitchen({ renderMode }: KitchenProps) {
                         // If we are only rendering beverages, we do not want food orders
                         onOrdersChange(receivedOrder, message.type as DatabaseChangeType, setOrders)
                     }
-                    break
-                case 'MenuItem':
-                    onMenuItemsChange(message.payload as MenuItem, message.type as DatabaseChangeType, setMenuItems)
                     break
             }
         },
@@ -102,17 +99,11 @@ function Kitchen({ renderMode }: KitchenProps) {
 
     function fetchMenuItemsAndOrders() {
         const getBeveragesOnly = renderMode === KitchenRenderMode.BEVERAGES
-        Promise.all([
-            DjangoBackend.get<MenuItem[]>('/api/menu_items/?active=true'),
-            DjangoBackend.get<Order[]>(
-                `/api/orders_with_order_items/?beverages_only=${getBeveragesOnly}&exclude_status=${OrderStatus.DELIVERED}`
-            ),
-        ])
-            .then(([menuItemsResponse, ordersResponse]) => {
-                setOrders(ordersResponse.data)
-                setMenuItems(menuItemsResponse.data)
-            })
-            .catch(reason => console.log(reason.response))
+        DjangoBackend.get<Order[]>(
+            `/api/orders_with_order_items/?beverages_only=${getBeveragesOnly}&exclude_status=${OrderStatus.DELIVERED}`
+        ).then((ordersResponse) => {
+            setOrders(ordersResponse.data)
+        }).catch(reason => console.log(reason.response))
     }
 
     function renderView() {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Button as MuiButton, TextField } from '@mui/material';
 import './Statistics.scss';
@@ -10,6 +10,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { subDays } from 'date-fns';
 import { sv } from "date-fns/locale";
 import { useSnackbar } from 'notistack';
+import { useMenuItems } from "../../hooks";
 
 const DATE_TIME_PICKER_COMMON_PROPS = Object.freeze({
     mask: "____-__-__ __:__",
@@ -21,19 +22,10 @@ const DATE_TIME_PICKER_COMMON_PROPS = Object.freeze({
 function Statistics() {
     const [endDate, setEndDate] = useState(new Date())
     const [startDate, setStartDate] = useState(subDays(endDate, 1));
-    const [menuItems, setMenuItems] = useState<MenuItem[]>([])
+    const { menuItems } = useMenuItems();
     const [isLoadingData, setIsLoadingData] = useState(false)
     const [chartOptions, setChartOptions] = useState({})
     const { enqueueSnackbar } = useSnackbar()
-
-
-    useEffect(() => {
-        Promise.all([DjangoBackend.get<MenuItem[]>('/api/menu_items/')])
-            .then(([menuItems]) => {
-                setMenuItems(menuItems.data)
-            })
-            .catch(reason => console.log(reason.response))
-    }, [])
 
     function onDateSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
