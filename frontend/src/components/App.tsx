@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { MdClose } from 'react-icons/md';
 import { IconButton, StyledEngineProvider } from '@mui/material';
@@ -11,17 +11,21 @@ import Kitchen from './Kitchen/Kitchen';
 import Login from './Login/Login';
 import Pickup from './Pickup/Pickup';
 import Statistics from './Statistics/Statistics';
-import { isAuthenticated } from '../utils/authenticationHelper';
-import { getAppliedTheme } from '../utils/theme';
 import { BarRenderMode, KitchenRenderMode } from '../@types';
+import { useUser } from "../hooks";
 
 function App() {
-    const [userIsAuthenticated, setUserIsAuthenticated] = useState(isAuthenticated)
+    const { user, isLoading, isUninitialized } = useUser();
+    const isAuthenticated = Boolean(user);
 
     const snackbarRef = useRef<SnackbarProvider>(null)
 
+    if (isLoading || isUninitialized) {
+        return null;
+    }
+
     function renderComponents() {
-        if (userIsAuthenticated) {
+        if (isAuthenticated) {
             return (
                 <Routes>
                     <Route path="/" element={<Home />} />
@@ -54,9 +58,7 @@ function App() {
                 </Routes>
             );
         } else {
-            return (
-                <Login onLogin={() => setUserIsAuthenticated(true)} />
-            );
+            return <Login />;
         }
     }
 
@@ -87,7 +89,7 @@ function App() {
                 ref={snackbarRef}
             >
                 <Header
-                    organisationLogo={`/assets/images/${getAppliedTheme() ?? 'utn'}.png`}
+                    organisationLogo={`/assets/images/${user?.theme || 'utn'}.png`}
                 />
                 {renderComponents()}
             </SnackbarProvider>

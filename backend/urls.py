@@ -2,7 +2,7 @@ from django.urls import path, include, re_path
 from .views import (
     MenuItemView, OrderView, OrderWithOrderItemsView,
     ManageOrderWithOrderItemsView, OrganisationWithUsersView,
-    LoginView, LogoutView
+    AuthenticationStatusView, LoginView, LogoutView
 )
 from rest_framework import routers
 
@@ -30,6 +30,9 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('auth/', include([
         re_path(r'^login/', LoginView.as_view(), name='login'),
+        re_path(r'^status/$',
+                AuthenticationStatusView.as_view(),
+                name='status'),
         re_path(r'^logout/', LogoutView.as_view(), name='logout'),
     ]))
 ]

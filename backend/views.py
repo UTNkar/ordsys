@@ -1,4 +1,5 @@
 from django.contrib.auth import login as django_login, logout as django_logout
+from django.contrib.auth.models import AnonymousUser
 from rest_framework import viewsets, status, mixins
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -9,7 +10,7 @@ from .serializers import (
     MenuItemSerializer, RestrictiveUpdateOrderSerializer,
     BaseOrderWithOrderItemsSerializer, CreatableOrderWithOrderItemsSerializer,
     RestrictiveUpdateOrderWithOrderItemsSerializer,
-    OrganisationWithUsersSerializer, LoginSerializer
+    OrganisationWithUsersSerializer, LoginSerializer, UserWithThemeSerializer
 )
 
 
@@ -95,6 +96,18 @@ class OrganisationWithUsersView(viewsets.ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
     serializer_class = OrganisationWithUsersSerializer
     queryset = Organisation.objects.all().prefetch_related('users')
+
+
+class AuthenticationStatusView(GenericAPIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        if not isinstance(user, AnonymousUser):
+            serialized_user = UserWithThemeSerializer(
+                user, context=self.get_serializer_context()).data
+            return Response(status=status.HTTP_200_OK, data=serialized_user)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class LoginView(GenericAPIView):
