@@ -4,7 +4,7 @@ import { FaUndo } from 'react-icons/fa';
 import { MdClose } from 'react-icons/md';
 import { Button as MuiButton, IconButton as MuiIconButton } from '@mui/material';
 import { SnackbarKey, useSnackbar } from 'notistack';
-import { useWebSocket, WebSocketPath } from '../../hooks';
+import { useMenuItems, useWebSocket, WebSocketPath } from '../../hooks';
 import './Bar.scss';
 import AllOrders from './AllOrders';
 import CurrentOrder from './CurrentOrder';
@@ -12,7 +12,7 @@ import Menu from './Menu';
 import OrderNumber from './OrderNumber';
 import { DjangoBackend } from '../../api/DjangoBackend';
 import { orderAscSorter, orderDescSorter } from '../../utils/sorters';
-import { onMenuItemsChange, onOrdersChange } from '../../utils/realtimeModelUpdate';
+import { onOrdersChange } from '../../utils/realtimeModelUpdate';
 import { BarRenderMode, CurrentOrderItem, DatabaseChangeType, MenuItem, Order, OrderStatus } from '../../@types';
 import MembershipChecker from '../MembershipChecker/MembershipChecker';
 
@@ -23,7 +23,7 @@ interface BarProps {
 function Bar({ renderMode }: BarProps) {
     const [currentOrder, setCurrentOrder] = useState<CurrentOrderItem[]>([])
     const [mealNote, setMealNote] = useState('')
-    const [menuItems, setMenuItems] = useState<MenuItem[]>([])
+    const { menuItems } = useMenuItems();
     const [orderNote, setOrderNote] = useState('')
     const [orderNumber, setOrderNumber] = useState('')
     const [orders, setOrders] = useState<Order[]>([])
@@ -44,7 +44,7 @@ function Bar({ renderMode }: BarProps) {
                 closeSnackbar(currentNetworkErrorKey)
                 networkErrorSnackbarKey.current = null
             }
-            sendJsonMessage({ models: ['backend.Order', 'backend.MenuItem'] })
+            sendJsonMessage({ models: ['backend.Order'] })
         },
         onMessage: event => {
             const message = JSON.parse(event.data)
@@ -56,9 +56,6 @@ function Bar({ renderMode }: BarProps) {
                     } else {
                         setOrders(prevState => prevState.sort(orderDescSorter))
                     }
-                    break
-                case 'MenuItem':
-                    onMenuItemsChange(message.payload as MenuItem, message.type as DatabaseChangeType, setMenuItems)
                     break
                 default:
                     break
@@ -160,12 +157,8 @@ function Bar({ renderMode }: BarProps) {
         } else {
             orderQuery += `?exclude_status=${OrderStatus.DELIVERED}`
         }
-        Promise.all([
-            DjangoBackend.get<MenuItem[]>('/api/menu_items/?active=true'),
-            DjangoBackend.get<Order[]>(orderQuery),
-        ])
-            .then(([menuItems, orders]) => {
-                setMenuItems(menuItems.data)
+        DjangoBackend.get<Order[]>(orderQuery)
+            .then((orders) => {
                 if (renderMode === BarRenderMode.WAITER || renderMode === BarRenderMode.HISTORY) {
                     setOrders(orders.data.sort(orderAscSorter))
                 } else {
@@ -382,10 +375,7 @@ function Bar({ renderMode }: BarProps) {
                             />
                             <Row className="menu align-items-start">
                                 <Col>
-                                    <Menu
-                                        menuItems={menuItems}
-                                        onMenuItemClick={onMenuItemClick}
-                                    />
+                                    <Menu onMenuItemClick={onMenuItemClick} />
                                 </Col>
                             </Row>
                             <Row className="membership-row align-items-end justify-content-center">
@@ -510,10 +500,7 @@ function Bar({ renderMode }: BarProps) {
                             <Col>
                                 <Row className="menu align-items-start" id="waiter-menu-column">
                                     <Col>
-                                        <Menu
-                                            menuItems={menuItems}
-                                            onMenuItemClick={onMenuItemClick}
-                                        />
+                                        <Menu onMenuItemClick={onMenuItemClick} />
                                     </Col>
                                 </Row>
                                 <Row>

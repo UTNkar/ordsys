@@ -2,17 +2,19 @@ import React from 'react';
 import { Card, CardColumns } from 'react-bootstrap';
 import './Menu.scss';
 import { MenuItem } from '../../@types';
+import { useActiveMenuItems } from "../../hooks";
 
 interface MenuProps {
-    menuItems: MenuItem[]
     onMenuItemClick: (item: MenuItem) => void
 }
 
-function Menu({ menuItems, onMenuItemClick }: MenuProps) {
+function Menu({ onMenuItemClick }: MenuProps) {
+    const { activeMenuItems } = useActiveMenuItems();
+
     return (
-        menuItems.length    ?
+        activeMenuItems.length ?
         <CardColumns className="menu-items mt-3">
-            {menuItems.map(item =>
+            {activeMenuItems.map(item =>
                 <Card
                     key={item.id}
                     className="menu-card"
