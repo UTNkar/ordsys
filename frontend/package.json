@@ -21,7 +21,7 @@
     "@types/react-router-dom": "^5.1.5",
     "axios": ">=0.26.1",
     "bootstrap": "4.6.0",
-    "http-proxy-middleware": "^0.19.1",
+    "http-proxy-middleware": "^2.0.4",
     "date-fns": "^2.22.1",
     "js-cookie": "^3.0.1",
     "notistack": "^2.0.3",
