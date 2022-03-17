@@ -32,7 +32,7 @@ function Statistics() {
         setIsLoadingData(true)
         let hasValue = false;
         DjangoBackend.get<Order[]>('/api/orders_with_order_items/?younger_than='
-            +startDate.toISOString()+'&older_than='+endDate.toISOString())
+            +endDate.toISOString()+'&older_than='+startDate.toISOString())
             .then(orders => {
                 const dataPoints: { label: string, y: number }[] = []
                 orders.data.forEach(order => {

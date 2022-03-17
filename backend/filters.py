@@ -33,10 +33,10 @@ class OrderFilter(filters.FilterSet):
         return queryset.filter(created_timestamp__gte=time_threshold)
 
     def get_younger_than_datetime(self, queryset, field_name, value):
-        return queryset.filter(created_timestamp__gte=value)
+        return queryset.filter(created_timestamp__lte=value)
 
     def get_older_than_datetime(self, queryset, field_name, value):
-        return queryset.filter(created_timestamp__lte=value)
+        return queryset.filter(created_timestamp__gte=value)
 
     class Meta:
         model = Order
