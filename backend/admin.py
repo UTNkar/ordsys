@@ -69,6 +69,7 @@ class OrderAdmin(ForeignKeyModelAdmin):
         'get_order_name', 'beverages_only',
         'created_timestamp', 'status', 'get_delivered_timestamp', 'user'
     ]
+    list_filter = ['beverages_only', 'status', 'user', 'user__org']
 
     def get_delivered_timestamp(self, obj):
         return obj.delivered_timestamp
@@ -90,7 +91,7 @@ class OrderAdmin(ForeignKeyModelAdmin):
     def get_list_filter(self, request):
         if not request.user.is_superuser:
             return ['beverages_only', 'status', 'user']
-        return ['beverages_only', 'status', 'user', 'user__org']
+        return self.list_filter
 
     def get_readonly_fields(self, request, obj=None):
         field_list = ['status']
