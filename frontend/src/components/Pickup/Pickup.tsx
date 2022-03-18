@@ -79,7 +79,7 @@ function Pickup() {
 
 
     return (
-        <>
+        <Container className="pickup-main-container">
             <Row xs={2} className="bar-top">
                 <Col xs={7} className="my-2 justify-content-center">
                     <h3 className="pr-2 pt-2 align-self-center">IN PROGRESS</h3>
@@ -106,7 +106,7 @@ function Pickup() {
                     </Container>
                 </Col>
             </Row>
-        </>
+        </Container>
     )
 }
 
