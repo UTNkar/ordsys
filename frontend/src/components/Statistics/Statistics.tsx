@@ -3,14 +3,12 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { Button as MuiButton, TextField } from '@mui/material';
 import './Statistics.scss';
 import { CanvasJSChart } from '../../libs/canvasjs.react';
-import { DjangoBackend } from '../../api/DjangoBackend';
-import { MenuItem, Order } from '../../@types';
 import { DateTimePicker, LocalizationProvider } from '@mui/lab';
 import DateFnsUtils from '@date-io/date-fns';
 import { subDays } from 'date-fns';
 import { sv } from "date-fns/locale";
 import { useSnackbar } from 'notistack';
-import { useMenuItems } from "../../hooks";
+import { useOrderHistory } from "../../hooks";
 
 const DATE_TIME_PICKER_COMMON_PROPS = Object.freeze({
     mask: "____-__-__ __:__",
@@ -22,51 +20,23 @@ const DATE_TIME_PICKER_COMMON_PROPS = Object.freeze({
 function Statistics() {
     const [endDate, setEndDate] = useState(new Date())
     const [startDate, setStartDate] = useState(subDays(endDate, 1));
-    const { menuItems } = useMenuItems();
-    const [isLoadingData, setIsLoadingData] = useState(false)
-    const [chartOptions, setChartOptions] = useState({})
     const { enqueueSnackbar } = useSnackbar()
+    const { getOrderHistory, orderHistory, isFetching } = useOrderHistory();
 
     function onDateSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
-        setIsLoadingData(true)
-        let hasValue = false;
-        DjangoBackend.get<Order[]>('/api/orders_with_order_items/?younger_than='
-            +startDate.toISOString()+'&older_than='+endDate.toISOString())
-            .then(orders => {
-                const dataPoints: { label: string, y: number }[] = []
-                orders.data.forEach(order => {
-                    hasValue = true;
-                    order.order_items.forEach(orderItem => {
-                        const menuItem = menuItems.find(item => item.id === orderItem.menu) as MenuItem
-                        const dataPointIndex = dataPoints.findIndex(item => item.label === menuItem.item_name)
-                        if (dataPointIndex === -1) {
-                            dataPoints.push({ label: menuItem.item_name, y: orderItem.quantity})
-                        } else {
-                            dataPoints[dataPointIndex].y += orderItem.quantity
-                        }
-                    })
-                })
-                if (!hasValue)
+        getOrderHistory(startDate, endDate)
+            .then(({ data, isError, isSuccess }) => {
+                if (isSuccess && (!data || data.length === 0)) {
                     enqueueSnackbar('No orders found for the selected interval.', {
                         variant: 'info',
+                    });
+                } else if (isError) {
+                    enqueueSnackbar('Something went wrong when fetching the orders.', {
+                        variant: 'error',
                     })
-                setChartOptions({
-                    animationEnabled: true,
-                    exportEnabled: true,
-                    data: [{
-                        type: 'bar',
-                        toolTipContent: "<b>{label}</b>: {y} st",
-                        showInLegend: true,
-                        legendText: '{label}',
-                        indexLabelFontSize: 16,
-                        indexLabel: '{label} - {y} st',
-                        dataPoints,
-                    }]
-                })
-            })
-            .catch(reason => console.log(reason.response))
-            .finally(() => setIsLoadingData(false))
+                }
+            });
     }
 
     return (
@@ -88,7 +58,7 @@ function Statistics() {
                                     value={startDate}
                                     // @ts-ignore
                                     onChange={setStartDate}
-                                    disabled={isLoadingData}
+                                    disabled={isFetching}
                                     maxDateTime={endDate}
                                     label={"Start date"}
                                     renderInput={(params) => (
@@ -104,7 +74,7 @@ function Statistics() {
                                     value={endDate}
                                     // @ts-ignore
                                     onChange={setEndDate}
-                                    disabled={isLoadingData}
+                                    disabled={isFetching}
                                     label={"End date"}
                                     renderInput={(params) => (
                                         <TextField
@@ -119,19 +89,19 @@ function Statistics() {
                         <MuiButton
                             className="statistics-submit"
                             color="primary"
-                            disabled={isLoadingData}
+                            disabled={isFetching}
                             size="large"
                             type="submit"
                             variant="contained"
                         >
-                            {isLoadingData ? 'Crunching the data...' : 'Load selected interval'}
+                            {isFetching ? 'Crunching the data...' : 'Load selected interval'}
                         </MuiButton>
                     </form>
                 </Col>
             </Row>
             <Row>
                 <Col>
-                        <CanvasJSChart options={chartOptions} />
+                        <CanvasJSChart options={orderHistory} />
                 </Col>
             </Row>
         </Container>

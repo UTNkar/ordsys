@@ -1,91 +1,56 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { FaUndo } from 'react-icons/fa';
 import { MdClose } from 'react-icons/md';
 import { Button as MuiButton, IconButton as MuiIconButton } from '@mui/material';
 import { SnackbarKey, useSnackbar } from 'notistack';
-import { useMenuItems, useWebSocket, WebSocketPath } from '../../hooks';
+import { useMenuItems, useOrdersWithItems } from '../../hooks';
 import './Bar.scss';
 import AllOrders from './AllOrders';
 import CurrentOrder from './CurrentOrder';
 import Menu from './Menu';
 import OrderNumber from './OrderNumber';
-import { DjangoBackend } from '../../api/DjangoBackend';
-import { orderAscSorter, orderDescSorter } from '../../utils/sorters';
-import { onOrdersChange } from '../../utils/realtimeModelUpdate';
-import { BarRenderMode, CurrentOrderItem, DatabaseChangeType, MenuItem, Order, OrderStatus } from '../../@types';
+import {
+    BarRenderMode,
+    CurrentOrderItem,
+    MenuItem,
+    Order,
+    OrderStatus,
+} from '../../@types';
 import MembershipChecker from '../MembershipChecker/MembershipChecker';
+import {
+    useCreateOrderMutation,
+    useDeleteOrderMutation,
+    useUpdateOrderContentsMutation,
+} from "../../api/backend";
 
 interface BarProps {
     renderMode: BarRenderMode
 }
 
 function Bar({ renderMode }: BarProps) {
+    const isAscSort = renderMode === BarRenderMode.WAITER || renderMode === BarRenderMode.HISTORY;
+    const queryParams =
+        renderMode === BarRenderMode.HISTORY
+            ? "?max_hours=1"
+            : `?exclude_status=${OrderStatus.DELIVERED}`;
+
     const [currentOrder, setCurrentOrder] = useState<CurrentOrderItem[]>([])
     const [mealNote, setMealNote] = useState('')
-    const { menuItems } = useMenuItems();
     const [orderNote, setOrderNote] = useState('')
     const [orderNumber, setOrderNumber] = useState('')
-    const [orders, setOrders] = useState<Order[]>([])
     const [orderToEdit, setOrderToEdit] = useState<Order | null>(null)
-    const [isSubmittingOrder, setIsSubmittingOrder] = useState(false)
-
-    const componentIsMounted = useRef(true)
-    const networkErrorSnackbarKey = useRef<SnackbarKey | null>(null)
-
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
-    const { sendJsonMessage } = useWebSocket({
-        shouldReconnect: () => componentIsMounted.current,
-        onOpen: () => {
-            const currentNetworkErrorKey = networkErrorSnackbarKey.current
-            if (currentNetworkErrorKey !== null) {
-                // Re-fetch all data from the database if WebSocket was disconnected
-                fetchMenuItemsAndOrders()
-                closeSnackbar(currentNetworkErrorKey)
-                networkErrorSnackbarKey.current = null
-            }
-            sendJsonMessage({ models: ['backend.Order'] })
-        },
-        onMessage: event => {
-            const message = JSON.parse(event.data)
-            switch (message.model_name) {
-                case 'Order':
-                    onOrdersChange(message.payload as Order, message.type as DatabaseChangeType, setOrders)
-                    if (renderMode === BarRenderMode.WAITER || renderMode === BarRenderMode.HISTORY) {
-                        setOrders(prevState => prevState.sort(orderAscSorter))
-                    } else {
-                        setOrders(prevState => prevState.sort(orderDescSorter))
-                    }
-                    break
-                default:
-                    break
-            }
-        },
-        onError: () => {
-            if (networkErrorSnackbarKey.current === null) {
-                networkErrorSnackbarKey.current = enqueueSnackbar(
-                    'Network error, please check your internet connection!',
-                    {
-                        // Disallow manually closing the Snackbar
-                        action: () => {},
-                        persist: true,
-                        preventDuplicate: true,
-                        variant: 'error',
-                    }
-                )
-            }
-        },
-    }, WebSocketPath.MODEL_CHANGES)
 
-    useEffect(() => {
-        fetchMenuItemsAndOrders()
-        return function cleanup() {
-            componentIsMounted.current = false
-            closeSnackbar()
-        }
-        // We only want this to once so ignore the eslint warning
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    const { menuItems } = useMenuItems();
+    const { orders } = useOrdersWithItems(queryParams, isAscSort);
+    const [createOrder, { isLoading: isCreatingOrder }] = useCreateOrderMutation();
+    const [deleteOrder, { isLoading: isDeletingOrder }] = useDeleteOrderMutation();
+    const [updateOrder, { isLoading: isUpdatingOrder }] = useUpdateOrderContentsMutation();
+
+    const isSubmittingOrder = isCreatingOrder || isDeletingOrder || isUpdatingOrder;
+
+    useEffect(() => closeSnackbar, [closeSnackbar]);
 
     function addToOrderNumber(digit: number) {
         setOrderNumber(((Number(orderNumber) % 10) * 10 + digit).toString())
@@ -149,28 +114,10 @@ function Bar({ renderMode }: BarProps) {
         })
     }
 
-    function fetchMenuItemsAndOrders() {
-        let orderQuery = `/api/orders_with_order_items/`;
-        if (renderMode === BarRenderMode.HISTORY) {
-            // For the order history view, we only want last hour's orders
-            orderQuery += `?max_hours=1`
-        } else {
-            orderQuery += `?exclude_status=${OrderStatus.DELIVERED}`
-        }
-        DjangoBackend.get<Order[]>(orderQuery)
-            .then((orders) => {
-                if (renderMode === BarRenderMode.WAITER || renderMode === BarRenderMode.HISTORY) {
-                    setOrders(orders.data.sort(orderAscSorter))
-                } else {
-                    setOrders(orders.data.sort(orderDescSorter))
-                }
-            })
-            .catch(reason => console.log(reason.response))
-    }
-
     function modifyOrder(orderId: number, payload: Order | object | undefined = undefined) {
         if (payload !== undefined) {
-            DjangoBackend.patch<Order>(`/api/manage_orders_with_order_items/${orderId}/`, payload)
+            updateOrder({ orderId, body: payload })
+                .unwrap()
                 .then(() => {
                     clearCurrentOrder()
                     enqueueSnackbar('Order successfully updated!', {
@@ -178,24 +125,15 @@ function Bar({ renderMode }: BarProps) {
                         variant: 'success',
                     })
                 })
-                .catch(() => enqueueSnackbar('Order update failed!', {
-                    variant: 'error',
-                }))
-                .finally(() => setIsSubmittingOrder(false))
+                .catch(() => enqueueSnackbar('Order update failed!', { variant: 'error' }));
         } else {
-            DjangoBackend.delete(`/api/orders/${orderId}/`)
-                .then(() => {
-                    enqueueSnackbar('Order successfully deleted!', {
-                        autoHideDuration: 2500,
-                        variant: 'success',
-                    })
-                })
-                .catch(() => {
-                    enqueueSnackbar('Order deletion failed!', {
-                        variant: 'error',
-                    })
-                })
-                .finally(() => setIsSubmittingOrder(false))
+            deleteOrder(orderId)
+                .unwrap()
+                .then(() => enqueueSnackbar('Order successfully deleted!', {
+                    autoHideDuration: 2500,
+                    variant: 'success',
+                }))
+                .catch(() => enqueueSnackbar('Order deletion failed!', { variant: 'error' }));
         }
     }
 
@@ -234,7 +172,6 @@ function Bar({ renderMode }: BarProps) {
                 .map(item => {
                     return { menu: item.id, quantity: item.quantity, special_requests: item.mealNote }
                 })
-        setIsSubmittingOrder(true)
         if (orderToEdit !== null) {
             const payload = {
                 customer_number: orderNumber,
@@ -243,40 +180,33 @@ function Bar({ renderMode }: BarProps) {
             }
             modifyOrder(orderToEdit.id, payload)
         } else {
-            const payloadBase = { customer_number: orderNumber, note: orderNote }
-            const foodPromise =
-                foodItems.length > 0
-                    ? DjangoBackend.post<Order>('/api/manage_orders_with_order_items/', {
-                        ...payloadBase,
-                        beverages_only: false,
-                        order_items: foodItems,
-                    })
-                    : null
-            const beveragePromise =
-                beverageItems.length > 0
-                    ? DjangoBackend.post<Order>('/api/manage_orders_with_order_items/', {
-                        ...payloadBase,
-                        beverages_only: true,
-                        order_items: beverageItems,
-                    })
-                    : null
-            Promise.all([foodPromise, beveragePromise])
-                .then(([foodResponse, beverageResponse]) => {
+            const payload = [
+                {
+                    customer_number: orderNumber,
+                    note: orderNote,
+                    beverages_only: false,
+                    order_items: foodItems,
+                },
+                {
+                    customer_number: orderNumber,
+                    note: orderNote,
+                    beverages_only: true,
+                    order_items: beverageItems,
+                },
+            ].filter((item) => item.order_items.length > 0);
+            createOrder(payload)
+                .unwrap()
+                .then((orders) => {
                     clearCurrentOrder()
                     enqueueSnackbar('Order created!', {
                         action: key =>
-                            <MuiButton
-                                onClick={() => undoOrders([foodResponse?.data, beverageResponse?.data], key)}
-                            >
+                            <MuiButton onClick={() => undoOrders(orders, key)}>
                                 Undo
                             </MuiButton>,
                         variant: 'success',
                     })
                 })
-                .catch(() => enqueueSnackbar('Could not create order', {
-                    variant: 'error',
-                }))
-                .finally(() => setIsSubmittingOrder(false))
+                .catch(() => enqueueSnackbar('Could not create order', { variant: 'error' }));
         }
     }
 
@@ -293,29 +223,27 @@ function Bar({ renderMode }: BarProps) {
         return currentOrder.length > 0 && orderNumber !== ''
     }
 
-    function undoOrders([foodOrder, beverageOrder]: [Order | undefined, Order | undefined], snackbarKey: SnackbarKey) {
-        Promise.all([
-            foodOrder !== undefined ? DjangoBackend.delete(`/api/orders/${foodOrder.id}/`) : null,
-            beverageOrder !== undefined ? DjangoBackend.delete(`/api/orders/${beverageOrder.id}/`) : null,
-        ]).catch(() => {
-            enqueueSnackbar('Failed to undo order!', {
-                action: key =>
-                    <>
-                        <MuiButton onClick={() => undoOrders([foodOrder, beverageOrder], key)}>Retry</MuiButton>
-                        <MuiIconButton
-                            aria-label='Close'
-                            color='inherit'
-                            onClick={() => closeSnackbar(key)}
-                            size='medium'
-                            title='Close'
-                        >
-                            <MdClose />
-                        </MuiIconButton>
-                    </>,
-                persist: true,
-                variant: 'error',
+    function undoOrders(orders: Order[], snackbarKey: SnackbarKey) {
+        Promise.all(orders.map(({ id }) => deleteOrder(id).unwrap()))
+            .catch(() => {
+                enqueueSnackbar('Failed to undo order!', {
+                    action: key =>
+                        <>
+                            <MuiButton onClick={() => undoOrders(orders, key)}>Retry</MuiButton>
+                            <MuiIconButton
+                                aria-label='Close'
+                                color='inherit'
+                                onClick={() => closeSnackbar(key)}
+                                size='medium'
+                                title='Close'
+                            >
+                                <MdClose />
+                            </MuiIconButton>
+                        </>,
+                    persist: true,
+                    variant: 'error',
+                })
             })
-        })
         closeSnackbar(snackbarKey)
     }
 
