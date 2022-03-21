@@ -29,7 +29,7 @@ $stats-y-margin: 0.75rem;
     .order-column {
         overflow-y: auto;
 
-        .card {
+        > div {
             margin-bottom: 1rem;
         }
     }

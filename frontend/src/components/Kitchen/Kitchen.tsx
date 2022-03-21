@@ -1,10 +1,9 @@
 import React from 'react';
-import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import { useMenuItems, useOrdersWithItems } from '../../hooks';
 import './Kitchen.scss';
-import OrderTicket from '../Order/OrderTicket';
+import OrderTicket from '../OrderTicket';
 import { KitchenRenderMode, MenuItem, Order, OrderStatus } from '../../@types';
-import { useUpdateOrderMutation } from "../../api/backend";
 
 function showStats(ordersWaiting: Order[], ordersInProgress: Order[], menuItems: MenuItem[]) {
     const orders = [...ordersWaiting, ...ordersInProgress]
@@ -31,17 +30,12 @@ interface KitchenProps {
 function Kitchen({ renderMode }: KitchenProps) {
     const { menuItems } = useMenuItems();
     const { orders: allOrders } = useOrdersWithItems(`?exclude_status=${OrderStatus.DELIVERED}`);
-    const [updateOrder] = useUpdateOrderMutation();
 
     const beveragesOnly = renderMode === KitchenRenderMode.BEVERAGES;
     const orders = allOrders.filter((order) => order.beverages_only === beveragesOnly);
     const ordersWaiting    = orders.filter(order => order.status === OrderStatus.WAITING)
     const ordersInProgress = orders.filter(order => order.status === OrderStatus.IN_PROGRESS)
     const ordersDone       = orders.filter(order => order.status === OrderStatus.DONE)
-
-    function changeOrderStatus(order: Order, status: OrderStatus) {
-        updateOrder({ orderId: order.id, body: { status } });
-    }
 
     function renderView() {
         return (
@@ -62,24 +56,12 @@ function Kitchen({ renderMode }: KitchenProps) {
                         {ordersWaiting.map(order =>
                             <OrderTicket
                                 key={order.id}
-                                buttons={
-                                    <Button
-                                        className="shadow-sm"
-                                        variant="outline-secondary"
-                                        onClick={() => changeOrderStatus(order, OrderStatus.IN_PROGRESS)}
-                                    >
-                                        <img
-                                            src={'/assets/images/arrow_right.svg'}
-                                            alt="Mark order as in progress"
-                                        />
-                                    </Button>
-                                }
-                                createdTimestamp={order.created_timestamp}
+                                buttons
+                                component="div"
+                                disableStatus
+                                fullHeight={false}
                                 menuItems={menuItems}
-                                note={order.note}
-                                orderItems={order.order_items}
-                                orderNumber={order.customer_number}
-                                status="waiting"
+                                order={order}
                             />
                         )}
                     </Col>
@@ -87,36 +69,12 @@ function Kitchen({ renderMode }: KitchenProps) {
                         {ordersInProgress.map(order =>
                             <OrderTicket
                                 key={order.id}
-                                buttons={
-                                    <>
-                                        <Button
-                                            className="shadow-sm"
-                                            variant="outline-secondary"
-                                            onClick={() => changeOrderStatus(order, OrderStatus.WAITING)}
-                                        >
-                                            <img
-                                                src={'/assets/images/arrow_left.svg'}
-                                                alt="Mark order as waiting"
-                                            />
-                                        </Button>
-                                        <Button
-                                            className="shadow-sm ml-5"
-                                            variant="outline-secondary"
-                                            onClick={() => changeOrderStatus(order, OrderStatus.DONE)}
-                                        >
-                                            <img
-                                                src={'/assets/images/arrow_right.svg'}
-                                                alt="Mark order as done"
-                                            />
-                                        </Button>
-                                    </>
-                                }
-                                createdTimestamp={order.created_timestamp}
+                                buttons
+                                component="div"
+                                disableStatus
+                                fullHeight={false}
                                 menuItems={menuItems}
-                                note={order.note}
-                                orderItems={order.order_items}
-                                orderNumber={order.customer_number}
-                                status="in-progress"
+                                order={order}
                             />
                         )}
                     </Col>
@@ -126,24 +84,12 @@ function Kitchen({ renderMode }: KitchenProps) {
                                 {ordersDone.map(order =>
                                     <OrderTicket
                                         key={order.id}
-                                        buttons={
-                                            <Button
-                                                className="shadow-sm"
-                                                variant="outline-secondary"
-                                                onClick={() => changeOrderStatus(order, OrderStatus.IN_PROGRESS)}
-                                            >
-                                                <img
-                                                    src={'/assets/images/arrow_left.svg'}
-                                                    alt="Mark order as in progress"
-                                                />
-                                            </Button>
-                                        }
-                                        createdTimestamp={order.created_timestamp}
+                                        buttons
+                                        component="div"
+                                        disableStatus
+                                        fullHeight={false}
                                         menuItems={menuItems}
-                                        note={order.note}
-                                        orderItems={order.order_items}
-                                        orderNumber={order.customer_number}
-                                        status="done"
+                                        order={order}
                                     />
                                 )}
                             </Col>

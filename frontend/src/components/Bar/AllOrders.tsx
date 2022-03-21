@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './AllOrders.scss';
 import OrderDetail from './OrderDetail';
-import OrderTicket from '../Order/OrderTicket';
+import OrderTicket from '../OrderTicket';
 import { MenuItem, Order, OrderStatus } from '../../@types';
 
 interface AllOrdersProps {
@@ -23,24 +23,13 @@ function AllOrders({ clickableOrders = true, menuItems, onOrderDelete, onOrderDe
                 {orders.map(order =>
                     <div key={order.id} className="masonry-brick">
                         <OrderTicket
-                            key={order.id}
-                            createdTimestamp={order.created_timestamp}
                             menuItems={menuItems}
-                            note={order.note}
-                            onClick={
-                                clickableOrders ?
-                                    () => {
-                                        setActiveOrder(order)
-                                        setShouldShowOrderDetail(true)
-                                    } :
-                                    undefined
-                            }
-                            orderItems={order.order_items}
-                            orderNumber={order.customer_number}
-                            status={order.status.toLowerCase().replace(' ', '-')}
-                        >
-                            {order.status}
-                        </OrderTicket>
+                            order={order}
+                            onClick={clickableOrders ? () => {
+                                setActiveOrder(order)
+                                setShouldShowOrderDetail(true)
+                            } : undefined}
+                        />
                     </div>
                 )}
             </div>

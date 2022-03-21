@@ -2,7 +2,7 @@ import React from 'react'
 import Modal from 'react-modal';
 import { Button } from 'react-bootstrap';
 import './OrderDetail.scss';
-import OrderTicket from '../Order/OrderTicket';
+import OrderTicket from '../OrderTicket';
 import { MenuItem, Order, OrderStatus } from '../../@types';
 
 interface OrderDetailProps {
@@ -28,15 +28,10 @@ function OrderDetail({
                 <div className="close-button" onClick={closeOrderDetail}>+</div>
                 <div className="order-detail">
                     <OrderTicket
-                        key={order.id}
-                        orderNumber={order.customer_number}
-                        note={order.note}
+                        buttons
                         menuItems={menuItems}
-                        orderItems={order.order_items}
-                        status={order.status.toLowerCase().replace(' ', '-')}
-                    >
-                        {order.status}
-                    </OrderTicket>
+                        order={order}
+                    />
                 </div>
                 {order.status !== OrderStatus.IN_TRANSIT &&
                     <Button className="btn-info detail-view-button" onClick={() => claimOrder(order.id)}>
