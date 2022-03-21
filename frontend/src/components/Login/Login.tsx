@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
-import {
-    Button as MuiButton,
-    CircularProgress,
-    MenuItem,
-    TextField,
-} from '@mui/material';
-import './Login.scss';
-import FlexContainer from '../FlexContainer/FlexContainer';
-import { Organisation, User } from '../../@types';
+import { MenuItem, Stack, TextField, Typography } from '@mui/material';
+import { LoadingButton } from "@mui/lab";
+
 import { useAvailableOrganisations } from "../../hooks";
 import { useSignInMutation } from "../../api/backend";
+
+import type { Organisation, User } from '../../@types';
 
 function Login() {
     const {
@@ -40,15 +36,25 @@ function Login() {
     }
 
     return (
-        <FlexContainer fluid='md'>
-            <div
-                className="pb-5"
-                // @ts-ignore
+        <Stack
+            maxWidth="sm"
+            marginX="auto"
+            width="100%"
+            flex="auto"
+            paddingX={2}
+            paddingY={4}
+            justifyContent={{ xs: "flex-start", md: "center" }}
+        >
+            <Typography
                 align="center"
+                component="h1"
+                fontWeight="bold"
+                gutterBottom
+                variant="h3"
             >
-                <h1>OrdSys</h1>
-            </div>
-            <form id='login-form' noValidate autoComplete="off" onSubmit={onLoginSubmit}>
+                OrdSys
+            </Typography>
+            <form noValidate onSubmit={onLoginSubmit}>
                 <TextField
                     disabled={organisations.length === 0}
                     error={isOrganisationFetchError}
@@ -109,19 +115,18 @@ function Login() {
                     value={inputPassword}
                     variant="outlined"
                 />
-                <MuiButton
-                    className="mt-3 mb-2"
-                    color="primary"
-                    disabled={inputPassword === '' || isSigningIn}
+                <LoadingButton
+                    disabled={inputPassword === ''}
+                    loading={isSigningIn}
                     fullWidth
                     size='large'
                     type="submit"
                     variant="contained"
                 >
-                    {isSigningIn ? <CircularProgress size='1.6rem' /> : 'Sign in'}
-                </MuiButton>
+                    Sign in
+                </LoadingButton>
             </form>
-        </FlexContainer>
+        </Stack>
     );
 }
 

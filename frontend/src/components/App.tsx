@@ -1,14 +1,19 @@
 import React, { useRef } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { MdClose } from 'react-icons/md';
-import { IconButton, StyledEngineProvider, ThemeProvider } from '@mui/material';
+import {
+    IconButton,
+    Stack,
+    StyledEngineProvider,
+    ThemeProvider
+} from '@mui/material';
 import { SnackbarProvider } from 'notistack';
 import './App.scss';
 import Bar from './Bar/Bar';
 import Header from './Header';
 import Home from './Home/Home';
 import Kitchen from './Kitchen/Kitchen';
-import Login from './Login/Login';
+import Login from './Login';
 import Pickup from './Pickup/Pickup';
 import Statistics from './Statistics/Statistics';
 import { BarRenderMode, KitchenRenderMode, OrganisationTheme } from '../@types';
@@ -91,7 +96,21 @@ function App() {
                     ref={snackbarRef}
                 >
                     <Header organisation={user?.theme || OrganisationTheme.UTN} />
-                    {renderComponents()}
+                    <Stack
+                        component="main"
+                        overflow="auto"
+                        sx={(theme) => ({
+                                height: "calc(100vh - 56px)",
+                                [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+                                    height: "calc(100vh - 48px)",
+                                },
+                                [`${theme.breakpoints.up("sm")}`]: {
+                                    height: "calc(100vh - 64px)",
+                                },
+                        })}
+                    >
+                        {renderComponents()}
+                    </Stack>
                 </SnackbarProvider>
             </ThemeProvider>
         </StyledEngineProvider>
