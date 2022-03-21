@@ -5,7 +5,7 @@ import { IconButton, StyledEngineProvider, ThemeProvider } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
 import './App.scss';
 import Bar from './Bar/Bar';
-import Header from './Header/Header';
+import Header from './Header';
 import Home from './Home/Home';
 import Kitchen from './Kitchen/Kitchen';
 import Login from './Login/Login';
@@ -90,9 +90,7 @@ function App() {
                     }}
                     ref={snackbarRef}
                 >
-                    <Header
-                        organisationLogo={`/assets/images/${user?.theme || 'utn'}.png`}
-                    />
+                    <Header organisation={user?.theme || OrganisationTheme.UTN} />
                     {renderComponents()}
                 </SnackbarProvider>
             </ThemeProvider>

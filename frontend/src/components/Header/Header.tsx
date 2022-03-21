@@ -1,21 +1,42 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Nav, Navbar } from 'react-bootstrap';
-import { useMediaQuery } from '@mui/material';
-import './Header.scss';
+import {
+    AppBar,
+    Box,
+    Toolbar,
+    Typography,
+    useMediaQuery
+} from '@mui/material';
+
+import UtnLogo from "../../assets/images/utn.png";
+import UtnarmLogo from "../../assets/images/utnarm.png";
+import TdLogo from "../../assets/images/td.png";
+import KlubbverketLogo from "../../assets/images/klubbverket.png";
+import ForsranningenLogo from "../../assets/images/forsranningen.png";
+import RebusrallytLogo from "../../assets/images/rebusrallyt.png";
+
+import type { Theme } from "@mui/material";
+import { OrganisationTheme } from "../../@types";
+
+const THEME_TO_IMAGE = Object.freeze({
+    [OrganisationTheme.UTN]: UtnLogo,
+    [OrganisationTheme.UTNARM]: UtnarmLogo,
+    [OrganisationTheme.TEKNOLOG_DATAVETARMOTTAGNINGEN]: TdLogo,
+    [OrganisationTheme.KLUBBVERKET]: KlubbverketLogo,
+    [OrganisationTheme.FORSRANNINGEN]: ForsranningenLogo,
+    [OrganisationTheme.REBUSRALLYT]: RebusrallytLogo,
+});
 
 interface HeaderProps {
-    organisationLogo: string
+    organisation: OrganisationTheme
 }
 
-function Header({
-    organisationLogo
-}: HeaderProps) {
+function Header({ organisation }: HeaderProps) {
     const [date, setDate] = useState(new Date().toLocaleString('sv-SE'))
     const dateIntervalId = useRef<number | undefined>(undefined)
 
     // No point in showing date and time on mobile devices as they already have a clock in the top right corner
-    const showDateAndTime = useMediaQuery('(min-width: 1200px)')
+    const showDateAndTime = useMediaQuery<Theme>((theme) => theme.breakpoints.up("lg"));
 
     useEffect(() => {
         if (showDateAndTime) {
@@ -27,25 +48,23 @@ function Header({
     }, [showDateAndTime])
 
     return (
-        <Navbar className="header" expand="sm">
-            <Link to="/">
-                <Navbar.Brand>
-                    <img
-                        src={organisationLogo}
+        <AppBar position="static">
+            <Toolbar sx={{ justifyContent: "space-between" }}>
+                <Link to="/">
+                    <Box
+                        height={{ xs: "2rem", md: "2.5rem" }}
+                        component="img"
+                        src={THEME_TO_IMAGE[organisation]}
                         alt="Organisation logo"
                     />
-                </Navbar.Brand>
-            </Link>
-            <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-            <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="header-nav">
-                    {showDateAndTime
-                        ? <Nav.Item>{date}</Nav.Item>
-                        : null
-                    }
-                </Nav>
-            </Navbar.Collapse>
-        </Navbar>
+                </Link>
+                {showDateAndTime && (
+                    <Typography variant="h4" component="p">
+                        {date}
+                    </Typography>
+                )}
+            </Toolbar>
+        </AppBar>
     )
 }
 
