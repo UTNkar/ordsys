@@ -12,7 +12,7 @@ import './App.scss';
 import Bar from './Bar/Bar';
 import Header from './Header';
 import Home from './Home';
-import Kitchen from './Kitchen/Kitchen';
+import Kitchen from './Kitchen';
 import Login from './Login';
 import Pickup from './Pickup';
 import Statistics from './Statistics';

@@ -22,7 +22,6 @@ interface OrderTicketProps {
     buttons?: boolean,
     component?: React.ElementType,
     disableStatus?: boolean,
-    fullHeight?: boolean,
     menuItems: MenuItem[],
     order: Order,
     onClick?: () => void,
@@ -46,6 +45,7 @@ const OrderTicketButton = styled(ButtonBase)(({ theme }) => ({
     transition: theme.transitions.create(
         "background-color", { duration: theme.transitions.duration.short }
     ),
+    height: "100%",
     width: "100%",
 }));
 
@@ -53,7 +53,6 @@ export default function OrderTicket({
     buttons = false,
     component,
     disableStatus = false,
-    fullHeight = true,
     menuItems,
     order: {
         id: orderId,
@@ -125,7 +124,6 @@ export default function OrderTicket({
                 "&:hover": onClick && {
                     backgroundColor: `${ORDER_STATUS_TO_COLOR[orderStatus]}.dark`,
                 },
-                height: fullHeight ? "100%" : undefined,
                 // Override Bootstrap CSS
                 cursor: !onClick ? "default !important" : undefined,
             }}
