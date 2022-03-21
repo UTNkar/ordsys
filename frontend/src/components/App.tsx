@@ -11,7 +11,7 @@ import { SnackbarProvider } from 'notistack';
 import './App.scss';
 import Bar from './Bar/Bar';
 import Header from './Header';
-import Home from './Home/Home';
+import Home from './Home';
 import Kitchen from './Kitchen/Kitchen';
 import Login from './Login';
 import Pickup from './Pickup/Pickup';

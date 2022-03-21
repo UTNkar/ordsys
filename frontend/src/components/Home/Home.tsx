@@ -1,46 +1,80 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Col, Container, Row } from 'react-bootstrap';
-import './Home.scss';
-import IconButton from './IconButton';
+import { Container, Typography } from "@mui/material";
+
+import HomeRow from "./HomeRow";
+import { ReactComponent as BeerIcon } from "../../assets/icons/beer.svg";
+import { ReactComponent as ChartIcon } from "../../assets/icons/chart.svg";
+import { ReactComponent as GlassIcon } from "../../assets/icons/glass.svg";
+import { ReactComponent as HistoryIcon } from "../../assets/icons/history.svg";
+import { ReactComponent as PickupIcon } from "../../assets/icons/pickup.svg";
+import { ReactComponent as PotIcon } from "../../assets/icons/pot.svg";
+import { ReactComponent as TakeAwayIcon } from "../../assets/icons/take-away.svg";
+import { ReactComponent as WaiterIcon } from "../../assets/icons/waiter.svg";
+
+const orderLinks = [
+    {
+        to: "/bar",
+        label: "Bar",
+        icon: GlassIcon,
+    },
+    {
+        to: "/waiter",
+        label: "Waiter",
+        icon: WaiterIcon,
+    },
+];
+
+const deliveryLinks = [
+    {
+        to: "/kitchen",
+        label: "Kitchen",
+        icon: PotIcon,
+    },
+    {
+        to: "/tap",
+        label: "Tap",
+        icon: BeerIcon,
+    },
+    {
+        to: "/delivery",
+        label: "Delivery",
+        icon: TakeAwayIcon,
+    },
+];
+
+const overviewLinks = [
+    {
+        to: "/pickup",
+        label: "Pickup",
+        icon: PickupIcon,
+    },
+    {
+        to: "/statistics",
+        label: "Statistics",
+        icon: ChartIcon,
+    },
+    {
+        to: "/history",
+        label: "History",
+        icon: HistoryIcon,
+    },
+];
 
 function Home() {
-    interface ButtonProps {
-        link: string
-        iconUrl: string,
-        buttonText: string
-    }
-
-    function Button({ link, iconUrl, buttonText }: ButtonProps) {
-        return (
-            <Col xs={4} md={2} className="home-button">
-                <Link to={link}>
-                    <IconButton iconUrl={"/assets/images/" + iconUrl} text={buttonText} />
-                </Link>
-            </Col>
-        )
-    }
     return (
-        <Container className="home-buttons-container">
-            <p className="home-buttons-row-header">Ordering</p>
-            <Row xs={2} className="home-buttons-row">
-                <Button iconUrl='glass.svg' buttonText='Bar' link='/bar' />
-                <Button iconUrl='waiter.svg' buttonText='Waiter' link='/waiter' />
-            </Row>
-
-            <p className="home-buttons-row-header">Fulfilling/Delivery</p>
-            <Row xs={2} md={3} className="home-buttons-row">
-                <Button iconUrl='pot.svg' buttonText='Kitchen' link='/kitchen' />
-                <Button iconUrl='beer.svg' buttonText='Tap' link='/tap' />
-                <Button iconUrl='take-away.svg' buttonText='Delivery' link='/delivery' />
-            </Row>
-
-            <p className="home-buttons-row-header">Overview</p>
-            <Row xs={2} md={3} className="home-buttons-row">
-                <Button iconUrl='pickup.svg' buttonText='Pickup' link='/pickup' />
-                <Button iconUrl='chart.svg' buttonText='Statistics' link='/statistics' />
-                <Button iconUrl='history.svg' buttonText='Order History' link='/history' />
-            </Row>
+        <Container maxWidth="md" sx={{ paddingY: 4 }}>
+            <Typography
+                align="center"
+                component="h1"
+                fontWeight="bold"
+                marginBottom={4}
+                variant="h3"
+            >
+                Navigation links
+            </Typography>
+            <HomeRow title="Ordering" links={orderLinks} />
+            <HomeRow title="Fulfilling/Delivery" links={deliveryLinks} />
+            <HomeRow title="Overview" links={overviewLinks} />
         </Container>
     );
 }
