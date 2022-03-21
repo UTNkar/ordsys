@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { MdClose } from 'react-icons/md';
-import { IconButton, StyledEngineProvider } from '@mui/material';
+import { IconButton, StyledEngineProvider, ThemeProvider } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
 import './App.scss';
 import Bar from './Bar/Bar';
@@ -11,8 +11,9 @@ import Kitchen from './Kitchen/Kitchen';
 import Login from './Login/Login';
 import Pickup from './Pickup/Pickup';
 import Statistics from './Statistics/Statistics';
-import { BarRenderMode, KitchenRenderMode } from '../@types';
+import { BarRenderMode, KitchenRenderMode, OrganisationTheme } from '../@types';
 import { useUser } from "../hooks";
+import { themes } from "../utils/themes";
 
 function App() {
     const { user, isLoading, isUninitialized } = useUser();
@@ -64,35 +65,37 @@ function App() {
 
     return (
         <StyledEngineProvider injectFirst>
-            <SnackbarProvider
-                // Provides a default close button to all Snackbars not overriding 'action' prop
-                action={key => (
-                    <IconButton
-                        aria-label='Close'
-                        color='inherit'
-                        onClick={() => snackbarRef.current?.closeSnackbar(key)}
-                        size='medium'
-                        title='Close'
-                    >
-                        <MdClose />
-                    </IconButton>
-                )}
-                maxSnack={4}
-                anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
-                autoHideDuration={5000}
-                classes={{
-                    variantError: "base-snackbar",
-                    variantInfo: "base-snackbar",
-                    variantSuccess: "base-snackbar",
-                    variantWarning: "base-snackbar warning-snackbar",
-                }}
-                ref={snackbarRef}
-            >
-                <Header
-                    organisationLogo={`/assets/images/${user?.theme || 'utn'}.png`}
-                />
-                {renderComponents()}
-            </SnackbarProvider>
+            <ThemeProvider theme={themes[user?.theme || OrganisationTheme.UTN]}>
+                <SnackbarProvider
+                    // Provides a default close button to all Snackbars not overriding 'action' prop
+                    action={key => (
+                        <IconButton
+                            aria-label='Close'
+                            color='inherit'
+                            onClick={() => snackbarRef.current?.closeSnackbar(key)}
+                            size='medium'
+                            title='Close'
+                        >
+                            <MdClose />
+                        </IconButton>
+                    )}
+                    maxSnack={4}
+                    anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
+                    autoHideDuration={5000}
+                    classes={{
+                        variantError: "base-snackbar",
+                        variantInfo: "base-snackbar",
+                        variantSuccess: "base-snackbar",
+                        variantWarning: "base-snackbar warning-snackbar",
+                    }}
+                    ref={snackbarRef}
+                >
+                    <Header
+                        organisationLogo={`/assets/images/${user?.theme || 'utn'}.png`}
+                    />
+                    {renderComponents()}
+                </SnackbarProvider>
+            </ThemeProvider>
         </StyledEngineProvider>
     );
 }
