@@ -1,56 +1,28 @@
 import React from 'react';
-import './PickupOrders.scss';
-import OrderNumberCard from '../Order/OrderNumberCard';
-import { Order, OrderStatus } from '../../@types';
+import { Grid } from "@mui/material";
 
-// Component to list orders in the pick up view
+import PickupOrderNumber from './PickupOrderNumber';
 
-interface AllOrdersProps {
-    orders: Order[]
-    doneCol: Boolean
+import type { Order } from '../../@types';
+
+interface PickupOrdersProps {
+    orders: Order[],
+    done: boolean
 }
 
-function AllOrders({ orders, doneCol }: AllOrdersProps) {
-    if (doneCol) {
-        return (
-            <>
-                <div className="pickup-masonry">
-                    {orders.map(order =>
-                        (order.status !== OrderStatus.DONE) ? null
-                            :
-                            <div key={order.id} className="pickup-masonry-brick-done">
-                                <OrderNumberCard
-                                    key={order.id}
-                                    orderNumber={order.customer_number}
-                                    status={order.status.toLowerCase().replace(' ', '-')}
-                                >
-                                    {order.status}
-                                </OrderNumberCard>
-                            </div>
-                    )}
-                </div>
-            </>
-        );
-    }
+function PickupOrders({ orders, done }: PickupOrdersProps) {
     return (
-        <>
-            <div className="pickup-masonry">
-                {orders.map(order =>
-                    (order.status === OrderStatus.DONE) ? null
-                        :
-                        <div key={order.id} className="pickup-masonry-brick-not-done">
-                            <OrderNumberCard
-                                key={order.id}
-                                orderNumber={order.customer_number}
-                                status={order.status.toLowerCase().replace(' ', '-')}
-                            >
-                                {order.status}
-                            </OrderNumberCard>
-                        </div>
-                )}
-            </div>
-        </>
+        <Grid container spacing={2} columns={done ? 2 : 4}>
+            {orders.map((order) =>
+                <Grid key={order.id} item xs={1}>
+                    <PickupOrderNumber
+                        orderNumber={order.customer_number}
+                        isDone={done}
+                    />
+                </Grid>
+            )}
+        </Grid>
     );
 }
 
-export default AllOrders
+export default PickupOrders

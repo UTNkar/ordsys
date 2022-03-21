@@ -14,7 +14,7 @@ import Header from './Header';
 import Home from './Home';
 import Kitchen from './Kitchen/Kitchen';
 import Login from './Login';
-import Pickup from './Pickup/Pickup';
+import Pickup from './Pickup';
 import Statistics from './Statistics';
 import { BarRenderMode, KitchenRenderMode, OrganisationTheme } from '../@types';
 import { useUser } from "../hooks";
