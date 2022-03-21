@@ -6,7 +6,8 @@ import { Button as MuiButton, IconButton as MuiIconButton } from '@mui/material'
 import { SnackbarKey, useSnackbar } from 'notistack';
 import { useMenuItems, useOrdersWithItems } from '../../hooks';
 import './Bar.scss';
-import AllOrders from './AllOrders';
+import OrdersGrid from "../OrdersGrid";
+import OrdersGridWithDetail from "../OrdersGridWithDetail";
 import CurrentOrder from './CurrentOrder';
 import Menu from './Menu';
 import OrderNumber from './OrderNumber';
@@ -27,6 +28,8 @@ import {
 interface BarProps {
     renderMode: BarRenderMode
 }
+
+const ORDER_GRID_COLUMNS = { xs: 1, xl: 2 };
 
 function Bar({ renderMode }: BarProps) {
     const isAscSort = renderMode === BarRenderMode.WAITER || renderMode === BarRenderMode.HISTORY;
@@ -314,12 +317,12 @@ function Bar({ renderMode }: BarProps) {
                         </Container>
                     </Col>
                     <Col id="bar-all-orders-column">
-                        <AllOrders
+                        <OrdersGridWithDetail
+                            columns={ORDER_GRID_COLUMNS}
+                            disableClaim
                             menuItems={menuItems}
                             orders={orders}
-                            onOrderDelete={modifyOrder}
-                            onOrderDeliver={modifyOrder}
-                            onOrderEdit={editOrder}
+                            onEditOrderClick={editOrder}
                         />
                     </Col>
                 </Row>
@@ -337,12 +340,10 @@ function Bar({ renderMode }: BarProps) {
                 </Row>
                 <Row>
                     <Col id="bar-all-orders-column">
-                        <AllOrders
+                        <OrdersGridWithDetail
+                            disableDelete
                             menuItems={menuItems}
                             orders={orders}
-                            onOrderDelete={modifyOrder}
-                            onOrderDeliver={modifyOrder}
-                            onOrderEdit={undefined}
                         />
                     </Col>
                 </Row>
@@ -360,14 +361,7 @@ function Bar({ renderMode }: BarProps) {
                 </Row>
                 <Row>
                     <Col id="bar-all-orders-column">
-                        <AllOrders
-                            clickableOrders={false}
-                            menuItems={menuItems}
-                            orders={orders}
-                            onOrderDelete={modifyOrder}
-                            onOrderDeliver={modifyOrder}
-                            onOrderEdit={undefined}
-                        />
+                        <OrdersGrid menuItems={menuItems} orders={orders} />
                     </Col>
                 </Row>
             </>
@@ -433,12 +427,12 @@ function Bar({ renderMode }: BarProps) {
                                 </Row>
                                 <Row>
                                     <Col className="align-items-end border-bottom" id="waiter-all-orders-column">
-                                        <AllOrders
+                                        <OrdersGridWithDetail
+                                            columns={ORDER_GRID_COLUMNS}
+                                            disableClaim
                                             menuItems={menuItems}
                                             orders={orders}
-                                            onOrderDelete={modifyOrder}
-                                            onOrderDeliver={modifyOrder}
-                                            onOrderEdit={editOrder}
+                                            onEditOrderClick={editOrder}
                                         />
                                     </Col>
                                 </Row>
