@@ -9,6 +9,7 @@ import './Bar.scss';
 import OrdersGridWithDetail from "../OrdersGridWithDetail";
 import CurrentOrder from './CurrentOrder';
 import Menu from './Menu';
+import MembershipChecker from './MembershipChecker';
 import Numpad from './Numpad';
 import {
     BarRenderMode,
@@ -17,7 +18,6 @@ import {
     Order,
     OrderStatus,
 } from '../../@types';
-import MembershipChecker from '../MembershipChecker/MembershipChecker';
 import {
     useCreateOrderMutation,
     useDeleteOrderMutation,
