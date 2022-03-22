@@ -32,12 +32,6 @@ interface BarProps {
 const ORDER_GRID_COLUMNS = { xs: 1, xl: 2 };
 
 function Bar({ renderMode }: BarProps) {
-    const isAscSort = renderMode === BarRenderMode.WAITER || renderMode === BarRenderMode.HISTORY;
-    const queryParams =
-        renderMode === BarRenderMode.HISTORY
-            ? "?max_hours=1"
-            : `?exclude_status=${OrderStatus.DELIVERED}`;
-
     const [currentOrder, setCurrentOrder] = useState<CurrentOrderItem[]>([])
     const [mealNote, setMealNote] = useState('')
     const [orderNote, setOrderNote] = useState('')
@@ -46,7 +40,10 @@ function Bar({ renderMode }: BarProps) {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
     const { menuItems } = useMenuItems();
-    const { orders } = useOrdersWithItems(queryParams, isAscSort);
+    const { orders } = useOrdersWithItems(
+        `?exclude_status=${OrderStatus.DELIVERED}`,
+        renderMode === BarRenderMode.WAITER,
+    );
     const [createOrder, { isLoading: isCreatingOrder }] = useCreateOrderMutation();
     const [deleteOrder, { isLoading: isDeletingOrder }] = useDeleteOrderMutation();
     const [updateOrder, { isLoading: isUpdatingOrder }] = useUpdateOrderContentsMutation();
@@ -351,23 +348,6 @@ function Bar({ renderMode }: BarProps) {
         )
     }
 
-    function renderHistoryView() {
-        return (
-            <>
-                <Row className="bar-top">
-                    <Col className=" justify-content-center">
-                        <h3 className="pt-2 align-self-center">Order History (last hour)</h3>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col id="bar-all-orders-column">
-                        <OrdersGrid menuItems={menuItems} orders={orders} />
-                    </Col>
-                </Row>
-            </>
-        )
-    }
-
     function renderWaiterView() {
         return (
             <>
@@ -450,8 +430,6 @@ function Bar({ renderMode }: BarProps) {
                 return renderFullView()
             case (BarRenderMode.DELIVERY):
                 return renderDeliveryView()
-            case (BarRenderMode.HISTORY):
-                return renderHistoryView()
             case (BarRenderMode.WAITER):
                 return renderWaiterView()
         }

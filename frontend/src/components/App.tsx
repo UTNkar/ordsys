@@ -15,6 +15,7 @@ import Home from './Home';
 import Kitchen from './Kitchen';
 import Login from './Login';
 import Pickup from './Pickup';
+import RecentOrders from "./RecentOrders";
 import Statistics from './Statistics';
 import { BarRenderMode, KitchenRenderMode, OrganisationTheme } from '../@types';
 import { useUser } from "../hooks";
@@ -47,10 +48,7 @@ function App() {
                         path="/kitchen"
                         element={<Kitchen renderMode={KitchenRenderMode.FOOD} />}
                     />
-                    <Route
-                        path="/history"
-                        element={<Bar renderMode={BarRenderMode.HISTORY} />}
-                    />
+                    <Route path="/history" element={<RecentOrders />} />
                     <Route path="/pickup" element={<Pickup />} />
                     <Route path="/statistics" element={<Statistics />} />
                     <Route

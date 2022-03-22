@@ -8,7 +8,6 @@ interface CurrentOrderItem extends MenuItem {
 export enum BarRenderMode {
     FULL,
     DELIVERY,
-    HISTORY,
     WAITER,
 }
 
