@@ -1,5 +1,5 @@
 @font-face {
-    font-family: 'TeXGyreAdventorBold';
+    font-family: 'TeXGyreAdventor';
     /*noinspection CssUnknownTarget*/
     src: url('fonts/TeXGyreAdventorBold.ttf') format('truetype');
     font-weight: bold;
@@ -7,7 +7,7 @@
 }
 
 @font-face {
-    font-family: 'TeXGyreAdventorBoldItalic';
+    font-family: 'TeXGyreAdventor';
     /*noinspection CssUnknownTarget*/
     src: url('fonts/TeXGyreAdventorBoldItalic.ttf') format('truetype');
     font-weight: bold;
@@ -15,7 +15,7 @@
 }
 
 @font-face {
-    font-family: 'TeXGyreAdventorItalic';
+    font-family: 'TeXGyreAdventor';
     /*noinspection CssUnknownTarget*/
     src: url('fonts/TeXGyreAdventorItalic.ttf') format('truetype');
     font-weight: normal;
@@ -23,7 +23,7 @@
 }
 
 @font-face {
-    font-family: 'TeXGyreAdventorRegular';
+    font-family: 'TeXGyreAdventor';
     /*noinspection CssUnknownTarget*/
     src: url('fonts/TeXGyreAdventorRegular.ttf') format('truetype');
     font-weight: normal;
