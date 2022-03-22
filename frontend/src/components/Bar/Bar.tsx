@@ -6,7 +6,6 @@ import { Button as MuiButton, IconButton as MuiIconButton } from '@mui/material'
 import { SnackbarKey, useSnackbar } from 'notistack';
 import { useMenuItems, useOrdersWithItems } from '../../hooks';
 import './Bar.scss';
-import OrdersGrid from "../OrdersGrid";
 import OrdersGridWithDetail from "../OrdersGridWithDetail";
 import CurrentOrder from './CurrentOrder';
 import Menu from './Menu';
@@ -327,27 +326,6 @@ function Bar({ renderMode }: BarProps) {
         )
     }
 
-    function renderDeliveryView() {
-        return (
-            <>
-                <Row className="bar-top">
-                    <Col className=" justify-content-center">
-                        <h3 className="pt-2 align-self-center">All Orders</h3>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col id="bar-all-orders-column">
-                        <OrdersGridWithDetail
-                            disableDelete
-                            menuItems={menuItems}
-                            orders={orders}
-                        />
-                    </Col>
-                </Row>
-            </>
-        )
-    }
-
     function renderWaiterView() {
         return (
             <>
@@ -424,20 +402,12 @@ function Bar({ renderMode }: BarProps) {
         )
     }
 
-    function selectRenderView() {
-        switch (renderMode) {
-            case (BarRenderMode.FULL):
-                return renderFullView()
-            case (BarRenderMode.DELIVERY):
-                return renderDeliveryView()
-            case (BarRenderMode.WAITER):
-                return renderWaiterView()
-        }
-    }
-
     return (
         <Container fluid className="flex-grow-1">
-            {selectRenderView()}
+            {renderMode === BarRenderMode.FULL
+                ? renderFullView()
+                : renderWaiterView()
+            }
         </Container>
     );
 }

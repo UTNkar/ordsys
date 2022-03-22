@@ -42,13 +42,16 @@ function App() {
                     />
                     <Route
                         path="/delivery"
-                        element={<Bar renderMode={BarRenderMode.DELIVERY} />}
+                        element={<RecentOrders title="Delivery" />}
                     />
                     <Route
                         path="/kitchen"
                         element={<Kitchen renderMode={KitchenRenderMode.FOOD} />}
                     />
-                    <Route path="/history" element={<RecentOrders />} />
+                    <Route
+                        path="/history"
+                        element={<RecentOrders history title="Orders last hour" />}
+                    />
                     <Route path="/pickup" element={<Pickup />} />
                     <Route path="/statistics" element={<Statistics />} />
                     <Route
