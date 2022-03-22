@@ -9,7 +9,7 @@ import './Bar.scss';
 import OrdersGridWithDetail from "../OrdersGridWithDetail";
 import CurrentOrder from './CurrentOrder';
 import Menu from './Menu';
-import OrderNumber from './OrderNumber';
+import Numpad from './Numpad';
 import {
     BarRenderMode,
     CurrentOrderItem,
@@ -157,7 +157,7 @@ function Bar({ renderMode }: BarProps) {
         }
     }
 
-    function onSubmitOrder(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    function onSubmitOrder(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
         const foodItems =
             currentOrder
@@ -277,7 +277,7 @@ function Bar({ renderMode }: BarProps) {
                             </Row>
                             <Row className="align-items-end h-60">
                                 <Col>
-                                    <OrderNumber
+                                    <Numpad
                                         addToOrderNumber={addToOrderNumber}
                                         clearOrderNumber={() => setOrderNumber('')}
                                         onSubmitOrder={onSubmitOrder}
@@ -354,7 +354,7 @@ function Bar({ renderMode }: BarProps) {
                             </Row>
                             <Row className="align-items-end h-60">
                                 <Col>
-                                    <OrderNumber
+                                    <Numpad
                                         addToOrderNumber={addToOrderNumber}
                                         clearOrderNumber={() => setOrderNumber('')}
                                         onSubmitOrder={onSubmitOrder}
