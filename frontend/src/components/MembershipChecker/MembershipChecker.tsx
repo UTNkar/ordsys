@@ -1,9 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { Button as MuiButton, CircularProgress, TextField } from '@mui/material';
 import { green, red } from '@mui/material/colors';
 import { useSnackbar } from 'notistack';
-import { UtnMembership, UtnMembershipResponse } from '../../api/UtnMembership';
+
+import { useCheckMembershipMutation } from "../../api/utn";
 import './MembershipChecker.scss';
 
 function renderPersonalIdSubmit(
@@ -39,70 +40,55 @@ function renderPersonalIdSubmit(
     </MuiButton>
 }
 
-/**
- * Valid Swedish personal IDs are:
- * - YYMMDDXXXX
- * - YYMMDD-XXXX
- * - YYYYMMDDXXXX
- * - YYYYMMDD-XXXX
- *
- * The regex tests for 6 or 8 digits, followed by an optional -, followed by 4 digits
- */
-const personalIdRegex = /^(\d{6}|\d{8})-?\d{4}$/
-
 function MembershipChecker() {
-
-    const [isCheckingPersonalId, setIsCheckingPersonalId] = useState(false)
-    const [isInvalidPersonalId, setIsInvalidPersonalId] = useState(false)
-    const [isMember, setIsMember] = useState<boolean | undefined>(undefined)
-
+    const [
+        checkUtnMembership,
+        {
+            data,
+            error,
+            isError,
+            isLoading,
+            isSuccess,
+            reset,
+        },
+    ] = useCheckMembershipMutation();
     const { enqueueSnackbar } = useSnackbar();
     const personalIdInputRef: React.MutableRefObject<HTMLInputElement | null> = useRef(null)
     const [personalId, setPersonalId] = useState('')
 
-    function validateUtnMembership(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault()
-        if (!personalIdRegex.test(personalId)) {
-            setIsInvalidPersonalId(true)
-            return
+    useEffect(() => {
+        if (isSuccess) {
+            setPersonalId("");
+            personalIdInputRef.current?.focus()
+            // Show the result colour for 2500 ms before resetting to original state
+            const timeoutId = setTimeout(reset, 2500);
+
+            return () => clearTimeout(timeoutId);
         }
-        setIsCheckingPersonalId(true)
-        UtnMembership.post<UtnMembershipResponse>('/member_check_api/', `ssn=${personalId}`)
-            .then(response => {
-                setPersonalId('')
-                setIsMember(response.data.is_member)
-                personalIdInputRef.current?.focus()
-                // Show the result colour for 2500 ms before resetting to original state
-                setTimeout(() => setIsMember(undefined), 2500)
-            })
-            .catch(reason => {
-                if (reason.response !== undefined) {
-                    setIsInvalidPersonalId(true)
-                } else {
-                    enqueueSnackbar('A network error occurred, check your internet connection', {
-                        variant: 'error'
-                    })
-                }
-            })
-            .finally(() => setIsCheckingPersonalId(false))
+    }, [enqueueSnackbar, isSuccess, reset]);
+
+    function onCheckMembership(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault()
+        checkUtnMembership(personalId);
     }
 
     return (
-        <form noValidate onSubmit={validateUtnMembership}>
+        <form noValidate onSubmit={onCheckMembership}>
             <Row className='justify-content-between' noGutters xl={2} lg={1}>
                 <Col xl={6} className='d-flex justify-content-center'>
                     <TextField
-                        error={isInvalidPersonalId}
-                        helperText={isInvalidPersonalId ? 'Not a valid personal ID' : ' '}
+                        error={isError}
+                        helperText={!isError
+                            ? "YYYYMMDD-XXXX"
+                            : typeof error === "boolean"
+                                ? "Not a valid personal ID."
+                                : "Network error."
+                        }
                         inputRef={personalIdInputRef}
                         size='small'
                         label='Swedish personal ID'
                         onChange={e => {
-                            if (isInvalidPersonalId || isMember) {
-                                // Clear invalid personal ID error and unset membership status on new input
-                                setIsInvalidPersonalId(false)
-                                setIsMember(undefined)
-                            }
+                            reset();
                             setPersonalId(e.target.value)
                         }}
                         type='text'
@@ -111,7 +97,7 @@ function MembershipChecker() {
                     />
                 </Col>
                 <Col xl={6} className='d-flex justify-content-center'>
-                    {renderPersonalIdSubmit(isCheckingPersonalId, isInvalidPersonalId, isMember)}
+                    {renderPersonalIdSubmit(isLoading, isError, data?.is_member)}
                 </Col>
             </Row>
         </form>
