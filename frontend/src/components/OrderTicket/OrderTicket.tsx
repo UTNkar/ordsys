@@ -11,7 +11,10 @@ import {
     Typography,
     styled,
 } from "@mui/material";
-import { MdArrowBack, MdArrowForward } from 'react-icons/md';
+import {
+    ArrowBackRounded as ArrowBackIcon,
+    ArrowForwardRounded as ArrowForwardIcon,
+} from '@mui/icons-material';
 
 import { useUpdateOrderMutation } from "../../api/backend";
 
@@ -83,7 +86,7 @@ export default function OrderTicket({
                     isOrderDone ? OrderStatus.IN_PROGRESS : OrderStatus.WAITING
                 )}
             >
-                <MdArrowBack fontSize={48} />
+                <ArrowBackIcon sx={{ fontSize: 48 }} />
             </IconButton>
         );
         const rightButton = (isOrderWaiting || isOrderInProgress) && (
@@ -94,7 +97,7 @@ export default function OrderTicket({
                     isOrderWaiting ? OrderStatus.IN_PROGRESS : OrderStatus.DONE
                 )}
             >
-                <MdArrowForward fontSize={48} />
+                <ArrowForwardIcon sx={{ fontSize: 48 }} />
             </IconButton>
         );
 

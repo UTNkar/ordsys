@@ -6,7 +6,10 @@ import {
     ListItemText,
     Typography,
 } from "@mui/material";
-import { MdAdd as IncrementIcon, MdRemove as DecrementIcon } from 'react-icons/md';
+import {
+    AddRounded as IncrementIcon,
+    RemoveRounded as DecrementIcon,
+} from '@mui/icons-material';
 
 import type { CurrentOrderItem } from '../../@types';
 

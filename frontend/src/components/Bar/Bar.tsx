@@ -8,8 +8,10 @@ import {
     Typography,
     styled,
 } from "@mui/material";
-import { FaUndo } from 'react-icons/fa';
-import { MdClose } from 'react-icons/md';
+import {
+    CloseRounded as CloseIcon,
+    ReplayRounded as UndoIcon,
+} from "@mui/icons-material";
 
 import { useMenuItems, useOrdersWithItems, useSnackbar } from '../../hooks';
 import {
@@ -264,7 +266,7 @@ function Bar({ renderMode }: BarProps) {
                                 color='inherit'
                                 onClick={() => closeSnackbar(key)}
                             >
-                                <MdClose />
+                                <CloseIcon />
                             </IconButton>
                         </>,
                     persist: true,
@@ -301,15 +303,17 @@ function Bar({ renderMode }: BarProps) {
                         >
                             Current order
                         </Typography>
-                        <IconButton
-                            aria-label="Clear order"
-                            color="error"
-                            disabled={currentOrder.length === 0}
-                            onClick={clearCurrentOrder}
-                            sx={{ verticalAlign: "bottom" }}
-                        >
-                            <FaUndo />
-                        </IconButton>
+                        <Box position="absolute" display="inline-block">
+                            <IconButton
+                                aria-label="Clear order"
+                                color="error"
+                                disabled={currentOrder.length === 0}
+                                onClick={clearCurrentOrder}
+                                sx={{ top: -4 }}
+                            >
+                                <UndoIcon transform="rotate(-40)" fontSize="large" />
+                            </IconButton>
+                        </Box>
                     </Box>
                     <Box
                         flex="1 0 0"

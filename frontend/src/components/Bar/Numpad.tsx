@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, FormControl, Grid, OutlinedInput } from '@mui/material';
 import { LoadingButton } from "@mui/lab";
-import { FaPaperPlane } from 'react-icons/fa';
+import { SendRounded as SendIcon } from '@mui/icons-material';
 
 interface NumpadProps {
     addToOrderNumber: (digit: number) => void
@@ -101,9 +101,7 @@ export default function Numpad({
                         loading={showSubmitSpinner}
                         type="submit"
                     >
-                        <FaPaperPlane
-                            color={!orderIsValid || showSubmitSpinner ? "#000" : "#fff"}
-                        />
+                        <SendIcon fontSize="inherit" />
                     </LoadingButton>
                 </Grid>
             </Grid>

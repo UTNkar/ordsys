@@ -1,12 +1,12 @@
 import React from "react";
 import { Alert, IconButton, Typography } from "@mui/material";
 import {
-    MdClose as CloseIcon,
-    MdWarningAmber as WarningIcon,
-    MdErrorOutline as ErrorIcon,
-    MdCheck as SuccessIcon,
-    MdInfoOutline as InfoIcon,
-} from "react-icons/md";
+    CloseRounded as CloseIcon,
+    WarningAmberRounded as WarningIcon,
+    ErrorOutlineRounded as ErrorIcon,
+    CheckCircleOutlineRounded as SuccessIcon,
+    InfoOutlined as InfoIcon,
+} from "@mui/icons-material";
 
 import type { AlertColor } from "@mui/material";
 import type { SnackbarKey } from "notistack";
@@ -19,7 +19,7 @@ interface SnackbarContentProps {
     snackbarKey: SnackbarKey,
 }
 
-const ICON_PROPS = Object.freeze({ fontSize: "2rem" });
+const ICON_PROPS = Object.freeze({ sx: { fontSize: "2rem" }});
 
 const ICON_MAPPING: Record<AlertColor, React.ReactNode> = Object.freeze({
     error: <ErrorIcon {...ICON_PROPS} />,
