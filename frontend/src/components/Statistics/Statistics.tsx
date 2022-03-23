@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { Container, Stack, TextField, Typography } from '@mui/material';
 import { DateTimePicker, LoadingButton, LocalizationProvider } from '@mui/lab';
-import { useSnackbar } from 'notistack';
 import DateFnsUtils from '@date-io/date-fns';
 import { subDays } from 'date-fns';
 import { sv } from "date-fns/locale";
 
 import { CanvasJSChart } from '../../libs/canvasjs.react';
-import { useOrderHistory } from "../../hooks";
+import { useOrderHistory, useSnackbar } from "../../hooks";
 
 const DATE_TIME_PICKER_COMMON_PROPS = Object.freeze({
     mask: "____-__-__ __:__",

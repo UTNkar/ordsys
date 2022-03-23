@@ -10,9 +10,8 @@ import {
 } from "@mui/material";
 import { FaUndo } from 'react-icons/fa';
 import { MdClose } from 'react-icons/md';
-import { useSnackbar } from 'notistack';
 
-import { useMenuItems, useOrdersWithItems } from '../../hooks';
+import { useMenuItems, useOrdersWithItems, useSnackbar } from '../../hooks';
 import {
     useCreateOrderMutation,
     useDeleteOrderMutation,
@@ -37,6 +36,13 @@ const ORDER_GRID_COLUMNS = { xs: 1, xl: 2 };
 const Column = styled(Stack)(({ theme }) => ({
     padding: theme.spacing(2),
     justifyContent: "space-between",
+}));
+
+const SnackbarButton = styled(Button)(() => ({
+    color: "inherit",
+    fontSize: "1.125rem",
+    paddingTop: "3px",
+    paddingBottom: "3px",
 }));
 
 function Bar({ renderMode }: BarProps) {
@@ -113,7 +119,11 @@ function Bar({ renderMode }: BarProps) {
         setOrderNumber(order.customer_number)
         setOrderToEdit(order)
         enqueueSnackbar('You are editing an order', {
-            action: <Button onClick={() => clearCurrentOrder()}>Cancel edit</Button>,
+            action: (
+                <SnackbarButton onClick={() => clearCurrentOrder()}>
+                    Cancel
+                </SnackbarButton>
+            ),
             anchorOrigin: {
                 horizontal: 'center', vertical: 'top'
             },
@@ -209,9 +219,9 @@ function Bar({ renderMode }: BarProps) {
                     clearCurrentOrder()
                     enqueueSnackbar('Order created!', {
                         action: key =>
-                            <Button onClick={() => undoOrders(orders, key)}>
+                            <SnackbarButton onClick={() => undoOrders(orders, key)}>
                                 Undo
-                            </Button>,
+                            </SnackbarButton>,
                         variant: 'success',
                     })
                 })
@@ -238,13 +248,13 @@ function Bar({ renderMode }: BarProps) {
                 enqueueSnackbar('Failed to undo order!', {
                     action: key =>
                         <>
-                            <Button onClick={() => undoOrders(orders, key)}>Retry</Button>
+                            <SnackbarButton onClick={() => undoOrders(orders, key)}>
+                                Retry
+                            </SnackbarButton>
                             <IconButton
                                 aria-label='Close'
                                 color='inherit'
                                 onClick={() => closeSnackbar(key)}
-                                size='medium'
-                                title='Close'
                             >
                                 <MdClose />
                             </IconButton>

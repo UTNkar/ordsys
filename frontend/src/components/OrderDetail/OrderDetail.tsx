@@ -8,9 +8,8 @@ import {
     Stack,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { useSnackbar } from "notistack";
 
-import { useMenuItems } from "../../hooks";
+import { useMenuItems, useSnackbar } from "../../hooks";
 import {
     useDeleteOrderMutation,
     useUpdateOrderMutation

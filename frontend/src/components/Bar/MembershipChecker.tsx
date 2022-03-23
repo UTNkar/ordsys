@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Stack, TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { useSnackbar } from 'notistack';
 
+import { useSnackbar } from '../../hooks';
 import { useCheckMembershipMutation } from "../../api/utn";
 
 export default function MembershipChecker() {

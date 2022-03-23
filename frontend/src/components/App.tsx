@@ -1,14 +1,7 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { MdClose } from 'react-icons/md';
-import {
-    IconButton,
-    Stack,
-    StyledEngineProvider,
-    ThemeProvider
-} from '@mui/material';
+import { Stack, StyledEngineProvider, ThemeProvider } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
-import './App.scss';
 import Bar from './Bar';
 import Header from './Header';
 import Home from './Home';
@@ -24,8 +17,6 @@ import { themes } from "../utils/themes";
 function App() {
     const { user, isLoading, isUninitialized } = useUser();
     const isAuthenticated = Boolean(user);
-
-    const snackbarRef = useRef<SnackbarProvider>(null)
 
     if (isLoading || isUninitialized) {
         return null;
@@ -73,28 +64,9 @@ function App() {
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={themes[user?.theme || OrganisationTheme.UTN]}>
                 <SnackbarProvider
-                    // Provides a default close button to all Snackbars not overriding 'action' prop
-                    action={key => (
-                        <IconButton
-                            aria-label='Close'
-                            color='inherit'
-                            onClick={() => snackbarRef.current?.closeSnackbar(key)}
-                            size='medium'
-                            title='Close'
-                        >
-                            <MdClose />
-                        </IconButton>
-                    )}
                     maxSnack={4}
                     anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
                     autoHideDuration={5000}
-                    classes={{
-                        variantError: "base-snackbar",
-                        variantInfo: "base-snackbar",
-                        variantSuccess: "base-snackbar",
-                        variantWarning: "base-snackbar warning-snackbar",
-                    }}
-                    ref={snackbarRef}
                 >
                     <Header organisation={user?.theme || OrganisationTheme.UTN} />
                     <Stack
