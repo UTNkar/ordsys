@@ -9,7 +9,7 @@ interface MenuProps {
     onMenuItemClick: (item: MenuItem) => void
 }
 
-function Menu({ onMenuItemClick }: MenuProps) {
+const Menu = React.memo(function Menu({ onMenuItemClick }: MenuProps) {
     const { activeMenuItems } = useActiveMenuItems();
 
     if (activeMenuItems.length === 0) {
@@ -44,6 +44,6 @@ function Menu({ onMenuItemClick }: MenuProps) {
             ))}
         </Grid>
     );
-}
+});
 
 export default Menu

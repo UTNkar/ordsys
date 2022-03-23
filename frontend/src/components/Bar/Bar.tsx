@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
     Box,
     Button,
@@ -67,38 +67,42 @@ function Bar({ renderMode }: BarProps) {
 
     useEffect(() => closeSnackbar, [closeSnackbar]);
 
-    function addToOrderNumber(digit: number) {
-        setOrderNumber(((Number(orderNumber) % 10) * 10 + digit).toString())
-    }
+    const addToOrderNumber = useCallback((digit: number) => {
+        setOrderNumber((previous) => ((Number(previous) % 10) * 10 + digit).toString());
+    }, []);
 
-    function clearCurrentOrder() {
+    const clearCurrentOrder = useCallback(() => {
         closeSnackbar()
         setCurrentOrder([])
         setMealNote('')
         setOrderNote('')
         setOrderNumber('')
         setOrderToEdit(null)
-    }
+    }, [closeSnackbar]);
 
-    function decrementItemQuantity(item: CurrentOrderItem) {
-        if (item.quantity === 1) {
-            setCurrentOrder(currentOrder.filter(order =>
-                order.id !== item.id || order.mealNote !== item.mealNote
-            ))
-        } else {
-            const index = currentOrder.indexOf(item)
-            currentOrder[index].quantity -= 1
-            setCurrentOrder(currentOrder.slice(0))
-        }
-    }
+    const decrementItemQuantity = useCallback((item: CurrentOrderItem) => {
+        setCurrentOrder((previous) => {
+            if (item.quantity === 1) {
+                return previous.filter(({ id, mealNote }) =>
+                    id !== item.id || mealNote !== item.mealNote
+                )
+            } else {
+                const index = previous.indexOf(item)
+                previous[index].quantity -= 1
+                return previous.slice(0);
+            }
+        });
+    }, []);
 
-    function incrementItemQuantity(item: CurrentOrderItem) {
-        const index = currentOrder.indexOf(item)
-        currentOrder[index].quantity += 1
-        setCurrentOrder(currentOrder.slice(0))
-    }
+    const incrementItemQuantity = useCallback((item: CurrentOrderItem) => {
+        setCurrentOrder((previous) => {
+            const index = previous.indexOf(item);
+            previous[index].quantity += 1;
+            return previous.slice(0);
+        });
+    }, []);
 
-    function editOrder(order: Order) {
+    const editOrder = useCallback((order: Order) => {
         const orderToEdit = order.order_items.map(orderItem => {
             // TODO ensure menuItem is not undefined.
             //  It shouldn't be unless menu items are removed during the event and they are re-fetched
@@ -131,51 +135,55 @@ function Bar({ renderMode }: BarProps) {
             preventDuplicate: true,
             variant: 'warning',
         })
-    }
+    }, [clearCurrentOrder, enqueueSnackbar, menuItems]);
 
-    function modifyOrder(orderId: number, payload: Order | object | undefined = undefined) {
-        if (payload !== undefined) {
-            updateOrder({ orderId, body: payload })
-                .unwrap()
-                .then(() => {
-                    clearCurrentOrder()
-                    enqueueSnackbar('Order successfully updated!', {
+    const modifyOrder = useCallback(
+        (orderId: number, payload: Order | object | undefined = undefined) => {
+            if (payload !== undefined) {
+                updateOrder({ orderId, body: payload })
+                    .unwrap()
+                    .then(() => {
+                        clearCurrentOrder()
+                        enqueueSnackbar('Order successfully updated!', {
+                            autoHideDuration: 2500,
+                            variant: 'success',
+                        })
+                    })
+                    .catch(() => enqueueSnackbar('Order update failed!', { variant: 'error' }));
+            } else {
+                deleteOrder(orderId)
+                    .unwrap()
+                    .then(() => enqueueSnackbar('Order successfully deleted!', {
                         autoHideDuration: 2500,
                         variant: 'success',
-                    })
-                })
-                .catch(() => enqueueSnackbar('Order update failed!', { variant: 'error' }));
-        } else {
-            deleteOrder(orderId)
-                .unwrap()
-                .then(() => enqueueSnackbar('Order successfully deleted!', {
-                    autoHideDuration: 2500,
-                    variant: 'success',
-                }))
-                .catch(() => enqueueSnackbar('Order deletion failed!', { variant: 'error' }));
-        }
-    }
+                    }))
+                    .catch(() => enqueueSnackbar('Order deletion failed!', { variant: 'error' }));
+            }
+        },
+        [clearCurrentOrder, deleteOrder, enqueueSnackbar, updateOrder]
+    );
 
-    function onMenuItemClick(clickedItem: MenuItem) {
+    const onMenuItemClick = useCallback((clickedItem: MenuItem) => {
         if (orderToEdit !== null && orderToEdit.beverages_only !== clickedItem.beverage) {
             enqueueSnackbar("Can't add non-beverage to a beverage order (or vice versa)!", {
                 variant: 'error',
             })
             return
         }
-        const existingItemIndex = currentOrder.findIndex(existingItem =>
-            existingItem.id === clickedItem.id && existingItem.mealNote === mealNote
-        )
-        if (existingItemIndex === -1) {
-            const itemToAdd = { ...clickedItem, mealNote, quantity: 1 } as CurrentOrderItem
-            setCurrentOrder([...currentOrder, itemToAdd])
-            setMealNote('')
-        } else {
-            currentOrder[existingItemIndex].quantity += 1
-            setCurrentOrder(currentOrder.slice(0))
-            setMealNote('')
-        }
-    }
+        setCurrentOrder((previous) => {
+            const index = previous.findIndex((item) =>
+                item.id === clickedItem.id && item.mealNote === mealNote
+            );
+            if (index === -1) {
+                const itemToAdd = { ...clickedItem, mealNote, quantity: 1 } as CurrentOrderItem;
+                return [...previous, itemToAdd];
+            } else {
+                previous[index].quantity += 1;
+                return previous.slice(0);
+            }
+        });
+        setMealNote('');
+    }, [enqueueSnackbar, mealNote, orderToEdit]);
 
     function onSubmitOrder(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -242,7 +250,7 @@ function Bar({ renderMode }: BarProps) {
         return currentOrder.length > 0 && orderNumber !== ''
     }
 
-    function undoOrders(orders: Order[], snackbarKey: SnackbarKey) {
+    const undoOrders = useCallback((orders: Order[], snackbarKey: SnackbarKey) => {
         Promise.all(orders.map(({ id }) => deleteOrder(id).unwrap()))
             .catch(() => {
                 enqueueSnackbar('Failed to undo order!', {
@@ -264,7 +272,7 @@ function Bar({ renderMode }: BarProps) {
                 })
             })
         closeSnackbar(snackbarKey)
-    }
+    }, [closeSnackbar, deleteOrder, enqueueSnackbar]);
 
     const flex = `1 1 ${isFullView ? "33.33" : "50"}%`;
 

@@ -18,7 +18,7 @@ const DEFAULT_COLUMNS: OrdersGridProps["columns"] = Object.freeze({
     sm: 2,
 });
 
-export default function OrdersGrid({
+const OrdersGrid = React.memo(function OrdersGrid({
     columns = DEFAULT_COLUMNS,
     menuItems,
     orders,
@@ -47,4 +47,6 @@ export default function OrdersGrid({
             ))}
         </Grid>
     );
-}
+});
+
+export default OrdersGrid;

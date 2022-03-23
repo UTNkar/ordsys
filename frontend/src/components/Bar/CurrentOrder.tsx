@@ -16,7 +16,11 @@ interface CurrentOrderProps {
     incrementItemQuantity: (item: CurrentOrderItem) => void
 }
 
-function CurrentOrder({ currentOrder, decrementItemQuantity, incrementItemQuantity }: CurrentOrderProps) {
+const CurrentOrder = React.memo(function CurrentOrder({
+    currentOrder,
+    decrementItemQuantity,
+    incrementItemQuantity
+}: CurrentOrderProps) {
     return (
         <List dense>
             {currentOrder.map((item) => (
@@ -57,6 +61,6 @@ function CurrentOrder({ currentOrder, decrementItemQuantity, incrementItemQuanti
             ))}
         </List>
     );
-}
+});
 
 export default CurrentOrder
