@@ -18,13 +18,7 @@ function HomeButton({ to, icon, label }: HomeButtonProps) {
             variant="outlined"
             component={RouterLink}
             to={to}
-            sx={{
-                flexDirection: "column",
-                "&:hover": {
-                    // Override Bootstrap hover CSS
-                    color: "primary.main"
-                }
-            }}
+            sx={{ flexDirection: "column" }}
         >
             <Box
                 aria-labelledby={labelId}

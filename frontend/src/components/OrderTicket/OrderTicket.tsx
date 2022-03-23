@@ -124,8 +124,7 @@ export default function OrderTicket({
                 "&:hover": onClick && {
                     backgroundColor: `${ORDER_STATUS_TO_COLOR[orderStatus]}.dark`,
                 },
-                // Override Bootstrap CSS
-                cursor: !onClick ? "default !important" : undefined,
+                cursor: !onClick ? "default" : undefined,
             }}
         >
             <Stack direction="row">

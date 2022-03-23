@@ -1,5 +1,8 @@
-@import 'custom_bootstrap';
 @import 'fonts.css';
+
+body {
+    margin: 0;
+}
 
 #root {
     -webkit-user-select: none; /* Safari */
