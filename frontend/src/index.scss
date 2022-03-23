@@ -2,23 +2,8 @@
 @import 'fonts.css';
 
 #root {
-    font-family: 'TeXGyreAdventor', sans-serif;
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10+/Edge */
     user-select: none; /* Standard */
-}
-
-:root {
-    --button-background-color: #004C98;
-    --button-hover-color: #023b75;
-    --button-active-color: #207c98;
-
-    --order-waiting-color: #eaeaea;
-    --order-in-progress-color: #fff3b0;
-    --order-in-transit-color: #dffeff;
-    --order-done-color: #d0ffb2;
-
-    --dark-text-color: #000000;
-    --light-text-color: #ffffff;
 }

@@ -1,28 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Row } from 'react-bootstrap';
+import {
+    Box,
+    Button,
+    IconButton,
+    OutlinedInput,
+    Stack,
+    Typography,
+    styled,
+} from "@mui/material";
 import { FaUndo } from 'react-icons/fa';
 import { MdClose } from 'react-icons/md';
-import { Button as MuiButton, IconButton as MuiIconButton } from '@mui/material';
-import { SnackbarKey, useSnackbar } from 'notistack';
+import { useSnackbar } from 'notistack';
+
 import { useMenuItems, useOrdersWithItems } from '../../hooks';
-import './Bar.scss';
-import OrdersGridWithDetail from "../OrdersGridWithDetail";
-import CurrentOrder from './CurrentOrder';
-import Menu from './Menu';
-import MembershipChecker from './MembershipChecker';
-import Numpad from './Numpad';
-import {
-    BarRenderMode,
-    CurrentOrderItem,
-    MenuItem,
-    Order,
-    OrderStatus,
-} from '../../@types';
 import {
     useCreateOrderMutation,
     useDeleteOrderMutation,
     useUpdateOrderContentsMutation,
 } from "../../api/backend";
+import CurrentOrder from './CurrentOrder';
+import MembershipChecker from './MembershipChecker';
+import Menu from './Menu';
+import Numpad from './Numpad';
+import OrdersGridWithDetail from "../OrdersGridWithDetail";
+
+import { BarRenderMode, OrderStatus } from '../../@types';
+import type { SnackbarKey } from 'notistack';
+import type { CurrentOrderItem, MenuItem, Order } from "../../@types";
 
 interface BarProps {
     renderMode: BarRenderMode
@@ -30,7 +34,13 @@ interface BarProps {
 
 const ORDER_GRID_COLUMNS = { xs: 1, xl: 2 };
 
+const Column = styled(Stack)(({ theme }) => ({
+    padding: theme.spacing(2),
+    justifyContent: "space-between",
+}));
+
 function Bar({ renderMode }: BarProps) {
+    const isFullView = renderMode === BarRenderMode.FULL;
     const [currentOrder, setCurrentOrder] = useState<CurrentOrderItem[]>([])
     const [mealNote, setMealNote] = useState('')
     const [orderNote, setOrderNote] = useState('')
@@ -103,7 +113,7 @@ function Bar({ renderMode }: BarProps) {
         setOrderNumber(order.customer_number)
         setOrderToEdit(order)
         enqueueSnackbar('You are editing an order', {
-            action: <MuiButton onClick={() => clearCurrentOrder()}>Cancel edit</MuiButton>,
+            action: <Button onClick={() => clearCurrentOrder()}>Cancel edit</Button>,
             anchorOrigin: {
                 horizontal: 'center', vertical: 'top'
             },
@@ -199,9 +209,9 @@ function Bar({ renderMode }: BarProps) {
                     clearCurrentOrder()
                     enqueueSnackbar('Order created!', {
                         action: key =>
-                            <MuiButton onClick={() => undoOrders(orders, key)}>
+                            <Button onClick={() => undoOrders(orders, key)}>
                                 Undo
-                            </MuiButton>,
+                            </Button>,
                         variant: 'success',
                     })
                 })
@@ -228,8 +238,8 @@ function Bar({ renderMode }: BarProps) {
                 enqueueSnackbar('Failed to undo order!', {
                     action: key =>
                         <>
-                            <MuiButton onClick={() => undoOrders(orders, key)}>Retry</MuiButton>
-                            <MuiIconButton
+                            <Button onClick={() => undoOrders(orders, key)}>Retry</Button>
+                            <IconButton
                                 aria-label='Close'
                                 color='inherit'
                                 onClick={() => closeSnackbar(key)}
@@ -237,7 +247,7 @@ function Bar({ renderMode }: BarProps) {
                                 title='Close'
                             >
                                 <MdClose />
-                            </MuiIconButton>
+                            </IconButton>
                         </>,
                     persist: true,
                     variant: 'error',
@@ -246,169 +256,110 @@ function Bar({ renderMode }: BarProps) {
         closeSnackbar(snackbarKey)
     }
 
-    function renderFullView() {
-        return (
-            <>
-                <Row xs={3} className="bar-top">
-                    <Col className="my-2 d-flex flex-row justify-content-center">
-                        <h3 className="pr-2 pt-2 align-self-center">Current Order</h3>
-                        <Button id="btn-undo" variant="outline-danger" onClick={clearCurrentOrder}>
-                            <FaUndo />
-                        </Button>
-                    </Col>
-                    <Col className="my-2 d-flex flex-column justify-content-center">
-                        <h3 className="pt-2 align-self-center">Menu</h3>
-                    </Col>
-                    <Col className="my-2 d-flex flex-column justify-content-center">
-                        <h3 className="pt-2 align-self-center">All Orders</h3>
-                    </Col>
-                </Row>
-                <Row xs={3}>
-                    <Col id="bar-checkout-column">
-                        <Container className="h-100">
-                            <Row className="align-items-start h-40">
-                                <Col className="h-100 overflow-auto">
-                                    <CurrentOrder
-                                        currentOrder={currentOrder}
-                                        decrementItemQuantity={decrementItemQuantity}
-                                        incrementItemQuantity={incrementItemQuantity}
-                                    />
-                                </Col>
-                            </Row>
-                            <Row className="align-items-end h-60">
-                                <Col>
-                                    <Numpad
-                                        addToOrderNumber={addToOrderNumber}
-                                        clearOrderNumber={() => setOrderNumber('')}
-                                        onSubmitOrder={onSubmitOrder}
-                                        onOrderNoteChange={e => setOrderNote(e.target.value)}
-                                        orderIsValid={validateCurrentOrder()}
-                                        orderNote={orderNote}
-                                        orderNumber={orderNumber}
-                                        showSubmitSpinner={isSubmittingOrder}
-                                    />
-                                </Col>
-                            </Row>
-                        </Container>
-                    </Col>
-                    <Col id="bar-menu-column">
-                        <Container className='h-100 d-flex flex-column'>
-                            <input
-                                id='meal-note-input'
-                                onChange={e => setMealNote(e.target.value)}
-                                placeholder="Modification"
-                                value={mealNote}
-                                type="text"
-                            />
-                            <Row className="menu align-items-start">
-                                <Col>
-                                    <Menu onMenuItemClick={onMenuItemClick} />
-                                </Col>
-                            </Row>
-                            <Row className="membership-row align-items-end justify-content-center">
-                                <Col className="membership-checker-container">
-                                    <MembershipChecker />
-                                </Col>
-                            </Row>
-                        </Container>
-                    </Col>
-                    <Col id="bar-all-orders-column">
-                        <OrdersGridWithDetail
-                            columns={ORDER_GRID_COLUMNS}
-                            disableClaim
-                            menuItems={menuItems}
-                            orders={orders}
-                            onEditOrderClick={editOrder}
-                        />
-                    </Col>
-                </Row>
-            </>
-        )
-    }
+    const flex = `1 1 ${isFullView ? "33.33" : "50"}%`;
 
-    function renderWaiterView() {
-        return (
-            <>
-                <Row xs={2} className="bar-top">
-                    <Col className="my-2 d-flex flex-row justify-content-center">
-                        <h3 className="pr-2 pt-2 align-self-center">Current Order</h3>
-                        <Button id="btn-undo" variant="outline-danger" onClick={clearCurrentOrder}>
-                            <FaUndo />
-                        </Button>
-                    </Col>
-                    <Col className="my-2 d-flex flex-column justify-content-center">
-                        <h3 className="pt-2 align-self-center">Menu</h3>
-                    </Col>
-                </Row>
-                <Row xs={2}>
-                    <Col id="bar-checkout-column">
-                        <Container className="h-100">
-                            <Row className="align-items-start h-40">
-                                <Col className="h-100 overflow-auto">
-                                    <CurrentOrder
-                                        currentOrder={currentOrder}
-                                        decrementItemQuantity={decrementItemQuantity}
-                                        incrementItemQuantity={incrementItemQuantity}
-                                    />
-                                </Col>
-                            </Row>
-                            <Row className="align-items-end h-60">
-                                <Col>
-                                    <Numpad
-                                        addToOrderNumber={addToOrderNumber}
-                                        clearOrderNumber={() => setOrderNumber('')}
-                                        onSubmitOrder={onSubmitOrder}
-                                        onOrderNoteChange={e => setOrderNote(e.target.value)}
-                                        orderIsValid={validateCurrentOrder()}
-                                        orderNote={orderNote}
-                                        orderNumber={orderNumber}
-                                        showSubmitSpinner={isSubmittingOrder}
-                                    />
-                                </Col>
-                            </Row>
-                        </Container>
-                    </Col>
-                    <Col id="bar-menu-column">
-                        <Container className='h-100 d-flex flex-column'>
-                            <input
-                                id='meal-note-input'
-                                onChange={e => setMealNote(e.target.value)}
-                                placeholder="Modification"
-                                value={mealNote}
-                                type="text"
-                            />
-                            <Col>
-                                <Row className="menu align-items-start" id="waiter-menu-column">
-                                    <Col>
-                                        <Menu onMenuItemClick={onMenuItemClick} />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col className="align-items-end border-bottom" id="waiter-all-orders-column">
-                                        <OrdersGridWithDetail
-                                            columns={ORDER_GRID_COLUMNS}
-                                            disableClaim
-                                            menuItems={menuItems}
-                                            orders={orders}
-                                            onEditOrderClick={editOrder}
-                                        />
-                                    </Col>
-                                </Row>
-                            </Col>
-                        </Container>
-                    </Col>
-                </Row>
-            </>
-        )
-    }
+    const ordersGrid = (
+        <OrdersGridWithDetail
+            columns={ORDER_GRID_COLUMNS}
+            disableClaim
+            menuItems={menuItems}
+            orders={orders}
+            onEditOrderClick={editOrder}
+        />
+    );
 
     return (
-        <Container fluid className="flex-grow-1">
-            {renderMode === BarRenderMode.FULL
-                ? renderFullView()
-                : renderWaiterView()
-            }
-        </Container>
+        <Stack direction="row" height="100%" width="100%">
+            <Column flex={flex}>
+                <Box flexGrow={1} overflow="auto">
+                    <Box textAlign="center" marginBottom={1}>
+                        <Typography
+                            align="center"
+                            component="h2"
+                            display="inline-block"
+                            fontWeight="bold"
+                            marginRight={0.5}
+                            variant="h4"
+                        >
+                            Current order
+                        </Typography>
+                        <IconButton
+                            aria-label="Clear order"
+                            color="error"
+                            disabled={currentOrder.length === 0}
+                            onClick={clearCurrentOrder}
+                            sx={{ verticalAlign: "bottom" }}
+                        >
+                            <FaUndo />
+                        </IconButton>
+                    </Box>
+                    <Box
+                        flex="1 0 0"
+                        component={CurrentOrder}
+                        currentOrder={currentOrder}
+                        decrementItemQuantity={decrementItemQuantity}
+                        incrementItemQuantity={incrementItemQuantity}
+                    />
+                </Box>
+                <Numpad
+                    addToOrderNumber={addToOrderNumber}
+                    clearOrderNumber={() => setOrderNumber('')}
+                    onSubmitOrder={onSubmitOrder}
+                    onOrderNoteChange={e => setOrderNote(e.target.value)}
+                    orderIsValid={validateCurrentOrder()}
+                    orderNote={orderNote}
+                    orderNumber={orderNumber}
+                    showSubmitSpinner={isSubmittingOrder}
+                />
+            </Column>
+            <Column flex={flex}>
+                <Box marginBottom={2}>
+                    <Typography
+                        align="center"
+                        component="h2"
+                        fontWeight="bold"
+                        marginBottom={1}
+                        variant="h4"
+                    >
+                        Menu
+                    </Typography>
+                    <OutlinedInput
+                        aria-label="Item modification"
+                        label="Item modification"
+                        notched={false}
+                        placeholder="Item modification"
+                        value={mealNote}
+                        onChange={(e) => setMealNote(e.target.value)}
+                        size="small"
+                        sx={{
+                            width: "100%",
+                            fontSize: "1.35rem",
+                            marginBottom: 2,
+                            "& > input": { textAlign: "center" },
+                        }}
+                    />
+                    <Menu onMenuItemClick={onMenuItemClick} />
+                </Box>
+                {isFullView
+                    ? <MembershipChecker/>
+                    : ordersGrid
+                }
+            </Column>
+            {isFullView && (
+                <Column flex={flex} sx={{ justifyContent: "flex-start" }}>
+                    <Typography
+                        align="center"
+                        component="h2"
+                        fontWeight="bold"
+                        marginBottom={3}
+                        variant="h4"
+                    >
+                        All orders
+                    </Typography>
+                    {ordersGrid}
+                </Column>
+            )}
+        </Stack>
     );
 }
 

@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
 import './App.scss';
-import Bar from './Bar/Bar';
+import Bar from './Bar';
 import Header from './Header';
 import Home from './Home';
 import Kitchen from './Kitchen';
