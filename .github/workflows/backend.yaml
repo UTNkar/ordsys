@@ -4,20 +4,20 @@ on:
   push:
     branches: [ development ]
     paths:
-      - '/*requirements.txt'
-      - '/{ordsys,backend}/**'
-      - '/manage.py'
-      - '/.flake8'
-      - '/.github/workflows/backend.yaml'
+      - '*requirements.txt'
+      - '{ordsys,backend}/**'
+      - 'manage.py'
+      - '.flake8'
+      - '.github/workflows/backend.yaml'
 
   pull_request:
     branches: [ development ]
     paths:
-      - '/*requirements.txt'
-      - '/{ordsys,backend}/**'
-      - '/manage.py'
-      - '/.flake8'
-      - '/.github/workflows/backend.yaml'
+      - '*requirements.txt'
+      - '{ordsys,backend}/**'
+      - 'manage.py'
+      - '.flake8'
+      - '.github/workflows/backend.yaml'
 
   workflow_dispatch:
 
