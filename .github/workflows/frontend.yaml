@@ -4,14 +4,14 @@ on:
   push:
     branches: [ development ]
     paths:
-      - '/frontend/**'
-      - '/.github/workflows/frontend.yaml'
+      - 'frontend/**'
+      - '.github/workflows/frontend.yaml'
 
   pull_request:
     branches: [ development ]
     paths:
-      - '/frontend/**'
-      - '/.github/workflows/frontend.yaml'
+      - 'frontend/**'
+      - '.github/workflows/frontend.yaml'
 
   workflow_dispatch:
 
