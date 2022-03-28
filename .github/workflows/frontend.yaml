@@ -1,0 +1,43 @@
+name: Frontend
+
+on:
+  push:
+    branches: [ development ]
+    paths:
+      - '/frontend/**'
+      - '/.github/workflows/frontend.yaml'
+
+  pull_request:
+    branches: [ development ]
+    paths:
+      - '/frontend/**'
+      - '/.github/workflows/frontend.yaml'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Test and build frontend bundle
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [ 16.x ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node ${{ matrix.node }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'yarn'
+          cache-dependency-path: 'frontend/yarn.lock'
+
+      - name: Install dependencies
+        run: yarn install --prefer-offline --frozen-lockfile --non-interactive
+        working-directory: ./frontend
+
+      #- name: Run tests
+      #  run: yarn test
+      #  working-directory: ./frontend
