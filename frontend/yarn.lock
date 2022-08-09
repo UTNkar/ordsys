@@ -1918,10 +1918,10 @@
     "@svgr/plugin-svgo" "^5.5.0"
     loader-utils "^2.0.0"
 
-"@testing-library/dom@8.11.4", "@testing-library/dom@^8.0.0":
-  version "8.11.4"
-  resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-8.11.4.tgz#dc94d830b862e7a20686b0379eefd931baf0445b"
-  integrity sha512-7vZ6ZoBEbr6bfEM89W1nzl0vHbuI0g0kRrI0hwSXH3epnuqGO3KulFLQCKfmmW+60t7e4sevAkJPASSMmnNCRw==
+"@testing-library/dom@8.17.1", "@testing-library/dom@^8.0.0":
+  version "8.17.1"
+  resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-8.17.1.tgz#2d7af4ff6dad8d837630fecd08835aee08320ad7"
+  integrity sha512-KnH2MnJUzmFNPW6RIKfd+zf2Wue8mEKX0M3cpX6aKl5ZXrJM1/c/Pc8c2xDNYQCnJO48Sm5ITbMXgqTr3h4jxQ==
   dependencies:
     "@babel/code-frame" "^7.10.4"
     "@babel/runtime" "^7.12.5"
