@@ -1,7 +1,7 @@
 -r requirements.txt
 
 # Sentry for logging
-sentry-sdk==1.5.8
+sentry-sdk==1.9.6
 
 # Postgresql
 psycopg2==2.9.3
