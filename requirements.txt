@@ -6,7 +6,7 @@ channels==3.0.4
 channels_redis==3.4.0
 
 # Django
-Django[argon2]==4.0.3
+Django[argon2]==4.1.1
 django-cors-headers==3.11.0
 django-filter==21.1
 djangorestframework==3.13.1
