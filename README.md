@@ -4,7 +4,8 @@ OrdSys is a web application designed to create, display, and manage order ticket
 various events held by the Uppsala Union of Engineering and Science Students. It is written in Python3 and Javascript 
 using Django and PostgreSQL for the backend and React & Bootstrap for the frontend. 
 
-![OrdSys Front Page](https://i.ibb.co/D80JhCJ/ordsys.png)
+![OrdSys Front Page](https://user-images.githubusercontent.com/55285451/222741000-bef088f4-3945-4cb6-8c42-3000a8af3b11.png)
+
 
 ## Requirements
 
