@@ -37,8 +37,8 @@ On mac run `brew install redis`
 If you don't, install them using `$ pip install virtualenv` or `$ pip install virtualenvwrapper-win`.
 2. Create a new virtual environment with `$ mkvirtualenv venv`. This will create a virtual environment called `venv` 
 and automatically enter it.
-3. Install the required Python dependencies with `(venv) $ pip install -r requirements.txt`.
-If the versions are mis-matched, you may have to install each package of `requirements.txt` manually.
+3. Install the required Python dependencies with `(venv) $ pip install -r dev-requirements.txt`.
+If the versions are mis-matched, you may have to install each package of `dev-requirements.txt` manually.
 
 ### Setting up the database
 
