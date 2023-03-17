@@ -9,15 +9,7 @@ import {
 } from "@mui/icons-material";
 
 import type { AlertColor } from "@mui/material";
-import type { SnackbarKey } from "notistack";
-
-interface SnackbarContentProps {
-  action?: React.ReactNode | ((key: SnackbarKey) => React.ReactNode);
-  closeSnackbar: (key?: SnackbarKey) => void;
-  message: string;
-  variant: AlertColor;
-  snackbarKey: SnackbarKey;
-}
+import { CustomContentProps, useSnackbar } from "notistack";
 
 const ICON_PROPS = Object.freeze({ sx: { fontSize: "2rem" } });
 
@@ -28,10 +20,11 @@ const ICON_MAPPING: Record<AlertColor, React.ReactNode> = Object.freeze({
   warning: <WarningIcon {...ICON_PROPS} />,
 });
 
-const SnackbarContent = React.forwardRef<HTMLDivElement, SnackbarContentProps>(
-  ({ action, closeSnackbar, message, snackbarKey, variant }, ref) => {
-    const _action = typeof action === "function" ? action(snackbarKey) : action;
-
+const SnackbarContent = React.forwardRef<HTMLDivElement, CustomContentProps>(
+  ({ action, message, variant, id }, ref) => {
+    const { closeSnackbar } = useSnackbar();
+    const _action = typeof action === "function" ? action(id) : action;
+    const severity = variant as AlertColor;
     return (
       <Alert
         ref={ref}
@@ -40,17 +33,17 @@ const SnackbarContent = React.forwardRef<HTMLDivElement, SnackbarContentProps>(
             <IconButton
               aria-label="Close"
               color="inherit"
-              onClick={() => closeSnackbar(snackbarKey)}
+              onClick={() => closeSnackbar(id)}
             >
               <CloseIcon />
             </IconButton>
           )
         }
         iconMapping={ICON_MAPPING}
-        severity={variant}
+        severity={severity}
         variant="filled"
         sx={{
-          color: (theme) => theme.palette[variant].contrastText,
+          color: (theme) => theme.palette[severity].contrastText,
           minWidth: 300,
           boxShadow: 24,
         }}
