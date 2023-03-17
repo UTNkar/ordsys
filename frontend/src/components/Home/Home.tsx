@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Typography } from "@mui/material";
+import { Container } from "@mui/material";
 
 import HomeRow from "./HomeRow";
 import { ReactComponent as BeerIcon } from "../../assets/icons/beer.svg";
