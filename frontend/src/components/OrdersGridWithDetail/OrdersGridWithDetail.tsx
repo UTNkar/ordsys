@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 
 import OrderDetail from "../OrderDetail";
 import OrdersGrid from "../OrdersGrid";
