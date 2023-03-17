@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 
-import { useMenuItems, useSnackbar } from "../../hooks";
+import { useMenuItems } from "../../hooks";
 import {
     useDeleteOrderMutation,
     useUpdateOrderMutation
@@ -18,6 +18,7 @@ import OrderTicket from "../OrderTicket";
 
 import { OrderStatus } from "../../@types";
 import type { Order } from "../../@types";
+import { useSnackbar } from "notistack";
 
 interface OrderDetailProps {
     open: boolean,

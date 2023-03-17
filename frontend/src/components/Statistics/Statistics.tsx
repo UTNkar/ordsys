@@ -10,7 +10,8 @@ import { subDays } from "date-fns";
 import sv from "date-fns/locale/sv";
 
 import { CanvasJSChart } from "../../libs/canvasjs.react";
-import { useOrderHistory, useSnackbar } from "../../hooks";
+import { useOrderHistory } from "../../hooks";
+import { useSnackbar } from "notistack";
 
 const DATE_TIME_PICKER_COMMON_PROPS = Object.freeze({
   mask: "____-__-__ __:__",
