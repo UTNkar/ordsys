@@ -23,7 +23,7 @@ export default function PickupColumn({
                 marginBottom={5}
                 variant="h3"
             >
-                {done ? "DONE" : "IN PROGRESS"}
+                {done ? "READY FOR PICKUP" : "IN PROGRESS"}
             </Typography>
             <PickupOrders done={done} orders={orders} />
         </Box>
