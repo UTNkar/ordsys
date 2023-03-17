@@ -1,5 +1,5 @@
 # async functionality
-asgiref==3.5.0
+asgiref==3.6.0
 
 # Websockets
 channels==3.0.4
