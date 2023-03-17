@@ -63,15 +63,6 @@ const overviewLinks = [
 function Home() {
     return (
         <Container maxWidth="md" sx={{ paddingY: 4 }}>
-            <Typography
-                align="center"
-                component="h1"
-                fontWeight="bold"
-                marginBottom={4}
-                variant="h3"
-            >
-                Navigation links
-            </Typography>
             <HomeRow title="Ordering" links={orderLinks} />
             <HomeRow title="Fulfilling/Delivery" links={deliveryLinks} />
             <HomeRow title="Overview" links={overviewLinks} />
