@@ -35,6 +35,11 @@ const ACTION_BUTTON_COMMON_PROPS: {} = {
     variant: "contained",
 };
 
+const LoadingButtonStyle = {
+    fontSize: "1.4rem",
+    color: "white"
+}
+
 export default function OrderDetail({
     open,
     onClose,
@@ -170,6 +175,7 @@ export default function OrderDetail({
                         color="success"
                         disabled={isLoading}
                         loading={isDeliveringOrder}
+                        sx={LoadingButtonStyle}
                         onClick={() => deliverOrder({
                             orderId: order!!.id,
                             body: {status: OrderStatus.DELIVERED}
@@ -183,6 +189,7 @@ export default function OrderDetail({
                         {...ACTION_BUTTON_COMMON_PROPS}
                         color="warning"
                         disabled={isLoading}
+                        sx={LoadingButtonStyle}
                         onClick={() => {
                             onEditOrderClick(order!!);
                             onClose();
@@ -197,6 +204,7 @@ export default function OrderDetail({
                         color="error"
                         disabled={isLoading}
                         loading={isDeletingOrder}
+                        sx={LoadingButtonStyle}
                         onClick={() => deleteOrder(order!!.id)}
                     >
                         Delete
