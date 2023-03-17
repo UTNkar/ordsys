@@ -1,12 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import HeaderLogoutDialog from './HeaderLogoutDialog';
 import {
+    Alert,
     AppBar,
     Box,
+    IconButton,
     Toolbar,
+    Tooltip,
     Typography,
     useMediaQuery
 } from '@mui/material';
+import {
+    HelpOutline as HelpIcon,
+    Home as HomeIcon,
+    Logout as LogoutIcon
+} from "@mui/icons-material";
 
 import UtnLogo from "../../assets/images/utn.png";
 import UtnarmLogo from "../../assets/images/utnarm.png";
@@ -33,6 +42,7 @@ interface HeaderProps {
 
 function Header({ organisation }: HeaderProps) {
     const [date, setDate] = useState(new Date().toLocaleString('sv-SE'))
+    const [openLogoutModal, setOpenLogoutModal] = useState(false)
     const dateIntervalId = useRef<number | undefined>(undefined)
 
     // No point in showing date and time on mobile devices as they already have a clock in the top right corner
@@ -47,24 +57,60 @@ function Header({ organisation }: HeaderProps) {
         }
     }, [showDateAndTime])
 
+    const onLogoutClick = useCallback(() => {
+        console.log("Hello")
+    }, []);
+
     return (
         <AppBar position="static">
+
             <Toolbar sx={{ justifyContent: "space-between" }}>
-                <Link to="/">
-                    <Box
-                        height={{ xs: "2rem", md: "2.5rem" }}
-                        component="img"
-                        src={THEME_TO_IMAGE[organisation]}
-                        alt="Organisation logo"
-                    />
-                </Link>
-                {showDateAndTime && (
-                    <Typography variant="h4" component="p">
-                        {date}
-                    </Typography>
-                )}
+                <Tooltip followCursor={true} title="Return to home screen">
+                    <Link to="/">
+                        <Box sx={{ alignItems: "center", display: "flex" }}>
+                            <Box
+                                height={{ xs: "2rem", md: "2.5rem" }}
+                                component="img"
+                                src={THEME_TO_IMAGE[organisation]}
+                                alt="Organisation logo"
+                            />
+                            <IconButton
+                                color="iconButtonWhite"
+                                size="medium">
+                                <HomeIcon fontSize="large" />
+                            </IconButton>
+                        </Box>
+                    </Link>
+                </Tooltip>
+
+                <Box
+                    sx={{ alignItems: "center", display: "flex" }}
+                    id="rightDiv">
+                    <Tooltip title="Read the OrdSys documentation">
+                        <IconButton
+                            color="iconButtonWhite"
+                            href="https://docs.utn.se/ordsys/frontend"
+                            target="_blank">
+                            <HelpIcon fontSize="large" />
+                        </IconButton>
+                    </Tooltip>
+                    {showDateAndTime && (
+                        <Typography variant="h4" component="p" paddingBottom={"0.25rem"}>
+                            {date}
+                        </Typography>
+                    )}
+                    <Tooltip title="Log out">
+                        <IconButton
+                            color="iconButtonWhite"
+                            onClick={() => setOpenLogoutModal(true)}
+                        >
+                            <LogoutIcon fontSize="large" />
+                        </IconButton>
+                    </Tooltip>
+                </Box>
             </Toolbar>
-        </AppBar>
+            <HeaderLogoutDialog openLogoutModal={openLogoutModal} setOpenLogoutModal={setOpenLogoutModal} />
+        </AppBar >
     )
 }
 
