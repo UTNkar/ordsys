@@ -10,7 +10,7 @@
     "@mui/lab": "^5.0.0-alpha.123",
     "@mui/material": "^5.11.13",
     "@mui/x-date-pickers": "^6.0.2",
-    "@reduxjs/toolkit": "^1.8.0",
+    "@reduxjs/toolkit": "^1.9.3",
     "@testing-library/dom": "9.0.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.4",
@@ -28,7 +28,6 @@
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.2.2",
     "react-scripts": "^5.0.1",
-    "redux": "^4.1.2",
     "typescript": "^5.0.2"
   },
   "scripts": {
