@@ -197,10 +197,10 @@ export default function OrderTicket({
                 <>
                     <Divider variant="middle" sx={{ marginY: 1 }} />
                     <Box component="p" marginBottom={0} textAlign="left">
-                        <Typography variant="h5" component="span" fontWeight="bold">
+                        <Typography variant="h6" component="span" fontWeight="bold">
                             Note:
                         </Typography>
-                        <Typography variant="h5" component="span">
+                        <Typography variant="h6" component="span">
                             {` ${orderNote}`}
                         </Typography>
                     </Box>
