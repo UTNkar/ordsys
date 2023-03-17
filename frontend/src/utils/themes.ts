@@ -4,9 +4,9 @@ import { createTheme, darken, lighten, responsiveFontSizes } from "@mui/material
 const typography = {
     fontFamily: "'TeXGyreAdventor', sans-serif",
     button: {
-        fontWeight: "bold",
-    },
-};
+        textTransform: "normal"
+    }
+}
 
 const paletteBase = {
     divider: "rgba(0, 0, 0, 0.25)",
