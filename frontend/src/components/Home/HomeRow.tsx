@@ -16,7 +16,6 @@ export default function HomeRow({ title, links }: HomeRowProps) {
                 id={labelId}
                 align="center"
                 component="h2"
-                fontWeight="bold"
                 variant="h4"
             >
                 {title}
