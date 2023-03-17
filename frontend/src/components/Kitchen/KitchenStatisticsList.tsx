@@ -1,5 +1,5 @@
 import React from "react";
-import { List, ListItem, ListItemText, Typography } from "@mui/material";
+import { Grid, List, ListItem, ListItemText, Typography } from "@mui/material";
 
 import type { MenuItem, Order } from '../../@types';
 
@@ -26,16 +26,14 @@ export default function KitchenStatisticsList({
             .filter(({ quantity }) => quantity > 0);
 
     return (
-        <List dense sx={{ paddingLeft: 1.5 }}>
+        <Grid container columns={2} spacing={1} sx={{ paddingLeft: 1.5 }}>
             {items.map(({ id, name, quantity }) => (
-                <ListItem key={id} disablePadding>
-                    <ListItemText disableTypography>
-                        <Typography component="p" variant="h6">
-                            {`${quantity}x ${name}`}
-                        </Typography>
-                    </ListItemText>
-                </ListItem>
+                <Grid item xs={1} key={id}>
+                    <Typography component="p" variant="h6">
+                        {`${quantity}x ${name}`}
+                    </Typography>
+                </Grid>
             ))}
-        </List>
+        </Grid>
     )
 }

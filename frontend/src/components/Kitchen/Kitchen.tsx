@@ -17,9 +17,9 @@ function Kitchen({ renderMode }: KitchenProps) {
 
     const beveragesOnly = renderMode === KitchenRenderMode.BEVERAGES;
     const orders = allOrders.filter((order) => order.beverages_only === beveragesOnly);
-    const ordersWaiting    = orders.filter(order => order.status === OrderStatus.WAITING)
+    const ordersWaiting = orders.filter(order => order.status === OrderStatus.WAITING)
     const ordersInProgress = orders.filter(order => order.status === OrderStatus.IN_PROGRESS)
-    const ordersDone       = orders.filter(order => order.status === OrderStatus.DONE)
+    const ordersDone = orders.filter(order => order.status === OrderStatus.DONE)
 
     return (
         <Stack flexGrow={1} direction="row" spacing={2} padding={2}>
@@ -43,13 +43,7 @@ function Kitchen({ renderMode }: KitchenProps) {
                 <Divider sx={{ marginY: 2 }} />
                 <KitchenStatisticsColumn
                     menuItems={menuItems}
-                    orders={ordersWaiting}
-                    title="Waiting"
-                />
-                <KitchenStatisticsColumn
-                    menuItems={menuItems}
-                    orders={ordersInProgress}
-                    title="In progress"
+                    orders={[...ordersWaiting, ...ordersInProgress]}
                 />
             </KitchenColumn>
         </Stack>

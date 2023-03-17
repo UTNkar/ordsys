@@ -7,20 +7,18 @@ import type { MenuItem, Order } from '../../@types';
 
 interface KitchenStatisticsColumnProps {
     menuItems: MenuItem[],
-    orders: Order[],
-    title: string,
+    orders: Order[]
 }
 
 export default function KitchenStatisticsColumn({
-    title,
     ...rest
 }: KitchenStatisticsColumnProps) {
     return (
-        <Box display="inline-block" width="50%" sx={{ verticalAlign: "top" }}>
+        <Box display="inline-block" width="100%" sx={{ verticalAlign: "top" }}>
             {rest.orders.length > 0 && (
                 <>
-                    <Typography fontWeight="bold" component="h3" variant="h5">
-                        {title}
+                    <Typography fontWeight="bold" component="h3" variant="h5" gutterBottom>
+                        Items waiting and in progress
                     </Typography>
                     <KitchenStatisticsList {...rest} />
                 </>
