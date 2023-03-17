@@ -35,7 +35,7 @@ const Menu = React.memo(function Menu({ onMenuItemClick }: MenuProps) {
                                 md: "12px",
                                 lg: "15px"
                             },
-                            fontSize: "1.25rem"
+                            fontSize: "1.75rem"
                         }}
                     >
                         {item.item_name}
