@@ -18,7 +18,7 @@ function HomeButton({ to, icon, label }: HomeButtonProps) {
             variant="outlined"
             component={RouterLink}
             to={to}
-            sx={{ flexDirection: "column" }}
+            sx={{ flexDirection: "column", color: "black" }}
         >
             <Box
                 aria-labelledby={labelId}
