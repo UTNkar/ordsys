@@ -6,6 +6,15 @@ interface PickupOrderNumberProps {
     isDone: boolean
 }
 
+const isDoneStyle = {
+    fontSize: "6.5rem", 
+    paddingY: "0.5rem"
+}
+const inProgressStyle = {
+    fontSize: "5rem", 
+    paddingY: "0.5rem"
+}
+
 function PickupOrderNumber({ orderNumber, isDone }: PickupOrderNumberProps) {
     return (
         <Box
@@ -20,7 +29,7 @@ function PickupOrderNumber({ orderNumber, isDone }: PickupOrderNumberProps) {
                 align="center"
                 color={isDone ? "#fff" : undefined}
                 component="p"
-                variant={isDone ? "h1" : "h2"}
+                sx={isDone ? isDoneStyle : inProgressStyle}
             >
                 {`# ${orderNumber}`}
             </Typography>
