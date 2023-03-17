@@ -82,6 +82,7 @@ export default function OrderTicket({
             <IconButton
                 aria-label={`Mark order as ${isOrderDone ? "in progress" : "waiting"}.`}
                 color="inherit"
+                sx= {{border: "1px solid gray", padding: "8px 16px", borderRadius: "5px" }}
                 onClick={() => changeOrderStatus(
                     isOrderDone ? OrderStatus.IN_PROGRESS : OrderStatus.WAITING
                 )}
@@ -93,6 +94,7 @@ export default function OrderTicket({
             <IconButton
                 aria-label={`Mark order as ${isOrderWaiting ? "in progress" : "done"}.`}
                 color="inherit"
+                sx= {{border: "1px solid gray", padding: "8px 16px", borderRadius: "5px" }}
                 onClick={() => changeOrderStatus(
                     isOrderWaiting ? OrderStatus.IN_PROGRESS : OrderStatus.DONE
                 )}
