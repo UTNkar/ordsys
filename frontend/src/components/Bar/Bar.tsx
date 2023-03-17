@@ -1,40 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Row } from 'react-bootstrap';
-import { FaUndo } from 'react-icons/fa';
-import { MdClose } from 'react-icons/md';
-import { Button as MuiButton, IconButton as MuiIconButton } from '@mui/material';
-import { SnackbarKey, useSnackbar } from 'notistack';
-import { useMenuItems, useOrdersWithItems } from '../../hooks';
-import './Bar.scss';
-import AllOrders from './AllOrders';
-import CurrentOrder from './CurrentOrder';
-import Menu from './Menu';
-import OrderNumber from './OrderNumber';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
-    BarRenderMode,
-    CurrentOrderItem,
-    MenuItem,
-    Order,
-    OrderStatus,
-} from '../../@types';
-import MembershipChecker from '../MembershipChecker/MembershipChecker';
+    Box,
+    Button,
+    IconButton,
+    OutlinedInput,
+    Stack,
+    Typography,
+    styled,
+} from "@mui/material";
+import {
+    CloseRounded as CloseIcon,
+    ReplayRounded as UndoIcon,
+} from "@mui/icons-material";
+
+import { useMenuItems, useOrdersWithItems, useSnackbar } from '../../hooks';
 import {
     useCreateOrderMutation,
     useDeleteOrderMutation,
     useUpdateOrderContentsMutation,
 } from "../../api/backend";
+import CurrentOrder from './CurrentOrder';
+import MembershipChecker from './MembershipChecker';
+import Menu from './Menu';
+import Numpad from './Numpad';
+import OrdersGridWithDetail from "../OrdersGridWithDetail";
+
+import { BarRenderMode, OrderStatus } from '../../@types';
+import type { SnackbarKey } from 'notistack';
+import type { CurrentOrderItem, MenuItem, Order } from "../../@types";
 
 interface BarProps {
     renderMode: BarRenderMode
 }
 
-function Bar({ renderMode }: BarProps) {
-    const isAscSort = renderMode === BarRenderMode.WAITER || renderMode === BarRenderMode.HISTORY;
-    const queryParams =
-        renderMode === BarRenderMode.HISTORY
-            ? "?max_hours=1"
-            : `?exclude_status=${OrderStatus.DELIVERED}`;
+const ORDER_GRID_COLUMNS = { xs: 1, xl: 2 };
 
+const Column = styled(Stack)(({ theme }) => ({
+    padding: theme.spacing(2),
+    justifyContent: "space-between",
+}));
+
+const SnackbarButton = styled(Button)(() => ({
+    color: "inherit",
+    fontSize: "1.125rem",
+    paddingTop: "3px",
+    paddingBottom: "3px",
+}));
+
+function Bar({ renderMode }: BarProps) {
+    const isFullView = renderMode === BarRenderMode.FULL;
     const [currentOrder, setCurrentOrder] = useState<CurrentOrderItem[]>([])
     const [mealNote, setMealNote] = useState('')
     const [orderNote, setOrderNote] = useState('')
@@ -43,7 +57,10 @@ function Bar({ renderMode }: BarProps) {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
     const { menuItems } = useMenuItems();
-    const { orders } = useOrdersWithItems(queryParams, isAscSort);
+    const { orders } = useOrdersWithItems(
+        `?exclude_status=${OrderStatus.DELIVERED}`,
+        renderMode === BarRenderMode.WAITER,
+    );
     const [createOrder, { isLoading: isCreatingOrder }] = useCreateOrderMutation();
     const [deleteOrder, { isLoading: isDeletingOrder }] = useDeleteOrderMutation();
     const [updateOrder, { isLoading: isUpdatingOrder }] = useUpdateOrderContentsMutation();
@@ -52,38 +69,42 @@ function Bar({ renderMode }: BarProps) {
 
     useEffect(() => closeSnackbar, [closeSnackbar]);
 
-    function addToOrderNumber(digit: number) {
-        setOrderNumber(((Number(orderNumber) % 10) * 10 + digit).toString())
-    }
+    const addToOrderNumber = useCallback((digit: number) => {
+        setOrderNumber((previous) => ((Number(previous) % 10) * 10 + digit).toString());
+    }, []);
 
-    function clearCurrentOrder() {
+    const clearCurrentOrder = useCallback(() => {
         closeSnackbar()
         setCurrentOrder([])
         setMealNote('')
         setOrderNote('')
         setOrderNumber('')
         setOrderToEdit(null)
-    }
+    }, [closeSnackbar]);
 
-    function decrementItemQuantity(item: CurrentOrderItem) {
-        if (item.quantity === 1) {
-            setCurrentOrder(currentOrder.filter(order =>
-                order.id !== item.id || order.mealNote !== item.mealNote
-            ))
-        } else {
-            const index = currentOrder.indexOf(item)
-            currentOrder[index].quantity -= 1
-            setCurrentOrder(currentOrder.slice(0))
-        }
-    }
+    const decrementItemQuantity = useCallback((item: CurrentOrderItem) => {
+        setCurrentOrder((previous) => {
+            if (item.quantity === 1) {
+                return previous.filter(({ id, mealNote }) =>
+                    id !== item.id || mealNote !== item.mealNote
+                )
+            } else {
+                const index = previous.indexOf(item)
+                previous[index].quantity -= 1
+                return previous.slice(0);
+            }
+        });
+    }, []);
 
-    function incrementItemQuantity(item: CurrentOrderItem) {
-        const index = currentOrder.indexOf(item)
-        currentOrder[index].quantity += 1
-        setCurrentOrder(currentOrder.slice(0))
-    }
+    const incrementItemQuantity = useCallback((item: CurrentOrderItem) => {
+        setCurrentOrder((previous) => {
+            const index = previous.indexOf(item);
+            previous[index].quantity += 1;
+            return previous.slice(0);
+        });
+    }, []);
 
-    function editOrder(order: Order) {
+    const editOrder = useCallback((order: Order) => {
         const orderToEdit = order.order_items.map(orderItem => {
             // TODO ensure menuItem is not undefined.
             //  It shouldn't be unless menu items are removed during the event and they are re-fetched
@@ -104,7 +125,11 @@ function Bar({ renderMode }: BarProps) {
         setOrderNumber(order.customer_number)
         setOrderToEdit(order)
         enqueueSnackbar('You are editing an order', {
-            action: <MuiButton onClick={() => clearCurrentOrder()}>Cancel edit</MuiButton>,
+            action: (
+                <SnackbarButton onClick={() => clearCurrentOrder()}>
+                    Cancel
+                </SnackbarButton>
+            ),
             anchorOrigin: {
                 horizontal: 'center', vertical: 'top'
             },
@@ -112,53 +137,57 @@ function Bar({ renderMode }: BarProps) {
             preventDuplicate: true,
             variant: 'warning',
         })
-    }
+    }, [clearCurrentOrder, enqueueSnackbar, menuItems]);
 
-    function modifyOrder(orderId: number, payload: Order | object | undefined = undefined) {
-        if (payload !== undefined) {
-            updateOrder({ orderId, body: payload })
-                .unwrap()
-                .then(() => {
-                    clearCurrentOrder()
-                    enqueueSnackbar('Order successfully updated!', {
+    const modifyOrder = useCallback(
+        (orderId: number, payload: Order | object | undefined = undefined) => {
+            if (payload !== undefined) {
+                updateOrder({ orderId, body: payload })
+                    .unwrap()
+                    .then(() => {
+                        clearCurrentOrder()
+                        enqueueSnackbar('Order successfully updated!', {
+                            autoHideDuration: 2500,
+                            variant: 'success',
+                        })
+                    })
+                    .catch(() => enqueueSnackbar('Order update failed!', { variant: 'error' }));
+            } else {
+                deleteOrder(orderId)
+                    .unwrap()
+                    .then(() => enqueueSnackbar('Order successfully deleted!', {
                         autoHideDuration: 2500,
                         variant: 'success',
-                    })
-                })
-                .catch(() => enqueueSnackbar('Order update failed!', { variant: 'error' }));
-        } else {
-            deleteOrder(orderId)
-                .unwrap()
-                .then(() => enqueueSnackbar('Order successfully deleted!', {
-                    autoHideDuration: 2500,
-                    variant: 'success',
-                }))
-                .catch(() => enqueueSnackbar('Order deletion failed!', { variant: 'error' }));
-        }
-    }
+                    }))
+                    .catch(() => enqueueSnackbar('Order deletion failed!', { variant: 'error' }));
+            }
+        },
+        [clearCurrentOrder, deleteOrder, enqueueSnackbar, updateOrder]
+    );
 
-    function onMenuItemClick(clickedItem: MenuItem) {
+    const onMenuItemClick = useCallback((clickedItem: MenuItem) => {
         if (orderToEdit !== null && orderToEdit.beverages_only !== clickedItem.beverage) {
             enqueueSnackbar("Can't add non-beverage to a beverage order (or vice versa)!", {
                 variant: 'error',
             })
             return
         }
-        const existingItemIndex = currentOrder.findIndex(existingItem =>
-            existingItem.id === clickedItem.id && existingItem.mealNote === mealNote
-        )
-        if (existingItemIndex === -1) {
-            const itemToAdd = { ...clickedItem, mealNote, quantity: 1 } as CurrentOrderItem
-            setCurrentOrder([...currentOrder, itemToAdd])
-            setMealNote('')
-        } else {
-            currentOrder[existingItemIndex].quantity += 1
-            setCurrentOrder(currentOrder.slice(0))
-            setMealNote('')
-        }
-    }
+        setCurrentOrder((previous) => {
+            const index = previous.findIndex((item) =>
+                item.id === clickedItem.id && item.mealNote === mealNote
+            );
+            if (index === -1) {
+                const itemToAdd = { ...clickedItem, mealNote, quantity: 1 } as CurrentOrderItem;
+                return [...previous, itemToAdd];
+            } else {
+                previous[index].quantity += 1;
+                return previous.slice(0);
+            }
+        });
+        setMealNote('');
+    }, [enqueueSnackbar, mealNote, orderToEdit]);
 
-    function onSubmitOrder(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    function onSubmitOrder(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
         const foodItems =
             currentOrder
@@ -200,9 +229,9 @@ function Bar({ renderMode }: BarProps) {
                     clearCurrentOrder()
                     enqueueSnackbar('Order created!', {
                         action: key =>
-                            <MuiButton onClick={() => undoOrders(orders, key)}>
+                            <SnackbarButton onClick={() => undoOrders(orders, key)}>
                                 Undo
-                            </MuiButton>,
+                            </SnackbarButton>,
                         variant: 'success',
                     })
                 })
@@ -223,250 +252,136 @@ function Bar({ renderMode }: BarProps) {
         return currentOrder.length > 0 && orderNumber !== ''
     }
 
-    function undoOrders(orders: Order[], snackbarKey: SnackbarKey) {
+    const undoOrders = useCallback((orders: Order[], snackbarKey: SnackbarKey) => {
         Promise.all(orders.map(({ id }) => deleteOrder(id).unwrap()))
             .catch(() => {
                 enqueueSnackbar('Failed to undo order!', {
                     action: key =>
                         <>
-                            <MuiButton onClick={() => undoOrders(orders, key)}>Retry</MuiButton>
-                            <MuiIconButton
+                            <SnackbarButton onClick={() => undoOrders(orders, key)}>
+                                Retry
+                            </SnackbarButton>
+                            <IconButton
                                 aria-label='Close'
                                 color='inherit'
                                 onClick={() => closeSnackbar(key)}
-                                size='medium'
-                                title='Close'
                             >
-                                <MdClose />
-                            </MuiIconButton>
+                                <CloseIcon />
+                            </IconButton>
                         </>,
                     persist: true,
                     variant: 'error',
                 })
             })
         closeSnackbar(snackbarKey)
-    }
+    }, [closeSnackbar, deleteOrder, enqueueSnackbar]);
 
-    function renderFullView() {
-        return (
-            <>
-                <Row xs={3} className="bar-top">
-                    <Col className="my-2 d-flex flex-row justify-content-center">
-                        <h3 className="pr-2 pt-2 align-self-center">Current Order</h3>
-                        <Button id="btn-undo" variant="outline-danger" onClick={clearCurrentOrder}>
-                            <FaUndo />
-                        </Button>
-                    </Col>
-                    <Col className="my-2 d-flex flex-column justify-content-center">
-                        <h3 className="pt-2 align-self-center">Menu</h3>
-                    </Col>
-                    <Col className="my-2 d-flex flex-column justify-content-center">
-                        <h3 className="pt-2 align-self-center">All Orders</h3>
-                    </Col>
-                </Row>
-                <Row xs={3}>
-                    <Col id="bar-checkout-column">
-                        <Container className="h-100">
-                            <Row className="align-items-start h-40">
-                                <Col className="h-100 overflow-auto">
-                                    <CurrentOrder
-                                        currentOrder={currentOrder}
-                                        decrementItemQuantity={decrementItemQuantity}
-                                        incrementItemQuantity={incrementItemQuantity}
-                                    />
-                                </Col>
-                            </Row>
-                            <Row className="align-items-end h-60">
-                                <Col>
-                                    <OrderNumber
-                                        addToOrderNumber={addToOrderNumber}
-                                        clearOrderNumber={() => setOrderNumber('')}
-                                        onSubmitOrder={onSubmitOrder}
-                                        onOrderNoteChange={e => setOrderNote(e.target.value)}
-                                        orderIsValid={validateCurrentOrder()}
-                                        orderNote={orderNote}
-                                        orderNumber={orderNumber}
-                                        showSubmitSpinner={isSubmittingOrder}
-                                    />
-                                </Col>
-                            </Row>
-                        </Container>
-                    </Col>
-                    <Col id="bar-menu-column">
-                        <Container className='h-100 d-flex flex-column'>
-                            <input
-                                id='meal-note-input'
-                                onChange={e => setMealNote(e.target.value)}
-                                placeholder="Modification"
-                                value={mealNote}
-                                type="text"
-                            />
-                            <Row className="menu align-items-start">
-                                <Col>
-                                    <Menu onMenuItemClick={onMenuItemClick} />
-                                </Col>
-                            </Row>
-                            <Row className="membership-row align-items-end justify-content-center">
-                                <Col className="membership-checker-container">
-                                    <MembershipChecker />
-                                </Col>
-                            </Row>
-                        </Container>
-                    </Col>
-                    <Col id="bar-all-orders-column">
-                        <AllOrders
-                            menuItems={menuItems}
-                            orders={orders}
-                            onOrderDelete={modifyOrder}
-                            onOrderDeliver={modifyOrder}
-                            onOrderEdit={editOrder}
-                        />
-                    </Col>
-                </Row>
-            </>
-        )
-    }
+    const flex = `1 1 ${isFullView ? "33.33" : "50"}%`;
 
-    function renderDeliveryView() {
-        return (
-            <>
-                <Row className="bar-top">
-                    <Col className=" justify-content-center">
-                        <h3 className="pt-2 align-self-center">All Orders</h3>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col id="bar-all-orders-column">
-                        <AllOrders
-                            menuItems={menuItems}
-                            orders={orders}
-                            onOrderDelete={modifyOrder}
-                            onOrderDeliver={modifyOrder}
-                            onOrderEdit={undefined}
-                        />
-                    </Col>
-                </Row>
-            </>
-        )
-    }
-
-    function renderHistoryView() {
-        return (
-            <>
-                <Row className="bar-top">
-                    <Col className=" justify-content-center">
-                        <h3 className="pt-2 align-self-center">Order History (last hour)</h3>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col id="bar-all-orders-column">
-                        <AllOrders
-                            clickableOrders={false}
-                            menuItems={menuItems}
-                            orders={orders}
-                            onOrderDelete={modifyOrder}
-                            onOrderDeliver={modifyOrder}
-                            onOrderEdit={undefined}
-                        />
-                    </Col>
-                </Row>
-            </>
-        )
-    }
-
-    function renderWaiterView() {
-        return (
-            <>
-                <Row xs={2} className="bar-top">
-                    <Col className="my-2 d-flex flex-row justify-content-center">
-                        <h3 className="pr-2 pt-2 align-self-center">Current Order</h3>
-                        <Button id="btn-undo" variant="outline-danger" onClick={clearCurrentOrder}>
-                            <FaUndo />
-                        </Button>
-                    </Col>
-                    <Col className="my-2 d-flex flex-column justify-content-center">
-                        <h3 className="pt-2 align-self-center">Menu</h3>
-                    </Col>
-                </Row>
-                <Row xs={2}>
-                    <Col id="bar-checkout-column">
-                        <Container className="h-100">
-                            <Row className="align-items-start h-40">
-                                <Col className="h-100 overflow-auto">
-                                    <CurrentOrder
-                                        currentOrder={currentOrder}
-                                        decrementItemQuantity={decrementItemQuantity}
-                                        incrementItemQuantity={incrementItemQuantity}
-                                    />
-                                </Col>
-                            </Row>
-                            <Row className="align-items-end h-60">
-                                <Col>
-                                    <OrderNumber
-                                        addToOrderNumber={addToOrderNumber}
-                                        clearOrderNumber={() => setOrderNumber('')}
-                                        onSubmitOrder={onSubmitOrder}
-                                        onOrderNoteChange={e => setOrderNote(e.target.value)}
-                                        orderIsValid={validateCurrentOrder()}
-                                        orderNote={orderNote}
-                                        orderNumber={orderNumber}
-                                        showSubmitSpinner={isSubmittingOrder}
-                                    />
-                                </Col>
-                            </Row>
-                        </Container>
-                    </Col>
-                    <Col id="bar-menu-column">
-                        <Container className='h-100 d-flex flex-column'>
-                            <input
-                                id='meal-note-input'
-                                onChange={e => setMealNote(e.target.value)}
-                                placeholder="Modification"
-                                value={mealNote}
-                                type="text"
-                            />
-                            <Col>
-                                <Row className="menu align-items-start" id="waiter-menu-column">
-                                    <Col>
-                                        <Menu onMenuItemClick={onMenuItemClick} />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col className="align-items-end border-bottom" id="waiter-all-orders-column">
-                                        <AllOrders
-                                            menuItems={menuItems}
-                                            orders={orders}
-                                            onOrderDelete={modifyOrder}
-                                            onOrderDeliver={modifyOrder}
-                                            onOrderEdit={editOrder}
-                                        />
-                                    </Col>
-                                </Row>
-                            </Col>
-                        </Container>
-                    </Col>
-                </Row>
-            </>
-        )
-    }
-
-    function selectRenderView() {
-        switch (renderMode) {
-            case (BarRenderMode.FULL):
-                return renderFullView()
-            case (BarRenderMode.DELIVERY):
-                return renderDeliveryView()
-            case (BarRenderMode.HISTORY):
-                return renderHistoryView()
-            case (BarRenderMode.WAITER):
-                return renderWaiterView()
-        }
-    }
+    const ordersGrid = (
+        <OrdersGridWithDetail
+            columns={ORDER_GRID_COLUMNS}
+            disableClaim
+            menuItems={menuItems}
+            orders={orders}
+            onEditOrderClick={editOrder}
+        />
+    );
 
     return (
-        <Container fluid className="flex-grow-1">
-            {selectRenderView()}
-        </Container>
+        <Stack direction="row" height="100%" width="100%">
+            <Column flex={flex}>
+                <Box flexGrow={1} overflow="auto">
+                    <Box textAlign="center" marginBottom={1}>
+                        <Typography
+                            align="center"
+                            component="h2"
+                            display="inline-block"
+                            fontWeight="bold"
+                            marginRight={0.5}
+                            variant="h4"
+                        >
+                            Current order
+                        </Typography>
+                        <Box position="absolute" display="inline-block">
+                            <IconButton
+                                aria-label="Clear order"
+                                color="error"
+                                disabled={currentOrder.length === 0}
+                                onClick={clearCurrentOrder}
+                                sx={{ top: -4 }}
+                            >
+                                <UndoIcon transform="rotate(-40)" fontSize="large" />
+                            </IconButton>
+                        </Box>
+                    </Box>
+                    <Box
+                        flex="1 0 0"
+                        component={CurrentOrder}
+                        currentOrder={currentOrder}
+                        decrementItemQuantity={decrementItemQuantity}
+                        incrementItemQuantity={incrementItemQuantity}
+                    />
+                </Box>
+                <Numpad
+                    addToOrderNumber={addToOrderNumber}
+                    clearOrderNumber={() => setOrderNumber('')}
+                    onSubmitOrder={onSubmitOrder}
+                    onOrderNoteChange={e => setOrderNote(e.target.value)}
+                    orderIsValid={validateCurrentOrder()}
+                    orderNote={orderNote}
+                    orderNumber={orderNumber}
+                    showSubmitSpinner={isSubmittingOrder}
+                />
+            </Column>
+            <Column flex={flex}>
+                <Box marginBottom={2}>
+                    <Typography
+                        align="center"
+                        component="h2"
+                        fontWeight="bold"
+                        marginBottom={1}
+                        variant="h4"
+                    >
+                        Menu
+                    </Typography>
+                    <OutlinedInput
+                        aria-label="Item modification"
+                        label="Item modification"
+                        notched={false}
+                        placeholder="Item modification"
+                        value={mealNote}
+                        onChange={(e) => setMealNote(e.target.value)}
+                        size="small"
+                        sx={{
+                            width: "100%",
+                            fontSize: "1.35rem",
+                            marginBottom: 2,
+                            "& > input": { textAlign: "center" },
+                        }}
+                    />
+                    <Menu onMenuItemClick={onMenuItemClick} />
+                </Box>
+                {isFullView
+                    ? <MembershipChecker/>
+                    : ordersGrid
+                }
+            </Column>
+            {isFullView && (
+                <Column flex={flex} sx={{ justifyContent: "flex-start" }}>
+                    <Typography
+                        align="center"
+                        component="h2"
+                        fontWeight="bold"
+                        marginBottom={3}
+                        variant="h4"
+                    >
+                        All orders
+                    </Typography>
+                    {ordersGrid}
+                </Column>
+            )}
+        </Stack>
     );
 }
 

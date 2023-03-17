@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
-import { Button as MuiButton, TextField } from '@mui/material';
-import './Statistics.scss';
-import { CanvasJSChart } from '../../libs/canvasjs.react';
-import { DateTimePicker, LocalizationProvider } from '@mui/lab';
+import { Container, Stack, TextField, Typography } from '@mui/material';
+import { DateTimePicker, LoadingButton, LocalizationProvider } from '@mui/lab';
 import DateFnsUtils from '@date-io/date-fns';
 import { subDays } from 'date-fns';
 import { sv } from "date-fns/locale";
-import { useSnackbar } from 'notistack';
-import { useOrderHistory } from "../../hooks";
+
+import { CanvasJSChart } from '../../libs/canvasjs.react';
+import { useOrderHistory, useSnackbar } from "../../hooks";
 
 const DATE_TIME_PICKER_COMMON_PROPS = Object.freeze({
     mask: "____-__-__ __:__",
@@ -40,70 +38,73 @@ function Statistics() {
     }
 
     return (
-        <Container className="flex-grow-1">
-            <Row className="justify-content-center">
-                <Col
-                    className="col-auto w-75"
-                    // @ts-ignore
-                    align="center"
-                >
-                    <h2 className="pr-2 pt-2 align-self-center">Order Statistics</h2>
-                    <form noValidate autoComplete="off" onSubmit={onDateSubmit}>
-                        <Row
-                            className='w-75 justify-content-between my-4'
-                        >
-                            <LocalizationProvider dateAdapter={DateFnsUtils} locale={sv}>
-                                <DateTimePicker
-                                    {...DATE_TIME_PICKER_COMMON_PROPS}
-                                    value={startDate}
-                                    // @ts-ignore
-                                    onChange={setStartDate}
-                                    disabled={isFetching}
-                                    maxDateTime={endDate}
-                                    label={"Start date"}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            helperText="The date and time to filter from"
-                                            variant="outlined"
-                                        />
-                                    )}
-                                />
-                                <DateTimePicker
-                                    {...DATE_TIME_PICKER_COMMON_PROPS}
-                                    value={endDate}
-                                    // @ts-ignore
-                                    onChange={setEndDate}
-                                    disabled={isFetching}
-                                    label={"End date"}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            helperText="The date and time to filter to"
-                                            variant="outlined"
-                                        />
-                                    )}
-                                />
-                            </LocalizationProvider>
-                        </Row>
-                        <MuiButton
-                            className="statistics-submit"
-                            color="primary"
+        <Container maxWidth="lg" sx={{ paddingY: 4 }}>
+            <Typography
+                align="center"
+                component="h1"
+                fontWeight="bold"
+                marginBottom={4}
+                variant="h3"
+            >
+                Order statistics
+            </Typography>
+            <Stack
+                alignItems="center"
+                marginBottom={4}
+                component="form"
+                noValidate
+                autoComplete="off"
+                onSubmit={onDateSubmit}
+            >
+                <LocalizationProvider dateAdapter={DateFnsUtils} locale={sv}>
+                    <Stack
+                        spacing={4}
+                        direction={{ xs: "column", sm: "row" }}
+                        marginBottom={2}
+                    >
+                        <DateTimePicker
+                            {...DATE_TIME_PICKER_COMMON_PROPS}
+                            value={startDate}
+                            // @ts-ignore
+                            onChange={setStartDate}
                             disabled={isFetching}
-                            size="large"
-                            type="submit"
-                            variant="contained"
-                        >
-                            {isFetching ? 'Crunching the data...' : 'Load selected interval'}
-                        </MuiButton>
-                    </form>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                        <CanvasJSChart options={orderHistory} />
-                </Col>
-            </Row>
+                            maxDateTime={endDate}
+                            label={"Start date"}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    helperText="The date and time to filter from"
+                                    variant="outlined"
+                                />
+                            )}
+                        />
+                        <DateTimePicker
+                            {...DATE_TIME_PICKER_COMMON_PROPS}
+                            value={endDate}
+                            // @ts-ignore
+                            onChange={setEndDate}
+                            disabled={isFetching}
+                            label={"End date"}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    helperText="The date and time to filter to"
+                                    variant="outlined"
+                                />
+                            )}
+                        />
+                    </Stack>
+                </LocalizationProvider>
+                <LoadingButton
+                    loading={isFetching}
+                    size="large"
+                    type="submit"
+                    variant="contained"
+                >
+                    Load interval
+                </LoadingButton>
+            </Stack>
+            <CanvasJSChart options={orderHistory} />
         </Container>
     );
 }

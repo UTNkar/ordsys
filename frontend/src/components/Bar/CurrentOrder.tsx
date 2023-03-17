@@ -1,9 +1,17 @@
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
-import IconButton from '@mui/material/IconButton';
-import { MdAdd as IncrementIcon, MdRemove as DecrementIcon } from 'react-icons/md';
-import './CurrentOrder.scss';
-import { CurrentOrderItem } from '../../@types';
+import {
+    IconButton,
+    List,
+    ListItem,
+    ListItemText,
+    Typography,
+} from "@mui/material";
+import {
+    AddRounded as IncrementIcon,
+    RemoveRounded as DecrementIcon,
+} from '@mui/icons-material';
+
+import type { CurrentOrderItem } from '../../@types';
 
 interface CurrentOrderProps {
     currentOrder: CurrentOrderItem[]
@@ -11,34 +19,51 @@ interface CurrentOrderProps {
     incrementItemQuantity: (item: CurrentOrderItem) => void
 }
 
-function CurrentOrder({ currentOrder, decrementItemQuantity, incrementItemQuantity }: CurrentOrderProps) {
+const CurrentOrder = React.memo(function CurrentOrder({
+    currentOrder,
+    decrementItemQuantity,
+    incrementItemQuantity
+}: CurrentOrderProps) {
     return (
-        <Container className='current-order-container'>
-            {currentOrder.map(item =>
-                <Row xs={2} key={item.id + item.mealNote} className='align-items-center'>
-                    <Col xs={2} className='pr-0'>
-                        <Row>
-                            <Col>
-                                <IconButton size='small' onClick={() => incrementItemQuantity(item)}>
-                                    <IncrementIcon />
-                                </IconButton>
-                                <IconButton size='small' onClick={() => decrementItemQuantity(item)}>
-                                    <DecrementIcon />
-                                </IconButton>
-                            </Col>
-                        </Row>
-                    </Col>
-                    <Col xs={2} className='px-2'>{item.quantity}</Col>
-                    <Col xs={8} className='pl-0'>
-                        {item.item_name}{' '}
-                        <span className='meal-note' hidden={item.mealNote === ''}>
-                            ({item.mealNote})
-                        </span>
-                    </Col>
-                </Row>
-            )}
-        </Container>
+        <List dense>
+            {currentOrder.map((item) => (
+                <ListItem key={item.id + item.mealNote}>
+                    <IconButton
+                        aria-label="increment item count"
+                        onClick={() => incrementItemQuantity(item)}
+                    >
+                        <IncrementIcon />
+                    </IconButton>
+                    <IconButton
+                        aria-label="decrement item count"
+                        onClick={() => decrementItemQuantity(item)}
+                        sx={{ marginLeft: 0.5 }}
+                    >
+                        <DecrementIcon />
+                    </IconButton>
+                    <ListItemText
+                        disableTypography
+                        primary={
+                            <Typography variant="h5" component="p">
+                                {`${item.quantity}x ${item.item_name}`}
+                            </Typography>
+                        }
+                        secondary={item.mealNote && (
+                            <Typography
+                                component="p"
+                                fontWeight="bold"
+                                marginLeft={2}
+                                variant="h6"
+                            >
+                                {item.mealNote}
+                            </Typography>
+                        )}
+                        sx={{ marginLeft: 1 }}
+                    />
+                </ListItem>
+            ))}
+        </List>
     );
-}
+});
 
 export default CurrentOrder
