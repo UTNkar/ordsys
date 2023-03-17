@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 import { Box, List, Stack, Typography } from "@mui/material";
 
 import OrderTicket from "../OrderTicket";

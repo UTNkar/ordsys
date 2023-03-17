@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import { createElement, useCallback } from "react";
 import { useSnackbar as useSnackbarInternal } from "notistack";
 
 import SnackbarContent from "../components/SnackbarContent";
@@ -21,7 +21,7 @@ export function useSnackbar() {
                 ...options,
                 variant,
                 content: (snackbarKey) => (
-                    React.createElement(
+                    createElement(
                         SnackbarContent,
                         {
                             action: options?.action,

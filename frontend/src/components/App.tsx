@@ -1,4 +1,3 @@
-import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Stack, StyledEngineProvider, ThemeProvider } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
