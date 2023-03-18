@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import HeaderLogoutDialog from './HeaderLogoutDialog';
+import HeaderDialog from './HeaderDialog';
 import {
     Alert,
     AppBar,
@@ -43,6 +43,7 @@ interface HeaderProps {
 function Header({ organisation }: HeaderProps) {
     const [date, setDate] = useState(new Date().toLocaleString('sv-SE'))
     const [openLogoutModal, setOpenLogoutModal] = useState(false)
+    const [openHelpModal, setOpenHelpModal] = useState(false)
     const dateIntervalId = useRef<number | undefined>(undefined)
 
     // No point in showing date and time on mobile devices as they already have a clock in the top right corner
@@ -63,7 +64,6 @@ function Header({ organisation }: HeaderProps) {
 
     return (
         <AppBar position="static">
-
             <Toolbar sx={{ justifyContent: "space-between" }}>
                 <Tooltip followCursor={true} title="Return to home screen">
                     <Link to="/">
@@ -86,11 +86,10 @@ function Header({ organisation }: HeaderProps) {
                 <Box
                     sx={{ alignItems: "center", display: "flex" }}
                     id="rightDiv">
-                    <Tooltip title="Read the OrdSys documentation">
+                    <Tooltip title="Open documentation">
                         <IconButton
                             color="iconButtonWhite"
-                            href="https://docs.utn.se/ordsys/frontend"
-                            target="_blank">
+                            onClick={() => setOpenHelpModal(true)}>
                             <HelpIcon fontSize="large" />
                         </IconButton>
                     </Tooltip>
@@ -109,7 +108,20 @@ function Header({ organisation }: HeaderProps) {
                     </Tooltip>
                 </Box>
             </Toolbar>
-            <HeaderLogoutDialog openLogoutModal={openLogoutModal} setOpenLogoutModal={setOpenLogoutModal} />
+            <HeaderDialog
+                openLogoutModal={openLogoutModal}
+                setOpenLogoutModal={setOpenLogoutModal}
+                callback={() => console.log("Log out function goes here")}
+                dialogTitle="Log out?"
+                dialogContent=""
+            />
+            <HeaderDialog
+                openLogoutModal={openHelpModal}
+                setOpenLogoutModal={setOpenHelpModal}
+                callback={() => window.open('https:/docs.utn.se/ordsys/frontend', '_blank')}
+                dialogTitle="Read documentation?"
+                dialogContent="This will open the OrdSys documentation in a new tab."
+            />
         </AppBar >
     )
 }
