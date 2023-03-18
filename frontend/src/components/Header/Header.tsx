@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import HeaderDialog from './HeaderDialog';
+import { useSignOutMutation } from "../../api/backend";
 import {
-    Alert,
     AppBar,
     Box,
     IconButton,
@@ -45,6 +45,7 @@ function Header({ organisation }: HeaderProps) {
     const [openLogoutModal, setOpenLogoutModal] = useState(false)
     const [openHelpModal, setOpenHelpModal] = useState(false)
     const dateIntervalId = useRef<number | undefined>(undefined)
+    const [signOut] = useSignOutMutation();
 
     // No point in showing date and time on mobile devices as they already have a clock in the top right corner
     const showDateAndTime = useMediaQuery<Theme>((theme) => theme.breakpoints.up("lg"));
@@ -57,10 +58,6 @@ function Header({ organisation }: HeaderProps) {
             window.clearInterval(dateIntervalId.current)
         }
     }, [showDateAndTime])
-
-    const onLogoutClick = useCallback(() => {
-        console.log("Hello")
-    }, []);
 
     return (
         <AppBar position="static">
@@ -111,7 +108,7 @@ function Header({ organisation }: HeaderProps) {
             <HeaderDialog
                 openLogoutModal={openLogoutModal}
                 setOpenLogoutModal={setOpenLogoutModal}
-                callback={() => console.log("Log out function goes here")}
+                callback={signOut}
                 dialogTitle="Log out?"
                 dialogContent=""
             />

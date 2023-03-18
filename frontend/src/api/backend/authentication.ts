@@ -21,6 +21,17 @@ const authenticationApi = backendBaseApi.injectEndpoints({
             ),
             extraOptions: { maxRetries: 0 },
         }),
+        signOut: build.mutation<null, {}>({
+            query: () => ({
+                url: '/auth/logout/',
+                method: "POST",
+                body: {},
+            }),
+            invalidatesTags: (_result, error) => (
+                !error ? [TAG_TYPES.AUTHENTICATION_STATUS] : []
+            ),
+            extraOptions: { maxRetries: 0 },
+        })
     }),
     overrideExisting: true,
 });
@@ -29,4 +40,5 @@ export const {
     useGetSignInStatusQuery,
     useGetOrganisationsQuery,
     useSignInMutation,
+    useSignOutMutation,
 } = authenticationApi;
