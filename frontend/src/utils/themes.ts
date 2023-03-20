@@ -50,8 +50,9 @@ const paletteBase = {
         light: lighten("#d0ffb2", 0.1),
         contrastText: "#000",
     },
-    iconButtonWhite: {
+    headerButtons: {
         main: "#fff",
+        contrastText: "#000",
     },
     tonalOffset: 0.1,
     contrastThreshold: 4.5,

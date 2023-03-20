@@ -51,6 +51,16 @@ function Header(props: HeaderProps) {
     // No point in showing date and time on mobile devices as they already have a clock in the top right corner
     const showDateAndTime = useMediaQuery<Theme>((theme) => theme.breakpoints.up("lg"));
 
+    const buttonSX = {
+        padding: "0.25rem",
+        mx: "0.5rem",
+        "&:hover": {
+
+            bgcolor: "headerButtons.main",
+            color: "headerButtons.contrastText",
+        },
+    };
+
     useEffect(() => {
         if (showDateAndTime) {
             setDate(new Date().toLocaleString('sv-SE'))
@@ -74,8 +84,10 @@ function Header(props: HeaderProps) {
                             />
                             {props.isAuthenticated ?
                                 <IconButton
-                                    color="iconButtonWhite"
-                                    size="medium">
+                                    color="headerButtons"
+                                    sx={buttonSX}
+                                    size="medium"
+                                >
                                     <HomeIcon fontSize="large" />
                                 </IconButton> : null
                             }
@@ -88,8 +100,10 @@ function Header(props: HeaderProps) {
                     id="rightDiv">
                     <Tooltip title="Open documentation">
                         <IconButton
-                            color="iconButtonWhite"
-                            onClick={() => setOpenHelpModal(true)}>
+                            color="headerButtons"
+                            onClick={() => setOpenHelpModal(true)}
+                            sx={buttonSX}
+                        >
                             <HelpIcon fontSize="large" />
                         </IconButton>
                     </Tooltip>
@@ -101,8 +115,9 @@ function Header(props: HeaderProps) {
                     {props.isAuthenticated ?
                         <Tooltip title="Log out">
                             <IconButton
-                                color="iconButtonWhite"
+                                color="headerButtons"
                                 onClick={() => setOpenLogoutModal(true)}
+                                sx={buttonSX}
                             >
                                 <LogoutIcon fontSize="large" />
                             </IconButton>
