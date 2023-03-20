@@ -24,28 +24,26 @@ export default function HeaderDialog(props: HeaderDialogProps) {
     };
 
     return (
-        <div>
-            <Dialog
-                open={props.openLogoutModal}
-                onClose={handleClickNo}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {props.dialogTitle}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        {props.dialogContent}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClickNo}>No</Button>
-                    <Button onClick={handleClickYes} autoFocus>
-                        Yes
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </div>
+        <Dialog
+            open={props.openLogoutModal}
+            onClose={handleClickNo}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogTitle id="alert-dialog-title">
+                {props.dialogTitle}
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    {props.dialogContent}
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClickNo}>No</Button>
+                <Button onClick={handleClickYes} autoFocus>
+                    Yes
+                </Button>
+            </DialogActions>
+        </Dialog>
     );
 }
