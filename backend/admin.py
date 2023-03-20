@@ -61,6 +61,16 @@ class MenuItemAdmin(ForeignKeyModelAdmin):
             return []
         return ['org__name']
 
+    @admin.action(description="Mark selected menu items as active")
+    def make_active(modeladmin, request, queryset):
+        queryset.update(active=True)
+
+    @admin.action(description="Mark selected menu items as inactive")
+    def make_inactive(modeladmin, request, queryset):
+        queryset.update(active=False)
+
+    actions=[make_active, make_inactive]
+
 
 @admin.register(Order)
 class OrderAdmin(ForeignKeyModelAdmin):
