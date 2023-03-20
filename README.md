@@ -75,6 +75,9 @@ For this repository there also exists a compose file meant to ease the setup of 
 
 ### Usage
 
-To start using the compose file run the shell script `run-dev.sh` with sudo and interact with it to create your organisation and user.
-If you are prompted to create a superuser and organisation while you have existing ones simply Ctrl+C and those steps can be ignored.
-To stop simply run `docker-compose down` and you'll stop all of the containers.
+To start using the compose file run the shell script `run-dev.sh` with sudo supplying the flag `init` incase you want to create a superuser and a new organisation.
+> Examples
+```bash
+sudo ./run-dev.sh init # prompts you for details to create user and org
+sudo ./run-dev.sh # starts everything without prompting
+```
