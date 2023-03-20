@@ -13,7 +13,7 @@ services:
       - 3000
     command: sh -c "yarn && yarn start"
   backend: 
-    image: python:3
+    image: python:3.10
     working_dir: /usr/src/app
     volumes:
       - ./:/usr/src/app:rw
