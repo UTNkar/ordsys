@@ -1,3 +1,4 @@
+import React from 'react';
 import { Alert, IconButton, Typography } from "@mui/material";
 import {
     CloseRounded as CloseIcon,
