@@ -68,18 +68,18 @@ function App() {
                     anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
                     autoHideDuration={5000}
                 >
-                    <Header organisation={user?.theme || OrganisationTheme.UTN} />
+                    <Header organisation={user?.theme || OrganisationTheme.UTN} isAuthenticated={isAuthenticated} />
                     <Stack
                         component="main"
                         overflow="auto"
                         sx={(theme) => ({
-                                height: "calc(100vh - 56px)",
-                                [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
-                                    height: "calc(100vh - 48px)",
-                                },
-                                [`${theme.breakpoints.up("sm")}`]: {
-                                    height: "calc(100vh - 64px)",
-                                },
+                            height: "calc(100vh - 56px)",
+                            [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+                                height: "calc(100vh - 48px)",
+                            },
+                            [`${theme.breakpoints.up("sm")}`]: {
+                                height: "calc(100vh - 64px)",
+                            },
                         })}
                     >
                         {renderComponents()}

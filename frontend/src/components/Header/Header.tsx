@@ -38,9 +38,10 @@ const THEME_TO_IMAGE = Object.freeze({
 
 interface HeaderProps {
     organisation: OrganisationTheme
+    isAuthenticated: Boolean
 }
 
-function Header({ organisation }: HeaderProps) {
+function Header(props: HeaderProps) {
     const [date, setDate] = useState(new Date().toLocaleString('sv-SE'))
     const [openLogoutModal, setOpenLogoutModal] = useState(false)
     const [openHelpModal, setOpenHelpModal] = useState(false)
@@ -68,14 +69,16 @@ function Header({ organisation }: HeaderProps) {
                             <Box
                                 height={{ xs: "2rem", md: "2.5rem" }}
                                 component="img"
-                                src={THEME_TO_IMAGE[organisation]}
+                                src={THEME_TO_IMAGE[props.organisation]}
                                 alt="Organisation logo"
                             />
-                            <IconButton
-                                color="iconButtonWhite"
-                                size="medium">
-                                <HomeIcon fontSize="large" />
-                            </IconButton>
+                            {props.isAuthenticated ?
+                                <IconButton
+                                    color="iconButtonWhite"
+                                    size="medium">
+                                    <HomeIcon fontSize="large" />
+                                </IconButton> : null
+                            }
                         </Box>
                     </Link>
                 </Tooltip>
@@ -95,14 +98,16 @@ function Header({ organisation }: HeaderProps) {
                             {date}
                         </Typography>
                     )}
-                    <Tooltip title="Log out">
-                        <IconButton
-                            color="iconButtonWhite"
-                            onClick={() => setOpenLogoutModal(true)}
-                        >
-                            <LogoutIcon fontSize="large" />
-                        </IconButton>
-                    </Tooltip>
+                    {props.isAuthenticated ?
+                        <Tooltip title="Log out">
+                            <IconButton
+                                color="iconButtonWhite"
+                                onClick={() => setOpenLogoutModal(true)}
+                            >
+                                <LogoutIcon fontSize="large" />
+                            </IconButton>
+                        </Tooltip> : null
+                    }
                 </Box>
             </Toolbar>
             <HeaderDialog
