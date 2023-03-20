@@ -62,6 +62,13 @@ class MenuItemAdmin(ForeignKeyModelAdmin):
         return ['org__name']
 
 
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    readonly_fields = [field.name for field in model._meta.fields]
+    max_num=0
+    can_delete=False
+
+
 @admin.register(Order)
 class OrderAdmin(ForeignKeyModelAdmin):
     form = ModelWithOrganisationForm
@@ -70,6 +77,7 @@ class OrderAdmin(ForeignKeyModelAdmin):
         'created_timestamp', 'status', 'get_delivered_timestamp', 'user'
     ]
     list_filter = ['beverages_only', 'status', 'user', 'user__org']
+    inlines = [OrderItemInline]
 
     def get_delivered_timestamp(self, obj):
         return obj.delivered_timestamp
