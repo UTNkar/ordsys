@@ -52,10 +52,8 @@ function Header(props: HeaderProps) {
     const showDateAndTime = useMediaQuery<Theme>((theme) => theme.breakpoints.up("lg"));
 
     const buttonSX = {
-        padding: "0.25rem",
         mx: "0.5rem",
         "&:hover": {
-
             bgcolor: "headerButtons.main",
             color: "headerButtons.contrastText",
         },
@@ -85,8 +83,8 @@ function Header(props: HeaderProps) {
                             {props.isAuthenticated ?
                                 <IconButton
                                     color="headerButtons"
+                                    size="small"
                                     sx={buttonSX}
-                                    size="medium"
                                 >
                                     <HomeIcon fontSize="large" />
                                 </IconButton> : null
@@ -102,13 +100,14 @@ function Header(props: HeaderProps) {
                         <IconButton
                             color="headerButtons"
                             onClick={() => setOpenHelpModal(true)}
+                            size="small"
                             sx={buttonSX}
                         >
                             <HelpIcon fontSize="large" />
                         </IconButton>
                     </Tooltip>
                     {showDateAndTime && (
-                        <Typography variant="h4" component="p" paddingBottom={"0.25rem"}>
+                        <Typography variant="h4" component="p">
                             {date}
                         </Typography>
                     )}
@@ -117,6 +116,7 @@ function Header(props: HeaderProps) {
                             <IconButton
                                 color="headerButtons"
                                 onClick={() => setOpenLogoutModal(true)}
+                                size="small"
                                 sx={buttonSX}
                             >
                                 <LogoutIcon fontSize="large" />
