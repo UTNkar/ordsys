@@ -1,0 +1,29 @@
+version: '3'
+services:
+  frontend:
+    image: node:16
+    depends_on:
+      - backend
+    user: "node"
+    working_dir: /home/node/frontend
+    network_mode: "host"
+    volumes:
+      - ./frontend:/home/node/frontend:rw
+    expose:
+      - 3000
+    command: sh -c "yarn && yarn start"
+  backend: 
+    image: python:3
+    environment:
+      - DJANGO_SUPERUSER_PASSWORD=devdevdev
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app:rw
+    network_mode: "host"
+    expose:
+      - 8000
+    command: sh -c "pip install --no-cache-dir -r dev-requirements.txt && 
+                    python manage.py migrate && 
+                    echo "dev\n" | python manage.py createorganisation && 
+                    echo "dev\rdevdevdev\rdevdevdev\n1" | python manage.py createsuperuser"
+  
