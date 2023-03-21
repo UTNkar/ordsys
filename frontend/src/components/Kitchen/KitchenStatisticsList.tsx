@@ -1,5 +1,4 @@
-import React from "react";
-import { Grid, List, ListItem, ListItemText, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 
 import type { MenuItem, Order } from '../../@types';
 

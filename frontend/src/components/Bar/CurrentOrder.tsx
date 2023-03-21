@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import {
     IconButton,
     List,
@@ -19,7 +19,7 @@ interface CurrentOrderProps {
     incrementItemQuantity: (item: CurrentOrderItem) => void
 }
 
-const CurrentOrder = React.memo(function CurrentOrder({
+const CurrentOrder = memo(function CurrentOrder({
     currentOrder,
     decrementItemQuantity,
     incrementItemQuantity

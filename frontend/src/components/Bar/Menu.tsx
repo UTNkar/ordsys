@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import { Button, Grid, Typography } from "@mui/material";
 
 import { useActiveMenuItems } from "../../hooks";
@@ -9,7 +9,7 @@ interface MenuProps {
     onMenuItemClick: (item: MenuItem) => void
 }
 
-const Menu = React.memo(function Menu({ onMenuItemClick }: MenuProps) {
+const Menu = memo(function Menu({ onMenuItemClick }: MenuProps) {
     const { activeMenuItems } = useActiveMenuItems();
 
     if (activeMenuItems.length === 0) {

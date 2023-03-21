@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, FormControl, Grid, OutlinedInput } from '@mui/material';
 import { LoadingButton } from "@mui/lab";
 import { SendRounded as SendIcon } from '@mui/icons-material';

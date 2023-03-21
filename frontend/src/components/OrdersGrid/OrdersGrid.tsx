@@ -1,4 +1,4 @@
-import React from "react";
+import { memo } from "react";
 import { Grid } from "@mui/material";
 
 import OrderTicket from "../OrderTicket";
@@ -18,7 +18,7 @@ const DEFAULT_COLUMNS: OrdersGridProps["columns"] = Object.freeze({
     sm: 2,
 });
 
-const OrdersGrid = React.memo(function OrdersGrid({
+const OrdersGrid = memo(function OrdersGrid({
     columns = DEFAULT_COLUMNS,
     menuItems,
     orders,
