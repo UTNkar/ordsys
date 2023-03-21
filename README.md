@@ -81,3 +81,7 @@ To start using the compose file run the shell script `run-dev.sh` with sudo supp
 sudo ./run-dev.sh init # prompts you for details to create user and org
 sudo ./run-dev.sh # starts everything without prompting
 ```
+
+### Stopping the development environment
+
+To stop the development environment run `docker compose down`
