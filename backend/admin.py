@@ -69,14 +69,14 @@ class MenuItemAdmin(ForeignKeyModelAdmin):
     def make_inactive(modeladmin, request, queryset):
         queryset.update(active=False)
 
-    actions=[make_active, make_inactive]
+    actions = [make_active, make_inactive]
 
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     readonly_fields = [field.name for field in model._meta.fields]
-    max_num=0
-    can_delete=False
+    max_num = 0
+    can_delete = False
 
 
 @admin.register(Order)
