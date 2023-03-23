@@ -19,7 +19,7 @@ interface SnackbarContentProps {
     snackbarKey: SnackbarKey,
 }
 
-const ICON_PROPS = Object.freeze({ sx: { fontSize: "2rem" }});
+const ICON_PROPS = Object.freeze({ sx: { fontSize: "2rem" } });
 
 const ICON_MAPPING: Record<AlertColor, React.ReactNode> = Object.freeze({
     error: <ErrorIcon {...ICON_PROPS} />,
