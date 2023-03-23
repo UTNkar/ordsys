@@ -10,4 +10,4 @@ class BackendConfig(AppConfig):
         # hooks them up to the signals.
         # https://docs.djangoproject.com/en/stable/topics/signals/#connecting-receiver-functions
 
-        from . import signals # noqa
+        from . import signals  # noqa

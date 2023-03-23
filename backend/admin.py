@@ -61,6 +61,23 @@ class MenuItemAdmin(ForeignKeyModelAdmin):
             return []
         return ['org__name']
 
+    @admin.action(description="Mark selected menu items as active")
+    def make_active(modeladmin, request, queryset):
+        queryset.update(active=True)
+
+    @admin.action(description="Mark selected menu items as inactive")
+    def make_inactive(modeladmin, request, queryset):
+        queryset.update(active=False)
+
+    actions = [make_active, make_inactive]
+
+
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    readonly_fields = [field.name for field in model._meta.fields]
+    max_num = 0
+    can_delete = False
+
 
 @admin.register(Order)
 class OrderAdmin(ForeignKeyModelAdmin):
@@ -70,6 +87,7 @@ class OrderAdmin(ForeignKeyModelAdmin):
         'created_timestamp', 'status', 'get_delivered_timestamp', 'user'
     ]
     list_filter = ['beverages_only', 'status', 'user', 'user__org']
+    inlines = [OrderItemInline]
     ordering = ['-created_timestamp']
 
     def get_delivered_timestamp(self, obj):
