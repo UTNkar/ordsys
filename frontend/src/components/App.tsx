@@ -1,18 +1,18 @@
-import { Route, Routes } from "react-router-dom";
-import { Stack, StyledEngineProvider, ThemeProvider } from "@mui/material";
-import { SnackbarProvider } from "notistack";
-import Bar from "./Bar";
-import Header from "./Header";
-import Home from "./Home";
-import Kitchen from "./Kitchen";
-import Login from "./Login";
-import Pickup from "./Pickup";
-import RecentOrders from "./RecentOrders";
-import Statistics from "./Statistics";
-import { BarRenderMode, KitchenRenderMode, OrganisationTheme } from "../@types";
-import { useUser } from "../hooks";
-import { themes } from "../utils/themes";
-import SnackbarContent from "./SnackbarContent";
+import { Route, Routes } from 'react-router-dom';
+import { Stack, StyledEngineProvider, ThemeProvider } from '@mui/material';
+import { SnackbarProvider } from 'notistack';
+import Bar from './Bar';
+import Header from './Header';
+import Home from './Home';
+import Kitchen from './Kitchen';
+import Login from './Login';
+import Pickup from './Pickup';
+import RecentOrders from './RecentOrders';
+import Statistics from './Statistics';
+import { BarRenderMode, KitchenRenderMode, OrganisationTheme } from '../@types';
+import { useUser } from '../hooks';
+import { themes } from '../utils/themes';
+import SnackbarContent from './SnackbarContent';
 
 function App() {
     const { user, isLoading, isUninitialized } = useUser();
@@ -31,7 +31,10 @@ function App() {
                         path="/bar"
                         element={<Bar renderMode={BarRenderMode.FULL} />}
                     />
-                    <Route path="/delivery" element={<RecentOrders title="Delivery" />} />
+                    <Route 
+                        path="/delivery" 
+                        element={<RecentOrders title="Delivery" />} 
+                    />
                     <Route
                         path="/kitchen"
                         element={<Kitchen renderMode={KitchenRenderMode.FOOD} />}
@@ -62,7 +65,7 @@ function App() {
             <ThemeProvider theme={themes[user?.theme || OrganisationTheme.UTN]}>
                 <SnackbarProvider
                     maxSnack={4}
-                    anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
+                    anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
                     autoHideDuration={5000}
                     Components={{
                         warning: SnackbarContent,
@@ -77,8 +80,7 @@ function App() {
                         overflow="auto"
                         sx={(theme) => ({
                             height: "calc(100vh - 56px)",
-                            [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]:
-                            {
+                            [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
                                 height: "calc(100vh - 48px)",
                             },
                             [`${theme.breakpoints.up("sm")}`]: {
@@ -94,4 +96,4 @@ function App() {
     );
 }
 
-export default App;
+export default App
