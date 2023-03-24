@@ -7,11 +7,11 @@ import Home from './Home';
 import Kitchen from './Kitchen';
 import Login from './Login';
 import Pickup from './Pickup';
-import RecentOrders from './RecentOrders';
+import RecentOrders from "./RecentOrders";
 import Statistics from './Statistics';
 import { BarRenderMode, KitchenRenderMode, OrganisationTheme } from '../@types';
-import { useUser } from '../hooks';
-import { themes } from '../utils/themes';
+import { useUser } from "../hooks";
+import { themes } from "../utils/themes";
 import SnackbarContent from './SnackbarContent';
 
 function App() {
@@ -31,9 +31,9 @@ function App() {
                         path="/bar"
                         element={<Bar renderMode={BarRenderMode.FULL} />}
                     />
-                    <Route 
-                        path="/delivery" 
-                        element={<RecentOrders title="Delivery" />} 
+                    <Route
+                        path="/delivery"
+                        element={<RecentOrders title="Delivery" />}
                     />
                     <Route
                         path="/kitchen"
