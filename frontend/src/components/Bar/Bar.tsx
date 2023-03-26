@@ -360,7 +360,7 @@ function Bar({ renderMode }: BarProps) {
                             "& > input": { textAlign: "center" },
                         }}
                     />
-                    <Box sx={{overflow: "auto"}}>
+                    <Box sx={{overflowY: "auto", width: "100%"}}>
                         <Menu onMenuItemClick={onMenuItemClick} />
                     </Box>
                 </Box>
