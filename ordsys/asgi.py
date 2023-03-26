@@ -3,8 +3,9 @@ ASGI config for ordsys project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
-For more information on this file, see
-https://docs.djangoproject.com/en/3.0/howto/deployment/asgi/
+The ASGI configuration is taken from the channels package
+https://channels.readthedocs.io/en/stable/topics/routing.html
+
 """
 
 import os
