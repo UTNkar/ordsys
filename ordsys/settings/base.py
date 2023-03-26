@@ -11,9 +11,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import sys
-# noinspection PyPackageRequirements
-from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,6 +20,7 @@ AUTH_USER_MODEL = 'backend.User'
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -130,7 +128,7 @@ REST_FRAMEWORK = {
 }
 
 # Channels
-ASGI_APPLICATION = 'ordsys.routing.application'
+ASGI_APPLICATION = 'ordsys.asgi.application'
 
 CHANNEL_LAYERS = {
     'default': {
