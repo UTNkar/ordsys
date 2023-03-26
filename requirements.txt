@@ -2,7 +2,7 @@
 asgiref==3.6.0
 
 # Websockets
-channels==3.0.4
+channels[daphne]==4.0.0
 channels_redis==4.0.0
 
 # Django
