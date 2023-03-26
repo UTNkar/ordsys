@@ -9,7 +9,7 @@ using Django and PostgreSQL for the backend and React & Bootstrap for the fronte
 
 ## Requirements
 
-The application requires Python (version 3.8 or greater), Node.js (Version 16) by using [nvm](https://github.com/nvm-sh/nvm).
+The application requires Python (version 3.8 or greater), Node.js (Version 16 or greater) by using [nvm](https://github.com/nvm-sh/nvm).
 
 ## Installation
 
@@ -19,7 +19,7 @@ To begin, clone the repo and open the repository folder in your terminal.
 
 #### Install redis
 
-On ubuntu, follow step 1 of this guide: [https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-18-04](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-18-04)
+On ubuntu, follow step 1 of this guide: [https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-22-04](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-22-04)
 
 On mac run `brew install redis`
 
