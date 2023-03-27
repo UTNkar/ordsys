@@ -12,6 +12,7 @@ import Statistics from './Statistics';
 import { BarRenderMode, KitchenRenderMode, OrganisationTheme } from '../@types';
 import { useUser } from "../hooks";
 import { themes } from "../utils/themes";
+import SnackbarContent from './SnackbarContent';
 
 function App() {
     const { user, isLoading, isUninitialized } = useUser();
@@ -66,6 +67,12 @@ function App() {
                     maxSnack={4}
                     anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
                     autoHideDuration={5000}
+                    Components={{
+                        warning: SnackbarContent,
+                        error: SnackbarContent,
+                        info: SnackbarContent,
+                        success: SnackbarContent,
+                    }}
                 >
                     <Header organisation={user?.theme || OrganisationTheme.UTN} isAuthenticated={isAuthenticated} />
                     <Stack

@@ -9,15 +9,7 @@ import {
 } from "@mui/icons-material";
 
 import type { AlertColor } from "@mui/material";
-import type { SnackbarKey } from "notistack";
-
-interface SnackbarContentProps {
-    action?: React.ReactNode | ((key: SnackbarKey) => React.ReactNode)
-    closeSnackbar: (key?: SnackbarKey) => void,
-    message: string,
-    severity: AlertColor,
-    snackbarKey: SnackbarKey,
-}
+import { CustomContentProps, useSnackbar } from "notistack";
 
 const ICON_PROPS = Object.freeze({ sx: { fontSize: "2rem" } });
 
@@ -28,15 +20,15 @@ const ICON_MAPPING: Record<AlertColor, React.ReactNode> = Object.freeze({
     warning: <WarningIcon {...ICON_PROPS} />,
 });
 
-const SnackbarContent = React.forwardRef<HTMLDivElement, SnackbarContentProps>(({
-    action,
-    closeSnackbar,
-    message,
-    snackbarKey,
-    severity,
+const SnackbarContent = React.forwardRef<HTMLDivElement, CustomContentProps>(({
+    action, 
+    message, 
+    variant, 
+    id
 }, ref) => {
-    const _action = typeof action === "function" ? action(snackbarKey) : action;
-
+    const { closeSnackbar } = useSnackbar();
+    const _action = typeof action === "function" ? action(id) : action;
+    const severity = variant as AlertColor;
     return (
         <Alert
             ref={ref}
@@ -44,7 +36,7 @@ const SnackbarContent = React.forwardRef<HTMLDivElement, SnackbarContentProps>((
                 <IconButton
                     aria-label="Close"
                     color="inherit"
-                    onClick={() => closeSnackbar(snackbarKey)}
+                    onClick={() => closeSnackbar(id)}
                 >
                     <CloseIcon />
                 </IconButton>
@@ -58,10 +50,7 @@ const SnackbarContent = React.forwardRef<HTMLDivElement, SnackbarContentProps>((
                 boxShadow: 24,
             }}
         >
-            <Typography
-                fontSize="1.5rem"
-                lineHeight="1.25"
-            >
+            <Typography fontSize="1.5rem" lineHeight="1.25">
                 {message}
             </Typography>
         </Alert>

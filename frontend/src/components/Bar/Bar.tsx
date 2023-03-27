@@ -13,7 +13,7 @@ import {
     ReplayRounded as UndoIcon,
 } from "@mui/icons-material";
 
-import { useMenuItems, useOrdersWithItems, useSnackbar } from '../../hooks';
+import { useMenuItems, useOrdersWithItems } from '../../hooks';
 import {
     useCreateOrderMutation,
     useDeleteOrderMutation,
@@ -26,7 +26,7 @@ import Numpad from './Numpad';
 import OrdersGridWithDetail from "../OrdersGridWithDetail";
 
 import { BarRenderMode, OrderStatus } from '../../@types';
-import type { SnackbarKey } from 'notistack';
+import { SnackbarKey, useSnackbar } from 'notistack';
 import type { CurrentOrderItem, MenuItem, Order } from "../../@types";
 
 interface BarProps {
