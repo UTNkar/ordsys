@@ -335,7 +335,7 @@ function Bar({ renderMode }: BarProps) {
                 />
             </Column>
             <Column flex={flex}>
-                <Box marginBottom={2}>
+                <Box flex={1} flexDirection="column" display="flex" marginBottom={2} sx={{overflow: "hidden"}}>
                     <Typography
                         align="center"
                         component="h2"
@@ -360,7 +360,9 @@ function Bar({ renderMode }: BarProps) {
                             "& > input": { textAlign: "center" },
                         }}
                     />
-                    <Menu onMenuItemClick={onMenuItemClick} />
+                    <Box sx={{overflowY: "auto", width: "100%"}}>
+                        <Menu onMenuItemClick={onMenuItemClick} />
+                    </Box>
                 </Box>
                 {isFullView
                     ? <MembershipChecker/>
