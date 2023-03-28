@@ -1,0 +1,7 @@
+# In the root folder there is a shortcut to this .prettierignore file called .prettierignore.
+# This is because the prettier command is being runned in the frontend folder and picks up the
+# ignore file from there. However, when formatting using vscode, it looks for the .prettierignore
+# in the root folder of the project. To make sure that the formatting always uses the same rule
+# the shortcut was created to ensure both mentioned options use the same configuration.
+
+**/libs
