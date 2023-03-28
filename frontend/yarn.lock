@@ -36,7 +36,7 @@
   resolved "https://registry.yarnpkg.com/@babel/compat-data/-/compat-data-7.21.0.tgz#c241dc454e5b5917e40d37e525e2f4530c399298"
   integrity sha512-gMuZsmsgxk/ENC3O/fRw5QY8A9/uxQbbCEypnLIiYYc/qVJtEV7ouxC3EllIIwNzMqAQee5tanFabWsUOutS7g==
 
-"@babel/core@^7.1.0", "@babel/core@^7.1.6", "@babel/core@^7.11.1", "@babel/core@^7.12.3", "@babel/core@^7.13.16", "@babel/core@^7.16.0", "@babel/core@^7.21.0", "@babel/core@^7.7.2", "@babel/core@^7.8.0":
+"@babel/core@^7.1.0", "@babel/core@^7.1.6", "@babel/core@^7.11.1", "@babel/core@^7.12.3", "@babel/core@^7.13.16", "@babel/core@^7.16.0", "@babel/core@^7.21.3", "@babel/core@^7.7.2", "@babel/core@^7.8.0":
   version "7.21.3"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.21.3.tgz#cf1c877284a469da5d1ce1d1e53665253fae712e"
   integrity sha512-qIJONzoa/qiHghnm0l1n4i/6IIziDpzqc36FBs4pzMhDUraHqponwJLiAKm1hGLP3OSB/TVNz6rMwVGpwxxySw==
@@ -1732,14 +1732,14 @@
     prop-types "^15.8.1"
     react-is "^18.2.0"
 
-"@mui/codemod@^5.11.12":
-  version "5.11.12"
-  resolved "https://registry.yarnpkg.com/@mui/codemod/-/codemod-5.11.12.tgz#ec41e13edd4ef1b08e72a540e4ca275037df4a12"
-  integrity sha512-cxlH/XvD//jkJnxdAm+EQA4Lw+k6UOoqnxdh8wfEJXrF1UJtZSUWK4BJAp/WstvCFAGpFUvfjjWbfPegfk6gLA==
+"@mui/codemod@^5.11.14":
+  version "5.11.14"
+  resolved "https://registry.yarnpkg.com/@mui/codemod/-/codemod-5.11.14.tgz#f754fd2937bbec63f4b41263882f5295a3e28f9a"
+  integrity sha512-pmiabQPitbX7x+MnFNxGZ4IUdlVPSodBIoaGYAvBVvQe+EFSdP5IswtPLv8hiohhTF1Q9163XMh2Lo1pEpC15A==
   dependencies:
-    "@babel/core" "^7.21.0"
+    "@babel/core" "^7.21.3"
     "@babel/runtime" "^7.21.0"
-    "@babel/traverse" "^7.21.2"
+    "@babel/traverse" "^7.21.3"
     jscodeshift "^0.13.1"
     jscodeshift-add-imports "^1.0.10"
     yargs "^17.7.1"
