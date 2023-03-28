@@ -63,3 +63,25 @@ you can open your web browser and browse to http://localhost:3000/.
 __Note__: Running the frontend with `start` launches it in development mode. To build and deploy to a production
 environment, use `$ yarn build`, and follow the appropriate steps at the
 [official guide](https://create-react-app.dev/docs/deployment/).
+
+## Docker
+
+For this repository there also exists a compose file meant to ease the setup of a development environment.
+
+### Requirements
+1. You need to install [Docker Engine](https://docs.docker.com/engine/install/)
+2. You need to install [Docker Compose](https://docs.docker.com/compose/install/)
+- Alternatively, on Ubuntu you should just need to install `docker.io` by runnning `sudo apt install docker.io`
+
+### Usage
+
+To start using the compose file run the shell script `run-dev.sh` with sudo supplying the flag `init` incase you want to create a superuser and a new organisation.
+> Examples
+```bash
+sudo ./run-dev.sh init # prompts you for details to create user and org
+sudo ./run-dev.sh # starts everything without prompting
+```
+
+### Stopping the development environment
+
+To stop the development environment run `docker compose down`
