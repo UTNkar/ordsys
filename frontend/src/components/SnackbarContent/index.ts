@@ -1,2 +1,3 @@
-import SnackbarContent from "./SnackbarContent";
+import SnackbarContent from './SnackbarContent';
+
 export default SnackbarContent;

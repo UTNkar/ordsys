@@ -1,2 +1,3 @@
-import OrderTicket from "./OrderTicket";
+import OrderTicket from './OrderTicket';
+
 export default OrderTicket;

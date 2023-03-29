@@ -1,2 +1,3 @@
-import RecentOrders from "./RecentOrders";
+import RecentOrders from './RecentOrders';
+
 export default RecentOrders;

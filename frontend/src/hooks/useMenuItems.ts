@@ -1,10 +1,10 @@
-import { useGetMenuItemsQuery } from "../api/backend";
+import { useGetMenuItemsQuery } from '../api/backend';
 
 export function useMenuItems() {
-    const {
-        data: menuItems = [],
-        ...rest
-    } = useGetMenuItemsQuery(undefined);
+  const {
+    data: menuItems = [],
+    ...rest
+  } = useGetMenuItemsQuery(undefined);
 
-    return { menuItems, ...rest };
+  return { menuItems, ...rest };
 }

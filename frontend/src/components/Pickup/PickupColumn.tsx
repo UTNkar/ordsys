@@ -1,30 +1,30 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography } from '@mui/material';
 
-import PickupOrders from "./PickupOrders";
+import PickupOrders from './PickupOrders';
 
-import type { Order } from "../../@types";
+import type { Order } from '../../@types';
 
 interface PickupColumnProps {
-    done: boolean,
-    orders: Order[],
+  done: boolean,
+  orders: Order[],
 }
 
 export default function PickupColumn({
-    done,
-    orders,
+  done,
+  orders,
 }: PickupColumnProps) {
-    return (
-        <Box flexBasis={done ? "40%" : "60%"}>
-            <Typography
-                align="center"
-                component={done ? "h1" : "h2"}
-                fontWeight="bold"
-                marginBottom={5}
-                variant="h3"
-            >
-                {done ? "READY FOR PICKUP" : "IN PROGRESS"}
-            </Typography>
-            <PickupOrders done={done} orders={orders} />
-        </Box>
-    )
+  return (
+    <Box flexBasis={done ? '40%' : '60%'}>
+      <Typography
+        align="center"
+        component={done ? 'h1' : 'h2'}
+        fontWeight="bold"
+        marginBottom={5}
+        variant="h3"
+      >
+        {done ? 'READY FOR PICKUP' : 'IN PROGRESS'}
+      </Typography>
+      <PickupOrders done={done} orders={orders} />
+    </Box>
+  );
 }

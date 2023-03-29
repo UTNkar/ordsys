@@ -1,2 +1,3 @@
-import Kitchen from "./Kitchen";
+import Kitchen from './Kitchen';
+
 export default Kitchen;

@@ -1,4 +1,4 @@
 export enum KitchenRenderMode {
-    FOOD,
-    BEVERAGES,
+  FOOD,
+  BEVERAGES,
 }

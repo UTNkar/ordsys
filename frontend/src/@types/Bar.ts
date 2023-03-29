@@ -1,13 +1,13 @@
-import type { MenuItem } from './';
+import type { MenuItem } from '.';
 
 interface CurrentOrderItem extends MenuItem {
-    mealNote: string
-    quantity: number
+  mealNote: string
+  quantity: number
 }
 
 export enum BarRenderMode {
-    FULL,
-    WAITER,
+  FULL,
+  WAITER,
 }
 
-export type { CurrentOrderItem }
+export type { CurrentOrderItem };

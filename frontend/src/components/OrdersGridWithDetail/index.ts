@@ -1,2 +1,3 @@
-import OrdersGridWithDetail from "./OrdersGridWithDetail";
+import OrdersGridWithDetail from './OrdersGridWithDetail';
+
 export default OrdersGridWithDetail;
