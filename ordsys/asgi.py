@@ -11,13 +11,15 @@ https://channels.readthedocs.io/en/stable/topics/routing.html
 import os
 from channels.routing import ProtocolTypeRouter
 from channels.auth import AuthMiddlewareStack
-from backend import routing
 from django.core.asgi import get_asgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ordsys.settings.dev')
-# Initialize Django ASGI application early to ensure the AppRegistry
-# is populated before importing code that may import ORM models.
 django_asgi_app = get_asgi_application()
+
+# Backend routing must be imported after get_asgi_application to avoid
+# 'Apps arent loaded yet' problem since it tries to load models that haven't
+# been loaded yet
+from backend import routing  # noqa:E402
 
 application = ProtocolTypeRouter({
     "http": django_asgi_app,
