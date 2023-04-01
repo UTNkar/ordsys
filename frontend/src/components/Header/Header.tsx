@@ -6,6 +6,7 @@ import {
     AppBar,
     Box,
     IconButton,
+    IconButtonProps,
     Toolbar,
     Tooltip,
     Typography,
@@ -60,7 +61,7 @@ function Header(props: HeaderProps) {
                 bgcolor: "primary.light"
             }
         }
-    }
+    } as IconButtonProps
 
     useEffect(() => {
         if (showDateAndTime) {

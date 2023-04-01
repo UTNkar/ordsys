@@ -1,12 +1,13 @@
 import { OrganisationTheme } from "../@types";
 import { createTheme, darken, lighten, responsiveFontSizes } from "@mui/material";
+import { TypographyOptions } from "@mui/material/styles/createTypography";
 
 const typography = {
     fontFamily: "'TeXGyreAdventor', sans-serif",
     button: {
-        textTransform: "normal"
+        textTransform: "none"
     }
-}
+} as TypographyOptions
 
 const paletteBase = {
     divider: "rgba(0, 0, 0, 0.25)",
