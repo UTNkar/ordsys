@@ -25,6 +25,7 @@ const Menu = memo(function Menu({ onMenuItemClick }: MenuProps) {
         <Masonry sx={{margin: 0}} spacing={2} columns={{ xs: 1, lg: 2 }}>
             {activeMenuItems.map((item) => (
                 <Button
+                    key={item.id}
                     fullWidth
                     onClick={() => onMenuItemClick(item)}
                     variant="contained"
