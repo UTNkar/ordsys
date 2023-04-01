@@ -1,10 +1,13 @@
 import { OrganisationTheme } from "../@types";
 import { createTheme, darken, lighten, responsiveFontSizes } from "@mui/material";
+import { Property } from 'csstype';
 
 const typography = {
     fontFamily: "'TeXGyreAdventor', sans-serif",
     button: {
-        textTransform: "normal"
+        // Typescript doesn't recognize the value of textTransform as valid CSS value
+        // so we have to explicit convertit to a TextTransform value
+        textTransform: "none" as Property.TextTransform 
     }
 }
 
