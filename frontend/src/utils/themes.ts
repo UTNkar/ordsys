@@ -1,15 +1,13 @@
 import { OrganisationTheme } from "../@types";
 import { createTheme, darken, lighten, responsiveFontSizes } from "@mui/material";
-import { Property } from 'csstype';
+import { TypographyOptions } from "@mui/material/styles/createTypography";
 
 const typography = {
     fontFamily: "'TeXGyreAdventor', sans-serif",
     button: {
-        // Typescript doesn't recognize the value of textTransform as valid CSS value
-        // so we have to explicit convertit to a TextTransform value
-        textTransform: "none" as Property.TextTransform 
+        textTransform: "none"
     }
-}
+} as TypographyOptions
 
 const paletteBase = {
     divider: "rgba(0, 0, 0, 0.25)",
