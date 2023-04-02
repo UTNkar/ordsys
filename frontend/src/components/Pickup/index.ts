@@ -1,2 +1,3 @@
-import Pickup from "./Pickup";
+import Pickup from './Pickup';
+
 export default Pickup;

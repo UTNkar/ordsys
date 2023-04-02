@@ -1,20 +1,22 @@
-import { useState } from "react";
-import { Container, Stack, TextField, Typography } from "@mui/material";
+import { useState } from 'react';
+import {
+  Container, Stack, TextField, Typography,
+} from '@mui/material';
 import {
   MobileDateTimePicker,
   LocalizationProvider,
-} from "@mui/x-date-pickers";
-import { LoadingButton } from "@mui/lab";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { subDays } from "date-fns";
-import sv from "date-fns/locale/sv";
+} from '@mui/x-date-pickers';
+import { LoadingButton } from '@mui/lab';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { subDays } from 'date-fns';
+import sv from 'date-fns/locale/sv';
 
-import { CanvasJSChart } from "../../libs/canvasjs.react";
-import { useOrderHistory } from "../../hooks";
-import { useSnackbar } from "notistack";
+import { useSnackbar } from 'notistack';
+import { CanvasJSChart } from '../../libs/canvasjs.react';
+import { useOrderHistory } from '../../hooks';
 
 const DATE_TIME_PICKER_COMMON_PROPS = Object.freeze({
-  mask: "____-__-__ __:__",
+  mask: '____-__-__ __:__',
   disableFuture: true,
   minutesStep: 5,
   showTodayButton: true,
@@ -30,12 +32,12 @@ function Statistics() {
     event.preventDefault();
     getOrderHistory(startDate, endDate).then(({ data, isError, isSuccess }) => {
       if (isSuccess && (!data || data.length === 0)) {
-        enqueueSnackbar("No orders found for the selected interval.", {
-          variant: "info",
+        enqueueSnackbar('No orders found for the selected interval.', {
+          variant: 'info',
         });
       } else if (isError) {
-        enqueueSnackbar("Something went wrong when fetching the orders.", {
-          variant: "error",
+        enqueueSnackbar('Something went wrong when fetching the orders.', {
+          variant: 'error',
         });
       }
     });
@@ -63,7 +65,7 @@ function Statistics() {
         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={sv}>
           <Stack
             spacing={4}
-            direction={{ xs: "column", sm: "row" }}
+            direction={{ xs: 'column', sm: 'row' }}
             marginBottom={2}
           >
             <MobileDateTimePicker
@@ -73,7 +75,7 @@ function Statistics() {
               onChange={setStartDate}
               disabled={isFetching}
               maxDateTime={endDate}
-              label={"Start date"}
+              label="Start date"
               renderInput={(params: any) => (
                 <TextField
                   {...params}
@@ -88,7 +90,7 @@ function Statistics() {
               // @ts-ignore
               onChange={setEndDate}
               disabled={isFetching}
-              label={"End date"}
+              label="End date"
               renderInput={(params: any) => (
                 <TextField
                   {...params}

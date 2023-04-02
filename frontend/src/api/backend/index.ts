@@ -1,6 +1,6 @@
-import backendBaseApi from "./backend";
+import backendBaseApi from './backend';
 
-export * from "./authentication";
-export * from "./menuItems";
-export * from "./orders";
+export * from './authentication';
+export * from './menuItems';
+export * from './orders';
 export default backendBaseApi;

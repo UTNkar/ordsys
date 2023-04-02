@@ -1,9 +1,9 @@
-import utnApi from "./utn";
+import utnApi from './utn';
 
 export interface UtnMembershipResponse {
-    is_member?: boolean
-    error?: string
+  is_member?: boolean
+  error?: string
 }
 
-export * from "./utn";
+export * from './utn';
 export default utnApi;

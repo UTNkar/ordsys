@@ -1,2 +1,3 @@
-import OrderDetail from "./OrderDetail";
+import OrderDetail from './OrderDetail';
+
 export default OrderDetail;
