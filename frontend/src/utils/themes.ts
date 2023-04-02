@@ -1,8 +1,8 @@
 import {
   createTheme, darken, lighten, responsiveFontSizes,
 } from '@mui/material';
+import { TypographyOptions } from '@mui/material/styles/createTypography';
 import { OrganisationTheme } from '../@types';
-import { TypographyOptions } from "@mui/material/styles/createTypography";
 
 const typography = {
   fontFamily: "'TeXGyreAdventor', sans-serif",
