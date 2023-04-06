@@ -8,7 +8,7 @@
     "@mui/codemod": "^5.11.14",
     "@mui/icons-material": "^5.11.16",
     "@mui/lab": "^5.0.0-alpha.125",
-    "@mui/material": "^5.11.15",
+    "@mui/material": "^5.11.16",
     "@mui/x-date-pickers": "^6.0.4",
     "@reduxjs/toolkit": "^1.9.3",
     "@testing-library/dom": "9.2.0",
