@@ -27,12 +27,12 @@ const SnackbarContent = React.forwardRef<HTMLDivElement, CustomContentProps>(({
   id,
 }, ref) => {
   const { closeSnackbar } = useSnackbar();
-  const _action = typeof action === 'function' ? action(id) : action;
+  const alertAction = typeof action === 'function' ? action(id) : action;
   const severity = variant as AlertColor;
   return (
     <Alert
       ref={ref}
-      action={_action || (
+      action={alertAction || (
         <IconButton
           aria-label="Close"
           color="inherit"
