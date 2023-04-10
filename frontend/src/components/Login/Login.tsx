@@ -94,7 +94,9 @@ function Login() {
           value={selectedUser}
           variant="outlined"
         >
-          {users.map((user) => <MenuItem key={user.id} value={user.username}>{user.username}</MenuItem>)}
+          {users.map(
+            (user) => <MenuItem key={user.id} value={user.username}>{user.username}</MenuItem>
+          )}
         </TextField>
         <TextField
           disabled={selectedUser === ''}

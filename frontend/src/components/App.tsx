@@ -73,7 +73,10 @@ function App() {
             success: SnackbarContent,
           }}
         >
-          <Header organisation={user?.theme || OrganisationTheme.UTN} isAuthenticated={isAuthenticated} />
+          <Header
+            organisation={user?.theme || OrganisationTheme.UTN}
+            isAuthenticated={isAuthenticated}
+          />
           <Stack
             component="main"
             overflow="auto"

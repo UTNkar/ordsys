@@ -4,6 +4,12 @@ import type { MenuItem } from '../@types';
 import { useMenuItems } from './useMenuItems';
 import { useLazyGetOrdersWithItemsQuery } from '../api/backend';
 
+interface ChartOptions {
+  data?: object[],
+  animationEnabled?: boolean,
+  exportEnabled?: boolean
+}
+
 export function useOrderHistory() {
   const { menuItems } = useMenuItems();
   const [
@@ -11,13 +17,15 @@ export function useOrderHistory() {
     { data: orderHistory, isFetching },
   ] = useLazyGetOrdersWithItemsQuery({
     selectFromResult: ({ data = [], isFetching }) => {
-      const chartOptions: { data?: object[], animationEnabled?: boolean, exportEnabled?: boolean } = {};
+      const chartOptions: ChartOptions = {};
       if (data.length > 0) {
         const dataPoints: { label: string, y: number }[] = [];
         data.forEach((order) => {
           order.order_items.forEach((orderItem) => {
             const menuItem = menuItems.find((item) => item.id === orderItem.menu) as MenuItem;
-            const dataPointIndex = dataPoints.findIndex((item) => item.label === menuItem.item_name);
+            const dataPointIndex = dataPoints.findIndex(
+              (item) => item.label === menuItem.item_name
+            );
             if (dataPointIndex === -1) {
               dataPoints.push({ label: menuItem.item_name, y: orderItem.quantity });
             } else {

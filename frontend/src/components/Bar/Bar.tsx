@@ -170,7 +170,9 @@ function Bar({ renderMode }: BarProps) {
       return;
     }
     setCurrentOrder((previous) => {
-      const index = previous.findIndex((item) => item.id === clickedItem.id && item.mealNote === mealNote);
+      const index = previous.findIndex(
+        (item) => item.id === clickedItem.id && item.mealNote === mealNote,
+      );
       if (index === -1) {
         const itemToAdd = { ...clickedItem, mealNote, quantity: 1 } as CurrentOrderItem;
         return [...previous, itemToAdd];
@@ -228,15 +230,6 @@ function Bar({ renderMode }: BarProps) {
     }
   }
 
-  /**
-     * Validates if the currently queued order meets the follow criteria:
-     * - Order number must be larger than 10
-     * - Order number must have have a remainder larger than 0 modulo 10.
-     * <br>
-     * These must be true as the string version is represented as 'NN - X' where 'X' is the 10's of the number.
-     * '00 - X' is not valid (excluding '00 - 0'), and neither is 'NN - 0'.
-     * The special order number '00 - 0' is allowed as it's internally used for food to employees.
-     */
   function validateCurrentOrder() {
     return currentOrder.length > 0 && orderNumber !== '';
   }

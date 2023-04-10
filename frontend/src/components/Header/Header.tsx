@@ -49,7 +49,8 @@ function Header(props: HeaderProps) {
   const dateIntervalId = useRef<number | undefined>(undefined);
   const [signOut] = useSignOutMutation();
 
-  // No point in showing date and time on mobile devices as they already have a clock in the top right corner
+  // No point in showing date and time on mobile devices as they already have
+  // a clock in the top right corner
   const showDateAndTime = useMediaQuery<Theme>((theme) => theme.breakpoints.up('lg'));
 
   const buttonProps = {
