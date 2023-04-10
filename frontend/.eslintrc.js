@@ -9,6 +9,13 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
+  rules: {
+    'import/prefer-default-export': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'comma-dangle': 'off',
+    '@typescript-eslint/comma-dangle': 'off',
+    '@typescript-eslint/ban-types': 'off',
+  },
   parserOptions: {
     project: ['./tsconfig.json'],
     tsconfigRootDir: __dirname,
