@@ -1738,10 +1738,10 @@
     prop-types "^15.8.1"
     react-is "^18.2.0"
 
-"@mui/codemod@^5.11.14":
-  version "5.11.14"
-  resolved "https://registry.yarnpkg.com/@mui/codemod/-/codemod-5.11.14.tgz#f754fd2937bbec63f4b41263882f5295a3e28f9a"
-  integrity sha512-pmiabQPitbX7x+MnFNxGZ4IUdlVPSodBIoaGYAvBVvQe+EFSdP5IswtPLv8hiohhTF1Q9163XMh2Lo1pEpC15A==
+"@mui/codemod@^5.12.0":
+  version "5.12.0"
+  resolved "https://registry.yarnpkg.com/@mui/codemod/-/codemod-5.12.0.tgz#0db466773f5604f294d9cc83fe34c128de416ea1"
+  integrity sha512-50RwoWJp6IjV3mSsXW3pm92fCAVGCDFnnRDqld1nh6HCH2Jr8AwjmKw3KnKfGDVO0bIeQHzqXj6X13lDeGxMow==
   dependencies:
     "@babel/core" "^7.21.3"
     "@babel/runtime" "^7.21.0"
