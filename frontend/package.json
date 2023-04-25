@@ -7,7 +7,7 @@
     "@emotion/styled": "^11.8.1",
     "@mui/codemod": "^5.12.0",
     "@mui/icons-material": "^5.11.16",
-    "@mui/lab": "^5.0.0-alpha.125",
+    "@mui/lab": "^5.0.0-alpha.128",
     "@mui/material": "^5.12.1",
     "@mui/x-date-pickers": "^6.1.0",
     "@reduxjs/toolkit": "^1.9.5",
