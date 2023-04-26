@@ -1743,10 +1743,10 @@
     prop-types "^15.8.1"
     react-is "^18.2.0"
 
-"@mui/codemod@^5.12.0":
-  version "5.12.0"
-  resolved "https://registry.yarnpkg.com/@mui/codemod/-/codemod-5.12.0.tgz#0db466773f5604f294d9cc83fe34c128de416ea1"
-  integrity sha512-50RwoWJp6IjV3mSsXW3pm92fCAVGCDFnnRDqld1nh6HCH2Jr8AwjmKw3KnKfGDVO0bIeQHzqXj6X13lDeGxMow==
+"@mui/codemod@^5.12.2":
+  version "5.12.2"
+  resolved "https://registry.yarnpkg.com/@mui/codemod/-/codemod-5.12.2.tgz#f10a3e1e7d41f6b7101718316df472656eefefc9"
+  integrity sha512-1e973ikSE+ieZILVuZCwaDyHByNQpacQo2QuWVJnSZCJZEv5qlwyE2fMwC9kDxWWQUeZQJu59+vqQR+zwe95YA==
   dependencies:
     "@babel/core" "^7.21.3"
     "@babel/runtime" "^7.21.0"
