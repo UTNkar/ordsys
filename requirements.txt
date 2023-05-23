@@ -1,5 +1,5 @@
 # async functionality
-asgiref==3.6.0
+asgiref==3.7.0
 
 # Websockets
 channels[daphne]==4.0.0
