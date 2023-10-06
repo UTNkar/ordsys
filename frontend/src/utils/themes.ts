@@ -130,4 +130,16 @@ export const themes = {
       },
     },
   })),
+  [OrganisationTheme.MILJOGRUPPEN]: responsiveFontSizes(createTheme({
+    typography,
+    palette: {
+      ...paletteBase,
+      primary: {
+        main: '#8ac163',
+        dark: '#4a8a1d',
+        light: '#a2c987',
+        contrastText: '#fff',
+      },
+    },
+  })),
 };

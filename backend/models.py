@@ -167,6 +167,7 @@ class Organisation(models.Model):
         KLUBBVERKET = 'klubbverket', 'Klubbverket'
         FORSRANNINGEN = 'forsranningen', 'Forsränningen'
         REBUSRALLYT = 'rebusrallyt', 'Rebusrallyt'
+        MILJOGRUPPEN = 'miljogruppen', 'Miljögruppen'
 
     id = models.AutoField(primary_key=True)
     name = models.CharField(
