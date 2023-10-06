@@ -41,6 +41,7 @@ export enum OrganisationTheme {
   KLUBBVERKET = 'klubbverket',
   FORSRANNINGEN = 'forsranningen',
   REBUSRALLYT = 'rebusrallyt',
+  MILJOGRUPPEN = 'miljogruppen',
 }
 
 export interface Organisation {

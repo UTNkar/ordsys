@@ -25,6 +25,7 @@ import TdLogo from '../../assets/images/td.png';
 import KlubbverketLogo from '../../assets/images/klubbverket.png';
 import ForsranningenLogo from '../../assets/images/forsranningen.png';
 import RebusrallytLogo from '../../assets/images/rebusrallyt.png';
+import MiljogruppenLogo from '../../assets/images/miljogruppen.png';
 
 import { OrganisationTheme } from '../../@types';
 
@@ -35,6 +36,7 @@ const THEME_TO_IMAGE = Object.freeze({
   [OrganisationTheme.KLUBBVERKET]: KlubbverketLogo,
   [OrganisationTheme.FORSRANNINGEN]: ForsranningenLogo,
   [OrganisationTheme.REBUSRALLYT]: RebusrallytLogo,
+  [OrganisationTheme.MILJOGRUPPEN]: MiljogruppenLogo,
 });
 
 interface HeaderProps {
