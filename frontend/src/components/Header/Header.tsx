@@ -21,7 +21,7 @@ import { useSignOutMutation } from '../../api/backend';
 
 import UtnLogo from '../../assets/images/utn.png';
 import UtnarmLogo from '../../assets/images/utnarm.png';
-import TdLogo from '../../assets/images/td.png';
+import TdLogo from '../../assets/images/tdb.png';
 import KlubbverketLogo from '../../assets/images/klubbverket.png';
 import ForsranningenLogo from '../../assets/images/forsranningen.png';
 import RebusrallytLogo from '../../assets/images/rebusrallyt.png';
