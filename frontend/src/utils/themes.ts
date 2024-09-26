@@ -118,7 +118,7 @@ export const themes = {
       },
     },
   })),
-  [OrganisationTheme.TEKNOLOG_DATAVETARMOTTAGNINGEN]: responsiveFontSizes(createTheme({
+  [OrganisationTheme.TEKNOLOG_DATAVETAR_BASMOTTAGNINGEN]: responsiveFontSizes(createTheme({
     typography,
     palette: {
       ...paletteBase,
