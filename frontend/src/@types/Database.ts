@@ -37,7 +37,7 @@ export enum OrderStatus {
 export enum OrganisationTheme {
   UTN = 'utn',
   UTNARM = 'utnarm',
-  TEKNOLOG_DATAVETAR_BASMOTTAGNINGEN = 'tdb',
+  TEKNOLOG_DATAVETARMOTTAGNINGEN = 'td',
   KLUBBVERKET = 'klubbverket',
   FORSRANNINGEN = 'forsranningen',
   REBUSRALLYT = 'rebusrallyt',

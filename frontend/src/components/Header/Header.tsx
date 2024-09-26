@@ -32,7 +32,7 @@ import { OrganisationTheme } from '../../@types';
 const THEME_TO_IMAGE = Object.freeze({
   [OrganisationTheme.UTN]: UtnLogo,
   [OrganisationTheme.UTNARM]: UtnarmLogo,
-  [OrganisationTheme.TEKNOLOG_DATAVETAR_BASMOTTAGNINGEN]: TdbLogo,
+  [OrganisationTheme.TEKNOLOG_DATAVETARMOTTAGNINGEN]: TdbLogo,
   [OrganisationTheme.KLUBBVERKET]: KlubbverketLogo,
   [OrganisationTheme.FORSRANNINGEN]: ForsranningenLogo,
   [OrganisationTheme.REBUSRALLYT]: RebusrallytLogo,

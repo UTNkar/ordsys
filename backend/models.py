@@ -162,8 +162,8 @@ class Organisation(models.Model):
     class ThemesEnum(models.TextChoices):
         UTN = 'utn', 'UTN'
         UTNARM = 'utnarm', 'Utnarm'
-        TEKNOLOG_DATAVETAR_BASMOTTAGNINGEN = \
-            'tdb', 'Teknolog-, datavetar- och basmottagningen'
+        TEKNOLOG_DATAVETARMOTTAGNINGEN = \
+            'td', 'Teknolog- och datavetarmottagningen'
         KLUBBVERKET = 'klubbverket', 'Klubbverket'
         FORSRANNINGEN = 'forsranningen', 'Forsränningen'
         REBUSRALLYT = 'rebusrallyt', 'Rebusrallyt'

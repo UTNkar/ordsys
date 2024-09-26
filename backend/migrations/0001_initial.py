@@ -65,7 +65,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('name', models.CharField(max_length=128, unique=True, verbose_name='organisation name')),
-                ('theme', models.CharField(choices=[('utn', 'UTN'), ('utnarm', 'Utnarm'), ('tdb', 'Teknolog-, datavetar- och basmottagningen'), ('klubbverket', 'Klubbverket'), ('forsranningen', 'Forsränningen'), ('rebusrallyt', 'Rebusrallyt')], default='utn', help_text='Which theme to apply to the organisation.', max_length=20, verbose_name='theme')),
+                ('theme', models.CharField(choices=[('utn', 'UTN'), ('utnarm', 'Utnarm'), ('td', 'Teknolog- och datavetarmottagningen'), ('klubbverket', 'Klubbverket'), ('forsranningen', 'Forsränningen'), ('rebusrallyt', 'Rebusrallyt')], default='utn', help_text='Which theme to apply to the organisation.', max_length=20, verbose_name='theme')),
             ],
             options={
                 'db_table': 'organisation',
