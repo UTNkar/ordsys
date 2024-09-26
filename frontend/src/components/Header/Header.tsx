@@ -21,7 +21,7 @@ import { useSignOutMutation } from '../../api/backend';
 
 import UtnLogo from '../../assets/images/utn.png';
 import UtnarmLogo from '../../assets/images/utnarm.png';
-import TdLogo from '../../assets/images/td.png';
+import TdbLogo from '../../assets/images/tdb.png';
 import KlubbverketLogo from '../../assets/images/klubbverket.png';
 import ForsranningenLogo from '../../assets/images/forsranningen.png';
 import RebusrallytLogo from '../../assets/images/rebusrallyt.png';
@@ -32,7 +32,7 @@ import { OrganisationTheme } from '../../@types';
 const THEME_TO_IMAGE = Object.freeze({
   [OrganisationTheme.UTN]: UtnLogo,
   [OrganisationTheme.UTNARM]: UtnarmLogo,
-  [OrganisationTheme.TEKNOLOG_DATAVETARMOTTAGNINGEN]: TdLogo,
+  [OrganisationTheme.TEKNOLOG_DATAVETARMOTTAGNINGEN]: TdbLogo,
   [OrganisationTheme.KLUBBVERKET]: KlubbverketLogo,
   [OrganisationTheme.FORSRANNINGEN]: ForsranningenLogo,
   [OrganisationTheme.REBUSRALLYT]: RebusrallytLogo,
