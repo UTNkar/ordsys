@@ -70,8 +70,12 @@ function Bar({ renderMode }: BarProps) {
   useEffect(() => closeSnackbar, [closeSnackbar]);
 
   const addToOrderNumber = useCallback((digit: number) => {
-    setOrderNumber((previous) => ((Number(previous) % 10) * 10 + digit).toString());
-  }, []);
+  setOrderNumber((previous) => {
+    const newOrderNumber = Number(previous + digit.toString());
+    return newOrderNumber > 100000 ? '0' : newOrderNumber.toString();
+  });
+}, []);
+
 
   const clearCurrentOrder = useCallback(() => {
     closeSnackbar();
