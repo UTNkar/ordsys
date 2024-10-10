@@ -88,7 +88,9 @@ function Bar({ renderMode }: BarProps) {
   const decrementItemQuantity = useCallback((item: CurrentOrderItem) => {
     setCurrentOrder((previous) => {
       if (item.quantity === 1) {
-        return previous.filter(({ id, mealNote }) => id !== item.id || mealNote !== item.mealNote);
+        return previous.filter(
+          ({ id, mealNote: orderMealNote }) => id !== item.id || orderMealNote !== item.mealNote,
+        );
       }
       const index = previous.indexOf(item);
       previous[index].quantity -= 1;
