@@ -186,13 +186,13 @@ function Bar({ renderMode }: BarProps) {
     setMealNote('');
   }, [enqueueSnackbar, mealNote, orderToEdit]);
 
-  const undoOrders = useCallback((orders: Order[], snackbarKey: SnackbarKey) => {
-    Promise.all(orders.map(({ id }) => deleteOrder(id).unwrap()))
+  const undoOrders = useCallback((createdOrders: Order[], snackbarKey: SnackbarKey) => {
+    Promise.all(createdOrders.map(({ id }) => deleteOrder(id).unwrap()))
       .catch(() => {
         enqueueSnackbar('Failed to undo order!', {
           action: (key) => (
             <>
-              <SnackbarButton onClick={() => undoOrders(orders, key)}>
+              <SnackbarButton onClick={() => undoOrders(createdOrders, key)}>
                 Retry
               </SnackbarButton>
               <IconButton
