@@ -186,6 +186,31 @@ function Bar({ renderMode }: BarProps) {
     setMealNote('');
   }, [enqueueSnackbar, mealNote, orderToEdit]);
 
+  const undoOrders = useCallback((orders: Order[], snackbarKey: SnackbarKey) => {
+    Promise.all(orders.map(({ id }) => deleteOrder(id).unwrap()))
+      .catch(() => {
+        enqueueSnackbar('Failed to undo order!', {
+          action: (key) => (
+            <>
+              <SnackbarButton onClick={() => undoOrders(orders, key)}>
+                Retry
+              </SnackbarButton>
+              <IconButton
+                aria-label="Close"
+                color="inherit"
+                onClick={() => closeSnackbar(key)}
+              >
+                <CloseIcon />
+              </IconButton>
+            </>
+          ),
+          persist: true,
+          variant: 'error',
+        });
+      });
+    closeSnackbar(snackbarKey);
+  }, [closeSnackbar, deleteOrder, enqueueSnackbar]);
+
   function onSubmitOrder(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const foodItems = currentOrder
@@ -246,31 +271,6 @@ function Bar({ renderMode }: BarProps) {
   function validateCurrentOrder() {
     return currentOrder.length > 0 && orderNumber !== '';
   }
-
-  const undoOrders = useCallback((orders: Order[], snackbarKey: SnackbarKey) => {
-    Promise.all(orders.map(({ id }) => deleteOrder(id).unwrap()))
-      .catch(() => {
-        enqueueSnackbar('Failed to undo order!', {
-          action: (key) => (
-            <>
-              <SnackbarButton onClick={() => undoOrders(orders, key)}>
-                Retry
-              </SnackbarButton>
-              <IconButton
-                aria-label="Close"
-                color="inherit"
-                onClick={() => closeSnackbar(key)}
-              >
-                <CloseIcon />
-              </IconButton>
-            </>
-          ),
-          persist: true,
-          variant: 'error',
-        });
-      });
-    closeSnackbar(snackbarKey);
-  }, [closeSnackbar, deleteOrder, enqueueSnackbar]);
 
   const flex = `1 1 ${isFullView ? '33.33' : '50'}%`;
 
