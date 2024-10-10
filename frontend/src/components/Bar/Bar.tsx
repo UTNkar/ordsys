@@ -284,6 +284,8 @@ function Bar({ renderMode }: BarProps) {
     />
   );
 
+  const handleSubmitOrder = (event: React.FormEvent<HTMLFormElement>) => onSubmitOrder(event);
+
   return (
     <Stack direction="row" height="100%" width="100%">
       <Column flex={flex}>
@@ -322,7 +324,7 @@ function Bar({ renderMode }: BarProps) {
         <Numpad
           addToOrderNumber={addToOrderNumber}
           clearOrderNumber={() => setOrderNumber('')}
-          onSubmitOrder={onSubmitOrder}
+          onSubmitOrder={handleSubmitOrder}
           onOrderNoteChange={(e) => setOrderNote(e.target.value)}
           orderIsValid={validateCurrentOrder()}
           orderNote={orderNote}
