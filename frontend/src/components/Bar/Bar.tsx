@@ -70,12 +70,11 @@ function Bar({ renderMode }: BarProps) {
   useEffect(() => closeSnackbar, [closeSnackbar]);
 
   const addToOrderNumber = useCallback((digit: number) => {
-  setOrderNumber((previous) => {
-    const newOrderNumber = Number(previous + digit.toString());
-    return newOrderNumber > 100000 ? '0' : newOrderNumber.toString();
-  });
-}, []);
-
+    setOrderNumber((previous) => {
+      const newOrderNumber = Number(previous + digit.toString());
+      return newOrderNumber > 100000 ? '0' : newOrderNumber.toString();
+    });
+  }, []);
 
   const clearCurrentOrder = useCallback(() => {
     closeSnackbar();
@@ -106,7 +105,7 @@ function Bar({ renderMode }: BarProps) {
   }, []);
 
   const editOrder = useCallback((order: Order) => {
-    const orderToEdit = order.order_items.map((orderItem) => {
+    const orderItemsToEdit = order.order_items.map((orderItem) => {
       // TODO ensure menuItem is not undefined.
       //  It shouldn't be unless menu items are removed during the event and they are re-fetched
       //  or real-time updates are in place
@@ -121,7 +120,7 @@ function Bar({ renderMode }: BarProps) {
         mealNote: orderItem.special_requests,
       };
     });
-    setCurrentOrder(orderToEdit);
+    setCurrentOrder(orderItemsToEdit);
     setOrderNote(order.note);
     setOrderNumber(order.customer_number);
     setOrderToEdit(order);
@@ -174,7 +173,9 @@ function Bar({ renderMode }: BarProps) {
       return;
     }
     setCurrentOrder((previous) => {
-      const index = previous.findIndex((item) => item.id === clickedItem.id && item.mealNote === mealNote);
+      const index = previous.findIndex(
+        (item) => item.id === clickedItem.id && item.mealNote === mealNote,
+      );
       if (index === -1) {
         const itemToAdd = { ...clickedItem, mealNote, quantity: 1 } as CurrentOrderItem;
         return [...previous, itemToAdd];
@@ -217,11 +218,11 @@ function Bar({ renderMode }: BarProps) {
       ].filter((item) => item.order_items.length > 0);
       createOrder(payload)
         .unwrap()
-        .then((orders) => {
+        .then((createdOrders) => {
           clearCurrentOrder();
           enqueueSnackbar('Order created!', {
             action: (key) => (
-              <SnackbarButton onClick={() => undoOrders(orders, key)}>
+              <SnackbarButton onClick={() => undoOrders(createdOrders, key)}>
                 Undo
               </SnackbarButton>
             ),
@@ -237,7 +238,8 @@ function Bar({ renderMode }: BarProps) {
      * - Order number must be larger than 10
      * - Order number must have have a remainder larger than 0 modulo 10.
      * <br>
-     * These must be true as the string version is represented as 'NN - X' where 'X' is the 10's of the number.
+     * These must be true as the string version is represented as 'NN - X',
+     * where 'X' is the 10's of the number.
      * '00 - X' is not valid (excluding '00 - 0'), and neither is 'NN - 0'.
      * The special order number '00 - 0' is allowed as it's internally used for food to employees.
      */
