@@ -42,6 +42,8 @@ If the versions are mis-matched, you may have to install each package of `dev-re
 
 ### Setting up the database
 
+0. Make sure you are running the redis server, on mac run: redis-server  
+
 1. Create all required database tables, enter `./manage.py migrate`.
 2. Create an organisation to associate your users with by running `./manage.py createorganisation`.
 3. Create a superuser so that you can log in with `./manage.py createsuperuser`.
