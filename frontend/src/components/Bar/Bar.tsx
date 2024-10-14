@@ -70,12 +70,11 @@ function Bar({ renderMode }: BarProps) {
   useEffect(() => closeSnackbar, [closeSnackbar]);
 
   const addToOrderNumber = useCallback((digit: number) => {
-  setOrderNumber((previous) => {
-    const newOrderNumber = Number(previous + digit.toString());
-    return newOrderNumber > 100000 ? '0' : newOrderNumber.toString();
-  });
-}, []);
-
+    setOrderNumber((previous) => {
+      const newOrderNumber = Number(previous + digit.toString());
+      return newOrderNumber > 100000 ? '0' : newOrderNumber.toString();
+    });
+  }, []);
 
   const clearCurrentOrder = useCallback(() => {
     closeSnackbar();
@@ -89,7 +88,9 @@ function Bar({ renderMode }: BarProps) {
   const decrementItemQuantity = useCallback((item: CurrentOrderItem) => {
     setCurrentOrder((previous) => {
       if (item.quantity === 1) {
-        return previous.filter(({ id, mealNote }) => id !== item.id || mealNote !== item.mealNote);
+        return previous.filter(
+          ({ id, mealNote: orderMealNote }) => id !== item.id || orderMealNote !== item.mealNote,
+        );
       }
       const index = previous.indexOf(item);
       previous[index].quantity -= 1;
@@ -106,7 +107,7 @@ function Bar({ renderMode }: BarProps) {
   }, []);
 
   const editOrder = useCallback((order: Order) => {
-    const orderToEdit = order.order_items.map((orderItem) => {
+    const orderItemsToEdit = order.order_items.map((orderItem) => {
       // TODO ensure menuItem is not undefined.
       //  It shouldn't be unless menu items are removed during the event and they are re-fetched
       //  or real-time updates are in place
@@ -121,7 +122,7 @@ function Bar({ renderMode }: BarProps) {
         mealNote: orderItem.special_requests,
       };
     });
-    setCurrentOrder(orderToEdit);
+    setCurrentOrder(orderItemsToEdit);
     setOrderNote(order.note);
     setOrderNumber(order.customer_number);
     setOrderToEdit(order);
@@ -174,7 +175,9 @@ function Bar({ renderMode }: BarProps) {
       return;
     }
     setCurrentOrder((previous) => {
-      const index = previous.findIndex((item) => item.id === clickedItem.id && item.mealNote === mealNote);
+      const index = previous.findIndex(
+        (item) => item.id === clickedItem.id && item.mealNote === mealNote,
+      );
       if (index === -1) {
         const itemToAdd = { ...clickedItem, mealNote, quantity: 1 } as CurrentOrderItem;
         return [...previous, itemToAdd];
@@ -184,6 +187,31 @@ function Bar({ renderMode }: BarProps) {
     });
     setMealNote('');
   }, [enqueueSnackbar, mealNote, orderToEdit]);
+
+  const undoOrders = useCallback((createdOrders: Order[], snackbarKey: SnackbarKey) => {
+    Promise.all(createdOrders.map(({ id }) => deleteOrder(id).unwrap()))
+      .catch(() => {
+        enqueueSnackbar('Failed to undo order!', {
+          action: (key) => (
+            <>
+              <SnackbarButton onClick={() => undoOrders(createdOrders, key)}>
+                Retry
+              </SnackbarButton>
+              <IconButton
+                aria-label="Close"
+                color="inherit"
+                onClick={() => closeSnackbar(key)}
+              >
+                <CloseIcon />
+              </IconButton>
+            </>
+          ),
+          persist: true,
+          variant: 'error',
+        });
+      });
+    closeSnackbar(snackbarKey);
+  }, [closeSnackbar, deleteOrder, enqueueSnackbar]);
 
   function onSubmitOrder(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -217,11 +245,11 @@ function Bar({ renderMode }: BarProps) {
       ].filter((item) => item.order_items.length > 0);
       createOrder(payload)
         .unwrap()
-        .then((orders) => {
+        .then((createdOrders) => {
           clearCurrentOrder();
           enqueueSnackbar('Order created!', {
             action: (key) => (
-              <SnackbarButton onClick={() => undoOrders(orders, key)}>
+              <SnackbarButton onClick={() => undoOrders(createdOrders, key)}>
                 Undo
               </SnackbarButton>
             ),
@@ -237,38 +265,14 @@ function Bar({ renderMode }: BarProps) {
      * - Order number must be larger than 10
      * - Order number must have have a remainder larger than 0 modulo 10.
      * <br>
-     * These must be true as the string version is represented as 'NN - X' where 'X' is the 10's of the number.
+     * These must be true as the string version is represented as 'NN - X',
+     * where 'X' is the 10's of the number.
      * '00 - X' is not valid (excluding '00 - 0'), and neither is 'NN - 0'.
      * The special order number '00 - 0' is allowed as it's internally used for food to employees.
      */
   function validateCurrentOrder() {
     return currentOrder.length > 0 && orderNumber !== '';
   }
-
-  const undoOrders = useCallback((orders: Order[], snackbarKey: SnackbarKey) => {
-    Promise.all(orders.map(({ id }) => deleteOrder(id).unwrap()))
-      .catch(() => {
-        enqueueSnackbar('Failed to undo order!', {
-          action: (key) => (
-            <>
-              <SnackbarButton onClick={() => undoOrders(orders, key)}>
-                Retry
-              </SnackbarButton>
-              <IconButton
-                aria-label="Close"
-                color="inherit"
-                onClick={() => closeSnackbar(key)}
-              >
-                <CloseIcon />
-              </IconButton>
-            </>
-          ),
-          persist: true,
-          variant: 'error',
-        });
-      });
-    closeSnackbar(snackbarKey);
-  }, [closeSnackbar, deleteOrder, enqueueSnackbar]);
 
   const flex = `1 1 ${isFullView ? '33.33' : '50'}%`;
 
@@ -281,6 +285,8 @@ function Bar({ renderMode }: BarProps) {
       onEditOrderClick={editOrder}
     />
   );
+
+  const handleSubmitOrder = (event: React.FormEvent<HTMLFormElement>) => onSubmitOrder(event);
 
   return (
     <Stack direction="row" height="100%" width="100%">
@@ -320,7 +326,7 @@ function Bar({ renderMode }: BarProps) {
         <Numpad
           addToOrderNumber={addToOrderNumber}
           clearOrderNumber={() => setOrderNumber('')}
-          onSubmitOrder={onSubmitOrder}
+          onSubmitOrder={handleSubmitOrder}
           onOrderNoteChange={(e) => setOrderNote(e.target.value)}
           orderIsValid={validateCurrentOrder()}
           orderNote={orderNote}
