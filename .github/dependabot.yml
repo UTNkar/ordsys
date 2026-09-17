@@ -7,7 +7,7 @@ updates:
 
 
 # Enable version updates for npm
-  - package-ecosystem: "npm" 
+  - package-ecosystem: "npm"
     directory: "/frontend"
     schedule:
       interval: "daily"
