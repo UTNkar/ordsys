@@ -6,7 +6,7 @@ channels[daphne]==4.3.2
 channels_redis==4.3.0
 
 # Django
-Django[argon2]==5.2.16
+Django[argon2]==6.1.1
 django-cors-headers==4.9.0
 django-filter==26.1
 djangorestframework==3.18.1
