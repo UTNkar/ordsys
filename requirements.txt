@@ -1,9 +1,9 @@
 # async functionality
-asgiref==3.8.1
+asgiref==3.9.2
 
 # Websockets
-channels[daphne]==4.0.0
-channels_redis==4.1.0
+channels[daphne]==4.3.2
+channels_redis==4.3.0
 
 # Django
 Django[argon2]==5.2.16
