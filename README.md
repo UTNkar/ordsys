@@ -1,8 +1,8 @@
 # OrdSys
 
 OrdSys is a web application designed to create, display, and manage order tickets for use in the kitchen and bar during
-various events held by the Uppsala Union of Engineering and Science Students. It is written in Python3 and Javascript 
-using Django and PostgreSQL for the backend and React & Bootstrap for the frontend. 
+various events held by the Uppsala Union of Engineering and Science Students. It is written in Python3 and Javascript
+using Django and PostgreSQL for the backend and React & Bootstrap for the frontend.
 
 ![OrdSys Front Page](https://user-images.githubusercontent.com/55285451/222741000-bef088f4-3945-4cb6-8c42-3000a8af3b11.png)
 
@@ -35,7 +35,7 @@ On mac run `brew install redis`
 
 1. Make sure you have the `virtualenv` and `virtualenvwrapper-win` packages installed on your system.
 If you don't, install them using `$ pip install virtualenv` or `$ pip install virtualenvwrapper-win`.
-2. Create a new virtual environment with `$ mkvirtualenv venv`. This will create a virtual environment called `venv` 
+2. Create a new virtual environment with `$ mkvirtualenv venv`. This will create a virtual environment called `venv`
 and automatically enter it.
 3. Install the required Python dependencies with `(venv) $ pip install -r dev-requirements.txt`.
 If the versions are mis-matched, you may have to install each package of `dev-requirements.txt` manually.
