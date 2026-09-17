@@ -8,7 +8,7 @@ channels_redis==4.1.0
 # Django
 Django[argon2]==5.2.16
 django-cors-headers==4.9.0
-django-filter==23.2
+django-filter==26.1
 djangorestframework==3.17.2
 
 # Handy config
